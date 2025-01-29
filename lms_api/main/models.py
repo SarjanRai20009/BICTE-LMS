@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+
 class Teacher(models.Model):
     # profile_picture = models.ImageField(upload_to='teacher_pics/', null=True, blank=True)  # Profile picture
    
@@ -20,6 +21,50 @@ class Teacher(models.Model):
     class Meta:
         verbose_name_plural = "Teachers"
 
+# class Semester(models.Model):
+#     EVEREST = "EV"
+#     ANNAPURNA = "AN"
+#     KANCHENJUNGA = "KA"
+#     MANASLU = "MA"
+#     LHOTSE = "LH"
+#     MAKALU = "MK"
+#     DHAULAGIRI = "DH"
+#     LANGTANG = "LA"
+    
+#     SEMESTER_CHOICES = {
+#         EVEREST: "Everest(1st sem)",
+#         ANNAPURNA: "Annapurna(2nd sem)",
+#         KANCHENJUNGA: "Kanchenjunga(3rd sem)",
+#         MANASLU: "Manaslu(4th sem)",
+#         LHOTSE: "Lhotse(5th sem)",
+#         MAKALU: "Makalu(6th sem)",
+#         DHAULAGIRI: "Dhaulagiri(7th sem)",
+#         LANGTANG: "Langtang(8th sem)",
+#     }
+    
+#     se_name = models.CharField(
+#         max_length=2,
+#         choices=SEMESTER_CHOICES,
+#         default=EVEREST,
+#     )
+#     batch = models.CharField(max_length=20)
+#     start_date = models.DateField()
+#     end_date = models.DateField()
+
+#     def __str__(self):
+#         return self.get_se_name_display()
+
+#     class Meta:
+#         verbose_name_plural = "Semesters"
+
+#     def get_courses(self):
+#         return self.course_set.all()
+
+#     def get_teachers(self):
+#         return Teacher.objects.filter(course__semester=self).distinct()
+
+#     def get_students(self):
+#         return self.student_set.all()
 class Semester(models.Model):
     EVEREST = "EV"
     ANNAPURNA = "AN"
@@ -51,7 +96,7 @@ class Semester(models.Model):
     end_date = models.DateField()
 
     def __str__(self):
-        return self.get_se_name_display()
+        return f"{self.get_se_name_display()} - Batch {self.batch}"
 
     class Meta:
         verbose_name_plural = "Semesters"
@@ -74,7 +119,7 @@ class Course(models.Model):
     # syllabus_file = models.FileField(upload_to='syllabus_files/', null=True, blank=True)  # Syllabus file
 
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return f"{self.title} ({self.subject_code})"
 
@@ -98,3 +143,17 @@ class Student(models.Model):
         return f"{self.st_name} - {self.st_email} - {self.st_contact}" 
     class Meta:
         verbose_name_plural = "Students"
+
+class CourseNote(models.Model):
+    course_note = models.FileField(upload_to='course_notes/', null=True, blank=True)
+    note_description = models.TextField()
+    upload_date = models.DateField(auto_now_add=True)
+    
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Note for {self.course.title} by {self.teacher.t_full_name}"
+
+    class Meta:
+        verbose_name_plural = "Course Notes"
