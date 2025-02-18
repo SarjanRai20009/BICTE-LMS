@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #c3c3c3;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            color: #6a11cb;
+        }
+        
+        .recent-activity {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header text-center">
+            <h1>Admin Dashboard</h1>
+            <p>
+                Welcome back, <strong>{{ user.username }}</strong>! Here's an overview of your system.
+            </p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center p-4">
+                    <i class="fas fa-chalkboard-teacher card-icon"></i>
+                    <h3>{{ total_teachers }}</h3>
+                    <p>Total Teachers</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center p-4">
+                    <i class="fas fa-users card-icon"></i>
+                    <h3>500</h3>
+                    <p>Total Students</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center p-4">
+                    <i class="fas fa-book card-icon"></i>
+                    <h3>30</h3>
+                    <p>Total Courses</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center p-4">
+                    <i class="fas fa-calendar-alt card-icon"></i>
+                    <h3>4</h3>
+                    <p>Active Semesters</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="recent-activity">
+                    <h4>Recent Assignments</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Assignment 1</strong> - Mathematics (Deadline: 2023-10-15)
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Assignment 2</strong> - Science (Deadline: 2023-10-20)
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Assignment 3</strong> - History (Deadline: 2023-10-25)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="recent-activity">
+                    <h4>Recent Course Materials</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Material 1</strong> - Mathematics (Uploaded: 2023-10-10)
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Material 2</strong> - Science (Uploaded: 2023-10-12)
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Material 3</strong> - History (Uploaded: 2023-10-14)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <h4>Quick Links</h4>
+                <a href="#" class="btn btn-primary m-2">Add Teacher</a>
+                <a href="#" class="btn btn-success m-2">Add Student</a>
+                <a href="#" class="btn btn-info m-2">Add Course</a>
+                <a href="#" class="btn btn-warning m-2">Add Semester</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

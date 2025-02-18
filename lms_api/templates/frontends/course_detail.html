@@ -1,0 +1,183 @@
+{% extends "base_template/main.html" %} {% load static %} {% block title %} Course Detail - BICTESMC {% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-4 course-image">
+            <!-- Course Image -->
+            <img src="{% static 'images/no_image.jpg' %}" class="img-thumbnail" alt="No Image" />
+        </div>
+        <div class="col-8">
+            <h3 class="">Course title</h3>
+            <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Similique sit nisi expedita deserunt. Ut laboriosam dolore assumenda, nemo obcaecati soluta voluptatum cum voluptate quas, recusandae a laudantium blanditiis dolores labore!
+            </p>
+            <p class="fw-bold">
+                Semester:
+                <a href="/api/semester-course/1" class="text-dark">Semester7</a>
+            </p>
+            <p class="fw-bold">
+                Teacher:
+                <a href="{% url 'teacher-details' pk=1 %}?course_id={{ course_id }}" class="text-dark">Santosh Dahal</a
+        >
+      </p>
+      <p class="fw-bold">Credit Hours: 3 hrs</p>
+      <p class="fw-bold">Course Types: Pt + Th</p>
+      <span class="fw-bold">Rating: 5/5 </span>
+      <span class="fw-bold ps-2">Views: 25 </span>
+    </div>
+  </div>
+
+  <div class="card mt-3 ps-3 pe-3 pt-2 pb-2 mb-2">
+    <p class="fw-bold text-center">Course Syllabus</p>
+    <div class="row">
+      <div class="col-12 mb-2">
+        <a
+          href="{% static 'images/no_image.jpg' %}"
+          download
+          class="btn btn-primary w-100"
+          >Download</a
+        >
+      </div>
+      <div class="col-12">
+        <a
+          href="{% static 'images/no_image.jpg' %}"
+          target="_blank"
+          class="btn btn-primary w-100"
+          >View Now</a
+        >
+      </div>
+    </div>
+
+    <div class="card mt-3 pt-2">
+      <div class="card-heade text-center fw-bold">Objectives</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Objective 1</li>
+        <li class="list-group-item">Objective 2</li>
+        <li class="list-group-item">Objective 3</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mt-4 ps-3 pe-3 pt-2 pb-2 mb-3">
+    <p class="fw-bold text-center">Course Materials</p>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex material-item">
+        <a
+          href="#"
+          target="_blank"
+          class="material-link d-flex align-items-center w-100 text-decoration-none"
+        >
+          <i class="bi bi-file-earmark-text me-2"></i>
+          <span class="flex-grow-1">Handwritten Note</span>
+          <span class="export-text ms-2">Explore</span>
+        </a>
+                </li>
+
+                <li class="list-group-item d-flex material-item">
+                    <a href="#" target="_blank" class="material-link d-flex align-items-center w-100 text-decoration-none">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        <span class="flex-grow-1">Note Softcopy</span>
+                        <span class="export-text ms-2">Explore</span>
+                    </a>
+                </li>
+
+                <li class="list-group-item d-flex material-item">
+                    <a href="#" target="_blank" class="material-link d-flex align-items-center w-100 text-decoration-none">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        <span class="flex-grow-1">Unit-Wise Notes</span>
+                        <span class="export-text ms-2">Export</span>
+                    </a>
+                </li>
+
+                <li class="list-group-item d-flex material-item">
+                    <a href="#" class="material-link d-flex align-items-center w-100 text-decoration-none">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        <span class="flex-grow-1">Course Video</span>
+                        <span class="export-text ms-2">
+            <button
+              class="btn btn-sm btn-danger bi-youtube"
+              data-bs-toggle="modal"
+              data-bs-target="#video1"
+            >
+              <span class="ps-1">Watch</span>
+                        </button>
+                        </span>
+                    </a>
+                </li>
+                </ul>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="video1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Course Video</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/_uQrJ0TkZlc" title="YouTube video" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Semester Courses Start-->
+        <h4 class="pb-1 mt-5 mb-4 text-center fw-bold">Related Semester Courses</h4>
+        <div class="row">
+            <!-- {Courses block start} -->
+            <div class="col-md-3">
+                <div class="card md-4">
+                    <a href="/api/course-detail/1">
+                        <img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" />
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            <a href="/api/course-detail/1">Course title</a>
+                        </h5>
+                        <p class="card-text text-center">Course description</p>
+                    </div>
+                </div>
+            </div>
+            <!-- {Courses block emd} -->
+
+            <!-- {Courses block start} -->
+            <div class="col-md-3">
+                <div class="card">
+                    <a href="/api/course-detail/2">
+                        <img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" />
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            <a href="#">Course title</a>
+                        </h5>
+                        <p class="card-text text-center">Course description</p>
+                    </div>
+                </div>
+            </div>
+            <!-- {Courses block emd} -->
+        </div>
+        <!-- Related Semester Courses End-->
+    </div>
+    <style>
+        .course-image {
+            margin: auto;
+        }
+        
+        .teacherprofile {
+            text-decoration: none;
+        }
+        
+        .teacherprofile:hover {
+            text-decoration: underline;
+            font-weight: bolder;
+        }
+    </style>
+    <script>
+        function getCourseId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get("course_id"); // Extract course_id from query parameter
+        }
+    </script>
+    {% endblock %}

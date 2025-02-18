@@ -1,0 +1,156 @@
+{% extends 'student_template/st_base_template.html' %} {% block title %} Student Dashboard - BICTESMC {% endblock %} {% load static %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <aside class="col-md-3">
+            <div class="card">
+                <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
+                    Dashboard
+                </h4>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'student-dashboard' %}" class="list-group-item list-group-item-action">Semester</a>
+                    <a href="{% url 'student-dashboard-assignment' %}" class="list-group-item list-group-item-action">Assignments</a>
+                    <a href="{% url 'student-profile-setting' %}" class="list-group-item list-group-item-action bg-primary text-light text-center">Profile Setting</a>
+                    <a href="{% url 'change-student-account-password' %}" class="list-group-item list-group-item-action">Manage Password</a>
+                    <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger">Logout</a>
+                </div>
+            </div>
+        </aside>
+
+        <section class="col-md-9 mt-4 mt-md-0">
+            <div class="card">
+                <h5 class="card-header text-center" style="background-color: #c0c0c0">
+                    Profile Setting
+                </h5>
+                <div class="card-body pt-3">
+                    <form id="profile-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3 row ms-2">
+                            <label for="profile_picture" class="col-sm-2 col-form-label">Profile Picture</label>
+                            <div class="col-sm-10">
+                                <input type="file" class="form-control input-effect mt-2" id="profile_picture" name="profile_picture"> {% if student.profile_picture %}
+                                <img src="{{ student.profile_picture.url }}" alt="Profile Picture" class="mt-2" style="max-width: 100px;"> {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2">
+                            <label for="st_exam_roll_no" class="col-sm-2 col-form-label">Exam Roll No.</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="st_exam_roll_no" name="st_exam_roll_no" value="{{ student.st_exam_roll_no }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2">
+                            <label for="st_reg_no" class="col-sm-2 col-form-label">Reg No.</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="st_reg_no" name="st_reg_no" value="{{ student.st_reg_no }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2">
+                            <label for="st_name" class="col-sm-2 col-form-label">Full Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="st_name" name="st_name" value="{{ student.st_name }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="st_date_of_birth" class="col-sm-2 col-form-label">Date of Birth</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control input-effect" id="st_date_of_birth" name="st_date_of_birth" value="{{ student.st_date_of_birth|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="st_address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="st_address" name="st_address" value="{{ student.st_address }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="st_contact" class="col-sm-2 col-form-label">Phone Number</label>
+                            <div class="col-sm-10">
+                                <input type="tel" class="form-control input-effect" id="st_contact" name="st_contact" value="{{ student.st_contact }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2">
+                            <label for="st_email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="st_email" name="st_email" value="{{ student.st_email }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="gender" class="col-sm-2 col-form-label">Gender</label>
+                            <div class="col-sm-10">
+                                <select class="form-control input-effect" id="gender" name="gender">
+                                    <option value="male" {% if student.gender == 'male' %}selected{% endif %}>Male</option>
+                                    <option value="female" {% if student.gender == 'female' %}selected{% endif %}>Female</option>
+                                    <option value="other" {% if student.gender == 'other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="st_father_name" class="col-sm-2 col-form-label">Father Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="st_father_name" name="st_father_name" value="{{ student.st_father_name }}">
+                            </div>
+                        </div>
+
+                        <!-- <div class="mb-3 row ms-2 pe-2">
+                            <label for="semester" class="col-sm-2 col-form-label">Semester</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="semester" name="semester" value="{{ student.semester }}">
+                            </div>
+                        </div> -->
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="semester" class="col-sm-2 col-form-label">Semester</label>
+                            <div class="col-sm-10">
+                                <select class="form-control input-effect" id="semester" name="semester">
+                                  <option value="">Select Semester</option>
+                                  {% for semester in semesters %}
+                                      <option value="{{ semester.se_name }}" {% if student.semester.se_name == semester.se_name %}selected{% endif %}>
+                                          {{ semester.se_name }}
+                                      </option>
+                                  {% endfor %}
+                              </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row ms-2 pe-4">
+                            <button type="button" class="btn btn-primary" id="update-profile-btn">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    document.getElementById('update-profile-btn').addEventListener('click', function() {
+        const form = document.getElementById('profile-form');
+        const formData = new FormData(form);
+
+        fetch("{% url 'update-student-profile' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}

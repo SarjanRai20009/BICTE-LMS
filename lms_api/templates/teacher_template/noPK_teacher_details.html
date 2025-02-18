@@ -1,0 +1,311 @@
+{% extends "base_template/main.html" %} {% load static %} {% block title %}
+Teacher Detail - BICTESMC {% endblock %} {% block content %}
+<style>
+  /* General Styles */
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+
+  .profile-container {
+    max-width: 800px;
+    padding-bottom: -0.4rem;
+    margin-bottom: 1.2rem !important;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    /* Added for cross button positioning */
+  }
+
+  .profile-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  }
+  /* Cross Button */
+
+  .cross-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #6a11cb;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .cross-button:hover {
+    color: #2575fc;
+    transform: scale(1.2);
+  }
+  /* Profile Picture Section */
+
+  .profile-picture-section {
+    flex: 1;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+  }
+
+  .profile-picture {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .profile-picture:hover {
+    transform: scale(1.05);
+  }
+  /* Profile Details Section */
+
+  .profile-details-section {
+    flex: 2;
+    padding: 30px;
+  }
+
+  .teacher-name {
+    font-size: 32px;
+    font-weight: 600;
+    color: #6a11cb;
+    margin-bottom: 10px;
+  }
+
+  .designation {
+    font-size: 20px;
+    color: #2575fc;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .details {
+    margin-bottom: 20px;
+  }
+
+  .details p {
+    font-size: 16px;
+    color: #555;
+    margin: 10px 0;
+  }
+
+  .details p strong {
+    color: #6a11cb;
+  }
+
+  .hire-date {
+    font-size: 14px;
+    color: #777;
+    margin-top: 10px;
+  }
+  /* Social Media Links */
+
+  .social-media {
+    margin-top: 20px;
+    margin-left: 19%;
+  }
+
+  .social-media a {
+    display: inline-block;
+    margin-right: 15px;
+    color: #6a11cb;
+    font-size: 24px;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .social-media a:hover {
+    color: #2575fc;
+    transform: translateY(-3px);
+  }
+  /* Edit Profile Button */
+
+  .edit-profile-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .edit-profile-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(106, 17, 203, 0.3);
+  }
+
+  .courselist {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-radius: 0.7rem;
+    padding: 20px;
+    background: #fff;
+  }
+
+  .courselist-header {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .material-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-decoration: none;
+    color: #333;
+  }
+
+  @media (max-width: 768px) {
+    .profile-container {
+      flex-direction: column;
+    }
+    .courselist {
+      width: 95%;
+    }
+  }
+</style>
+
+<!-- Add Font Awesome for Icons -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  rel="stylesheet"
+/>
+
+<div class="profile-container mt-4">
+  <!-- Cross Button -->
+
+  <!-- Profile Picture Section -->
+  <div class="profile-picture-section">
+    <img
+      src="{% static 'images/default-profile-picture1.jpg' %}"
+      alt="Profile Picture"
+      class="profile-picture"
+    />
+  </div>
+
+  <!-- Profile Details Section -->
+  <div class="profile-details-section">
+    <div class="teacher-name">Santosh Dahal</div>
+    <div class="designation">Focal Person, Assistant Teacher</div>
+
+    <div class="details">
+      <p><strong>Email:</strong> santoshdahal123@gmail.com</p>
+      <p><strong>Phone:</strong> 9812345677</p>
+      <p><strong>Address:</strong> Sundarharincha - 12, Morange</p>
+      <!-- <p><strong>Rating:</strong>4.5/5</p> -->
+    </div>
+
+    <div class="hire-date"><strong>Hire Date:</strong> January 15, 2018</div>
+
+    <!-- Social Media Links -->
+    <div class="social-media">
+      <a href="https://facebook.com" target="_blank" title="Facebook"
+        ><i class="fab fa-facebook"></i
+      ></a>
+      <a href="https://twitter.com" target="_blank" title="Twitter"
+        ><i class="fab fa-twitter"></i
+      ></a>
+      <a href="https://linkedin.com" target="_blank" title="LinkedIn"
+        ><i class="fab fa-linkedin"></i
+      ></a>
+      <a href="https://instagram.com" target="_blank" title="Instagram"
+        ><i class="fab fa-instagram"></i
+      ></a>
+      <a href="https://github.com" target="_blank" title="GitHub"
+        ><i class="fab fa-github"></i
+      ></a>
+      <!-- WhatsApp Link -->
+      <a href="https://wa.me/9812345677" target="_blank" title="WhatsApp"
+        ><i class="fab fa-whatsapp"></i
+      ></a>
+      <!-- Google Classroom Link -->
+      <a
+        href="https://classroom.google.com"
+        target="_blank"
+        title="Google Classroom"
+        ><i class="fab fa-google"></i
+      ></a>
+    </div>
+
+    <!-- <button class="edit-profile-btn">Edit Profile</button> -->
+  </div>
+</div>
+
+<div class="card courselist ps-3 pe-3 pt-2 pb-2">
+  <p class="fw-bold courselist-header text-center">Course</p>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item d-flex material-item">
+      <a
+        href="/api/course-detail/1"
+        target="_blank"
+        class="material-link d-flex align-items-center w-100 text-decoration-none"
+      >
+        <span class="flex-grow-1">Python Programming</span>
+        <span class="export-text ms-2">Explore</span>
+      </a>
+    </li>
+
+    <li class="list-group-item d-flex material-item">
+      <a
+        href="/api/course-detail/1"
+        target="_blank"
+        class="material-link d-flex align-items-center w-100 text-decoration-none"
+      >
+        <span class="flex-grow-1">Research In Education</span>
+        <span class="export-text ms-2">Explore</span>
+      </a>
+    </li>
+
+    <li class="list-group-item d-flex material-item">
+      <a
+        href="/api/course-detail/1"
+        target="_blank"
+        class="material-link d-flex align-items-center w-100 text-decoration-none"
+      >
+        <span class="flex-grow-1">Web Development</span>
+        <span class="export-text ms-2">Export</span>
+      </a>
+    </li>
+
+    <li class="list-group-item d-flex material-item">
+      <a
+        href="/api/course-detail/1"
+        target="_blank"
+        class="material-link d-flex align-items-center w-100 text-decoration-none"
+      >
+        <span class="flex-grow-1">Java</span>
+        <span class="export-text ms-2">Export</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+{% endblock %}

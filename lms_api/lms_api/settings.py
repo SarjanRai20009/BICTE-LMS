@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-9qe10tk3=n_n1(fw8av*$o(+794_ui(6z_@*zl3$^_9q@btr6s
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# FORMS_URLFIELD_ASSUME_HTTPS = True 
+# ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = []
+# for testing
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.100.186']
 
 
 # Application definition
@@ -40,14 +43,28 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # user define apps register here
+    
+    # 'rest_framework.authtoken',
+    
     'main', 
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'corsheaders',
+    'django_extensions',
 ]
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',  # Ensure only authenticated users can access
+#     ],
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',  # Ensure this is included
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -152,8 +169,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), 
+                     os.path.join(BASE_DIR, 'node_modules'), 
+                    ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -162,3 +181,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = True
+# FORMS_URLFIELD_ASSUME_HTTPS = True

@@ -1,0 +1,81 @@
+<!-- Stock Ticker
+<a href="/api/notic-list/" class="text-decoration-none text-light fw-bold">
+    <div class="latest-notice-label">Latest Notice</div>
+</a>
+<div class="stock-ticker">
+    <div class="ticker-container">
+        <ul class="ticker-ul">
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">- October 21, 2024</span>
+            </li>
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">October 21, 2024</span>
+            </li>
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">October 21, 2024</span>
+            </li>
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">October 21, 2024</span>
+            </li>
+        </ul>
+
+
+
+        <ul class="ticker-ul" caria-hidden="true">
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">October 21, 2024</span>
+            </li>
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">October 21, 2024</span>
+            </li>
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">October 21, 2024</span>
+            </li>
+            <li class="notice-list">
+                <span class="title"><a href="#">7th Semester, Terminal Exam</a></span>
+                <span class="timestamp">October 21, 2024</span>
+            </li>
+        </ul>
+    </div>
+</div> -->
+
+<!-- notice-slider.html -->
+<!-- Stock Ticker -->
+<a href="/api/notice/" class="text-decoration-none text-light fw-bold">
+  <div class="latest-notice-label">Latest Notice</div>
+</a>
+<div class="stock-ticker">
+  <div class="ticker-container">
+    <ul class="ticker-ul">
+      {% for notice in latest_notices %}
+      <li class="notice-list">
+        <span class="title"
+          ><a href="/api/notice/{{notice.id}}">{{ notice.title }}</a></span
+        >
+        <span class="timestamp text-danger fw-bold">
+          - {{ notice.timestamp|date:"F d, Y" }}</span
+        >
+      </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Duplicated List for Seamless Animation -->
+    <ul class="ticker-ul" aria-hidden="true">
+      {% for notice in latest_notices %}
+      <li class="notice-list">
+        <span class="title"><a href="#">{{ notice.title }}</a></span>
+        <span class="timestamp text-danger fw-bold">
+          - {{ notice.timestamp|date:"F d, Y" }}</span
+        >
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

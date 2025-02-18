@@ -1,0 +1,255 @@
+{% extends "base_template/main.html" %} {% load static %} {% block title %} Teacher List - BICTESMC{% endblock %} {% block content %}
+<div class="container mt-4">
+    <!-- Teacher list start -->
+    <h3 class="pb-1 mb-4 mt-5 text-center fw-bold animate__animated animate__fadeInDown">
+        Teachers
+    </h3>
+    <div class="row md-4">
+        <!-- Teacher block start -->
+        {% for teacher in teachers %}
+        <div class="col-md-3 mb-4">
+            <div class="card teacher-card animate__animated animate__fadeInUp bg-dark">
+                <a href="#">
+                    <div class="image-container">
+                        {% if teacher.profile_picture %}
+                        <img src="{{ teacher.profile_picture.url }}" class="card-img-top teacher-image" alt="{{ teacher.t_full_name }}" /> {% else %}
+                        <img src="{% static 'images/default_profile_image.jpg' %}" class="card-img-top teacher-image" alt="No Image" /> {% endif %}
+                    </div>
+                </a>
+                <div class="card-body text-light">
+                    <h5 class="card-title text-center">
+                        <a href="#" class="text-light teacher-name">{{ teacher.t_full_name }}</a
+            >
+          </h5>
+          <p class="card-text text-center">{{ teacher.designation }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <!-- Teacher block end -->
+  </div>
+  <!-- Teacher list end -->
+
+  <h3 class="pb-1 mb-4 mt-5 text-center animate__animated animate__fadeInDown">
+    Teacher Quotes
+  </h3>
+  <div
+    id="carouselExampleIndicators"
+    class="carousel slide student-testimonial bg-dark text-white py-5"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="1"
+        aria-label="Slide 2"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="2"
+        aria-label="Slide 3"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="3"
+        aria-label="Slide 4"
+      ></button>
+    </div>
+    <div class="carousel-inner">
+      <!-- Slides -->
+      <div class="carousel-item active">
+        <figure class="text-center">
+          <blockquote class="blockquote">
+            <p>
+              Sukuna Multiple Campus sharpened my ICT skills with practical
+              learning and great faculty.
+            </p>
+          </blockquote>
+          <figcaption class="blockquote-footer text-light fw-bold">
+            Sarjan Rai
+          </figcaption>
+        </figure>
+      </div>
+      <div class="carousel-item">
+        <figure class="text-center">
+          <blockquote class="blockquote">
+            <p>
+              Supportive mentors and real-world training made my BICTE journey
+              valuable.
+            </p>
+          </blockquote>
+          <figcaption class="blockquote-footer text-light fw-bold">
+            Samjhana Bhattarai
+          </figcaption>
+        </figure>
+      </div>
+      <div class="carousel-item">
+        <figure class="text-center">
+          <blockquote class="blockquote">
+            <p>
+              BICTE at Sukuna gave me hands-on experience and confidence for the
+              tech world.
+            </p>
+          </blockquote>
+          <figcaption class="blockquote-footer text-light fw-bold">
+            Dhairyata Rijal
+          </figcaption>
+        </figure>
+      </div>
+      <div class="carousel-item">
+        <figure class="text-center">
+          <blockquote class="blockquote">
+            <p>
+              BICTE at Sukuna gave best ICT skills with an active learning
+              environment.
+            </p>
+          </blockquote>
+          <figcaption class="blockquote-footer text-light fw-bold">
+            Ranjan BK
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <!-- Students Testimonial End -->
+</div>
+
+<style>
+  /* Animations */
+
+  .teacher-name {
+    text-decoration: none;
+  }
+
+  .teacher-name:hover {
+    text-decoration: underline;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate__animated {
+    animation-duration: 1s;
+  }
+
+  .animate__fadeInDown {
+    animation-name: fadeIn;
+  }
+
+  .animate__fadeInUp {
+    animation-name: fadeIn;
+  }
+  /* Teacher Card Hover Effect */
+
+  .teacher-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .teacher-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .teacher-name {
+    transition: color 0.3s ease;
+  }
+
+  .teacher-name:hover {
+    color: #007bff !important;
+  }
+  /* Responsive Design */
+
+  @media (max-width: 768px) {
+    .col-md-3 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .col-md-3 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+  /* Testimonial Section */
+
+  .student-testimonial {
+    border-radius: 1.2rem;
+  }
+
+  .carousel-item {
+    padding: 20px;
+  }
+
+  .blockquote {
+    font-size: 1.2rem;
+  }
+
+  .blockquote-footer {
+    margin-top: 10px;
+  }
+  /* Image Container and Image Styling */
+
+  .image-container {
+    
+        width: 100%;
+        height: 200px;
+        /* Set a fixed height for the image container */
+    
+        overflow: hidden;
+       /* Hide overflow to prevent stretching */
+  }
+
+  .teacher-image {
+
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    /* Maintain aspect ratio without stretching */
+  }
+</style>
+
+<!-- Add Animate.css for animations -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/>
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'student_template/st_base_template.html' %} {% block title %} Leaderboard - BICTE LMS{% endblock %} {% load static %} {% block content %}
+<div class="container mt-5">
+    <div class="search-bar ps-5">
+        <form class="d-flex justify-content-center" action="{% url 'search' %}" method="get">
+            <input type="text" class="form-control search-input" name="q" placeholder="Search courses, assignments, quizzes..." aria-label="Search" />
+            <button class="btn btn-primary search-btn" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+    </div>
+</div>
+<h1 class="text-center mb-5">Quiz Leaderboard</h1>
+
+<div class="row">
+    <!-- Left Column: Top 3 Players -->
+    <div class="col-md-6">
+        <div class="row justify-content-center">
+            <!-- Second Place -->
+            <div class="col-md-4 text-center mb-4">
+                <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInLeft">
+                    <a href="#">
+                        <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="Second Place" style="width: 120px; height: 120px" />
+                    </a>
+                    <h4>John Doe</h4>
+                    <p class="text-muted">Semester: 5</p>
+                    <p class="text-success fw-bold">Score: 850</p>
+                </div>
+            </div>
+
+            <!-- First Place -->
+            <div class="col-md-4 text-center mb-4">
+                <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInUp">
+                    <a href="#">
+                        <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="First Place" style="width: 150px; height: 150px" />
+                    </a>
+                    <h3>Jane Smith</h3>
+                    <p class="text-muted">Semester: 6</p>
+                    <p class="text-success fw-bold">Score: 950</p>
+                </div>
+            </div>
+
+            <!-- Third Place -->
+            <div class="col-md-4 text-center mb-4">
+                <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInRight">
+                    <a href="#">
+                        <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="Third Place" style="width: 120px; height: 120px" />
+                    </a>
+                    <h4>Alice Johnson</h4>
+                    <p class="text-muted">Semester: 4</p>
+                    <p class="text-success fw-bold">Score: 800</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Top 10 Leaderboard Table -->
+    <div class="col-md-6">
+        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="card-body">
+                <h3 class="text-center mb-4">Top 10 Players</h3>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Rank</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Semester</th>
+                            <th scope="col">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Jane Smith</td>
+                            <td>6</td>
+                            <td class="text-success fw-bold">950</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>John Doe</td>
+                            <td>5</td>
+                            <td class="text-success fw-bold">850</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>Alice Johnson</td>
+                            <td>4</td>
+                            <td class="text-success fw-bold">800</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td>Michael Brown</td>
+                            <td>7</td>
+                            <td>780</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">5</th>
+                            <td>Emily Davis</td>
+                            <td>3</td>
+                            <td>760</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">6</th>
+                            <td>David Wilson</td>
+                            <td>5</td>
+                            <td>740</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">7</th>
+                            <td>Sarah Miller</td>
+                            <td>6</td>
+                            <td>720</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">8</th>
+                            <td>James Moore</td>
+                            <td>4</td>
+                            <td>700</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">9</th>
+                            <td>Linda Taylor</td>
+                            <td>5</td>
+                            <td>680</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">10</th>
+                            <td>Robert Anderson</td>
+                            <td>6</td>
+                            <td>660</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Add Animate.css for animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    /* Search Bar Styles */
+    
+    .search-bar {
+        max-width: 600px;
+        margin: 0 auto;
+        padding-bottom: 2rem;
+    }
+    
+    .search-input {
+        border: 3px solid black;
+        background-color: rgba(255, 255, 255, 0.889);
+        border-radius: 25px;
+        padding: 10px 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-btn {
+        border: 1px solid black;
+        border-radius: 50%;
+        padding: 10px 20px;
+        margin-left: 10px;
+    }
+    
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+    
+    h3,
+    h4 {
+        color: #333;
+    }
+    
+    .text-muted {
+        font-size: 0.9rem;
+    }
+    
+    .text-success {
+        font-size: 1.2rem;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .table th,
+    .table td {
+        text-align: center;
+    }
+</style>
+{% endblock %}

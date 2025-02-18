@@ -1,0 +1,590 @@
+{% extends 'student_template/st_base_template.html' %} {% load static %} {% block content %}
+
+<!-- Latest Notice Section -->
+<div class="latest-notice-section">
+    <a href="/api/student-notice-list/" class="text-decoration-none text-light fw-bold">
+        <div class="latest-notice-label">Latest Notice</div>
+    </a>
+    <div class="stock-ticker">
+        <div class="ticker-container">
+            <ul class="ticker-ul">
+                {% for notice in latest_notices %}
+                <li class="notice-list">
+                    <span class="title"><a href="#">{{ notice.title }}</a></span>
+                    <span class="timestamp text-danger fw-bold">
+            - {{ notice.timestamp|date:"F d, Y" }}</span
+          >
+        </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Duplicated List for Seamless Animation -->
+      <ul class="ticker-ul" aria-hidden="true">
+        {% for notice in latest_notices %}
+        <li class="notice-list">
+          <span class="title"><a href="#">{{ notice.title }}</a></span>
+                    <span class="timestamp text-danger fw-bold">
+            - {{ notice.timestamp|date:"F d, Y" }}</span
+          >
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Welcome Section -->
+<div class="welcome-section text-center">
+  <h1 class="mb-4">
+    Welcome, <strong>{{ student.st_name }}</strong><br />to BICTE LMS
+  </h1>
+  <p class="mb-4">Your online learning platform for better education.</p>
+  <!-- Search Bar -->
+  <div class="search-bar ps-5">
+    <form
+      id="searchForm"
+      class="d-flex justify-content-center"
+      action="{% url 'search' %}"
+      method="get"
+    >
+      <input
+        type="text"
+        class="form-control search-input"
+        name="q"
+        placeholder="Search courses, assignments, quizzes..."
+        aria-label="Search"
+      />
+      <button class="btn btn-primary search-btn" type="submit">
+        <i class="bi bi-search"></i>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Slider Section -->
+<div class="slider_head text-center">
+  <h3>BICTE Galary</h3>
+</div>
+<div class="slider-section mb-5">
+  <div
+    id="carouselExampleControls"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-inner">
+      <!-- Slide 1 -->
+      <div class="carousel-item active">
+        <div class="carousel-image-container">
+          <img
+            src="{% static 'images/college_image.jpg' %}"
+            class="d-block w-100 carousel-image"
+            alt="Slide 1"
+          />
+          <div class="carousel-hover-overlay">
+            <h3 class="carousel-title">Slide 1 Title</h3>
+            <p class="carousel-description">
+              This is a short description for Slide 1.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-item">
+        <div class="carousel-image-container">
+          <img
+            src="{% static 'images/sukuna_program_2.jpg' %}"
+            class="d-block w-100 carousel-image"
+            alt="Slide 2"
+          />
+          <div class="carousel-hover-overlay">
+            <h3 class="carousel-title">Slide 2 Title</h3>
+            <p class="carousel-description">
+              This is a short description for Slide 2.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="carousel-item">
+        <div class="carousel-image-container">
+          <img
+            src="{% static 'images/sukuna_program_3.jpg' %}"
+            class="d-block w-100 carousel-image"
+            alt="Slide 3"
+          />
+          <div class="carousel-hover-overlay">
+            <h3 class="carousel-title">Slide 3 Title</h3>
+            <p class="carousel-description">
+              This is a short description for Slide 3.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="carousel-item">
+        <div class="carousel-image-container">
+          <img
+            src="{% static 'images/sukuna_program_7.jpg' %}"
+            class="d-block w-100 carousel-image"
+            alt="Slide 4"
+          />
+          <div class="carousel-hover-overlay">
+            <h3 class="carousel-title">Slide 4 Title</h3>
+            <p class="carousel-description">
+              This is a short description for Slide 4.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="carousel-item">
+        <div class="carousel-image-container">
+          <img
+            src="{% static 'images/sukuna_program_5.jpg' %}"
+            class="d-block w-100 carousel-image"
+            alt="Slide 5"
+          />
+          <div class="carousel-hover-overlay">
+            <h3 class="carousel-title">Slide 5 Title</h3>
+            <p class="carousel-description">
+              This is a short description for Slide 5.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6 -->
+      <div class="carousel-item">
+        <div class="carousel-image-container">
+          <img
+            src="{% static 'images/sukuna_program_6.jpg' %}"
+            class="d-block w-100 carousel-image"
+            alt="Slide 6"
+          />
+          <div class="carousel-hover-overlay">
+            <h3 class="carousel-title">Slide 6 Title</h3>
+            <p class="carousel-description">
+              This is a short description for Slide 6.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 7 -->
+      <div class="carousel-item">
+        <div class="carousel-image-container">
+          <img
+            src="{% static 'images/sukuna_program_1.jpg' %}"
+            class="d-block w-100 carousel-image"
+            alt="Slide 7"
+          />
+          <div class="carousel-hover-overlay">
+            <h3 class="carousel-title">Slide 7 Title</h3>
+            <p class="carousel-description">
+              This is a short description for Slide 7.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Controls -->
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleControls"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+        </div>
+    </div>
+
+    <!-- Dashboard Cards Section -->
+    <div class="dashboard-cards">
+        <div class="row">
+            <!-- Courses Card -->
+            <div class="col-md-6">
+                <div class="card dashboard-card p-3 shadow-lg">
+                    <div class="card-icon">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h3 class="text-center">Courses</h3>
+                    <p class="text-center">Explore available courses.</p>
+                    <!-- <a href="/course" class="btn btn-primary mb-3">View Semester Details</a> -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Title</th>
+                                    <th>Teacher</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                <tr>
+                                    <td>{{ course.subject_code }}
+                                    </td>
+                                    <td>
+                                        <a class="text-decoration-none " href="{% url 'st-course-detail' course.id %}">{{ course.title }}
+                                            </a>
+                                    </td>
+                                    <td><a class="text-decoration-none " href="{% url 'st-course-detail' course.id %}">{{ course.teacher.t_full_name }}</a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments Card -->
+            <div class="col-md-6">
+                <div class="card dashboard-card p-3 shadow-lg">
+                    <div class="card-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <h3 class="text-center">Assignments</h3>
+                    <p class="text-center">Check and submit your assignments.</p>
+                    <!-- <a href="/assignment " class="btn btn-primary mb-3">View All Assignments</a -->
+                    >
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Assignment Title</th>
+                                    <th>Course</th>
+                                    <th>Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for assignment in assignments %}
+                                <tr>
+                                    <td>{{ assignment.title }}</td>
+                                    <td>{{ assignment.course.title }}</td>
+                                    <td>{{ assignment.deadline|date:"F d, Y H:i " }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quizzes Card -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card dashboard-card p-3 shadow-lg">
+                    <div class="card-icon">
+                        <i class="bi bi-question-circle"></i>
+                    </div>
+                    <h3 class="text-center">Quizzes</h3>
+                    <p>Take quizzes and test your knowledge.</p>
+                    <a href="/quiz " class="btn btn-primary mb-3">View All Quizzes</a>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Quiz Title</th>
+                                    <th>Course</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for quiz in quizzes %}
+                                <tr>
+                                    <td>{{ quiz.title }}</td>
+                                    <td>{{ quiz.course.title }}</td>
+                                    <td>
+                                        {% if quiz.is_active %}
+                                        <span class="text-success">Active</span> {% else %}
+                                        <span class="text-danger">Inactive</span> {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Styles -->
+    <style>
+        .slider_head {
+            margin-top: 2rem !important;
+            margin-bottom: 3rem !important;
+            font-weight: bold !important;
+        }
+        /* Slider Section Styles */
+        
+        .slider-section {
+            margin: 2rem 0;
+            max-width: 1400px;
+            max-height: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            overflow: hidden;
+        }
+        
+        .carousel-inner {
+            max-height: 500px;
+        }
+        
+        .carousel-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+        /* Other Styles (unchanged) */
+        
+        .stock-ticker {
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            margin-top: 1rem;
+            margin-bottom: 1.6rem;
+            font-size: 1rem;
+            padding-block: 4px;
+            border-block: 0.7px solid red;
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+            height: 4.3rem;
+        }
+        
+        .stock-ticker .ticker-container {
+            display: flex;
+            gap: 2rem;
+            animation: scroll 20s linear infinite;
+        }
+        
+        .stock-ticker ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+            flex-shrink: 0;
+            padding-bottom: 10px;
+        }
+        
+        @keyframes scroll {
+            to {
+                transform: translateX(calc(-100% - 2rem));
+            }
+        }
+        
+        .stock-ticker .ticker-container:hover {
+            animation-play-state: paused;
+        }
+        
+        .stock-ticker .title {
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .stock-ticker .timestamp {
+            margin-inline: 4px;
+        }
+        
+        .stock-ticker .title a {
+            text-decoration: none;
+            color: black;
+        }
+        
+        .notice-list {
+            margin-top: 1rem;
+        }
+        
+        .latest-notice-label {
+            background-color: #daa925;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin: 1rem auto;
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;
+        }
+        /* Welcome Section Styles */
+        
+        .welcome-section {
+            margin: 4rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .welcome-section p {
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+        /* Search Bar Styles */
+        
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            border: 3px solid black;
+            background-color: rgba(255, 255, 255, 0.889);
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-btn {
+            border: 1px solid black;
+            border-radius: 50%;
+            padding: 10px 20px;
+            margin-left: 10px;
+        }
+        /* Dashboard Cards Section Styles */
+        
+        .dashboard-cards {
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        
+        .dashboard-card {
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-icon {
+            text-align: center;
+            font-size: 3rem;
+            color: #2575fc;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            color: #2f3542;
+            font-weight: 600;
+        }
+        
+        .dashboard-card p {
+            font-size: 1rem;
+            color: #57606f;
+        }
+        
+        .dashboard-card .btn {
+            margin-top: 1rem;
+            background-color: #2575fc;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dashboard-card .btn:hover {
+            background-color: #6a11cb;
+        }
+        /* Table Styles */
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+        
+        .text-success {
+            color: #28a745 !important;
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        /* Carousel Hover Effect */
+        
+        .carousel-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .carousel-hover-overlay {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: bottom 0.5s ease;
+        }
+        
+        .carousel-image {
+            border-radius: 1rem;
+        }
+        
+        .carousel-image-container:hover .carousel-hover-overlay {
+            bottom: 0;
+        }
+        
+        .carousel-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .carousel-description {
+            font-size: 1rem;
+            padding: 0 20px;
+        }
+    </style>
+
+    <!-- JavaScript to Ensure Form Submission on Enter -->
+    <script>
+        document
+            .getElementById("searchForm ")
+            .addEventListener("keypress ", function(e) {
+                if (e.key === "Enter ") {
+                    e.preventDefault(); // Prevent the default form submission
+                    this.submit(); // Submit the form
+                }
+            });
+    </script>
+
+    {% endblock %}

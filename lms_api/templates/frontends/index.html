@@ -1,0 +1,387 @@
+{% extends "base_template/main.html" %} {% load static %} {% block title %}Home - BICTESMC{% endblock %} {% block content %} {% include 'frontends/notice-slider.html' %}
+
+<div class="container mt-4 ">
+
+    <!-- Course list start -->
+    <h3 class="pb-1 mb-4">
+        Courses
+        <a href="/api/latest-course/" class="float-end fs-4 for-more-link">
+            <span>See All</span>
+        </a>
+    </h3>
+    <div class="row ">
+        <!-- {Courses block start} -->
+
+        <div class="col-md-3">
+            <div class="card md-4">
+                <a href="/api/course-detail/1"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="/api/course-detail/1">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+
+        <!-- {Courses block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/course-detail/2"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="#">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+
+        <!-- {Courses block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/course-detail/3"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="#">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+
+        <!-- {Courses block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/course-detail/4"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="#">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+    </div>
+    <!-- Course list end -->
+
+    <!-- Popular courses list -->
+
+
+    <!-- Course list start -->
+    <h3 class="pb-1 mb-4 mt-5">
+        Pouplar Courses
+        <a href="/api/popular-course/" class="float-end fs-4 for-more-link">
+            <span>See All</span>
+        </a>
+    </h3>
+    <div class="row">
+        <!-- {Courses block start} -->
+
+        <div class="col-md-3">
+            <div class="card md-4">
+                <a href="/api/course-detail/1"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="/api/course-detail/1">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="-title">
+                        <span class="float-start">Rating: 4/5</span>
+                        <span class="float-end">VIews: 23</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+
+        <!-- {Courses block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/course-detail/2"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="#">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="-title">
+                        <span class="float-start">Rating: 4/5</span>
+                        <span class="float-end">VIews: 23</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+
+        <!-- {Courses block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/course-detail/3"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="#">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="-title">
+                        <span class="float-start">Rating: 4/5</span>
+                        <span class="float-end">VIews: 23</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+
+        <!-- {Courses block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/course-detail/4"><img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="#">Course title</a>
+                    </h5>
+                    <p class="card-text text-center">Course description</p>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="-title">
+                        <span class="float-start">Rating: 4/5</span>
+                        <span class="float-end">VIews: 23</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- {Courses block emd} -->
+    </div>
+
+
+    <!-- Teacehr list start -->
+    <h3 class="pb-1 mb-4 mt-5 ">
+        Teachers
+        <a href="/api/all-teacher-list/" class="float-end fs-4 for-more-link">
+            <span>See All</span>
+        </a>
+    </h3>
+    <div class="row md-4">
+        <!-- {Teacher block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/base-teacher-details/1"><img src="{% static 'images/default-profile-picture1.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="/api/base-teacher-details/1">Teacher Name</a>
+                    </h5>
+                    <p class="card-text text-center">Description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Teacher block end} -->
+
+        <!-- {Teacher block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/base-teacher-details/2"><img src="{% static 'images/default-profile-picture1.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="/api/base-teacher-details/2">Teacher Name</a>
+                    </h5>
+                    <p class="card-text text-center">Description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Teacher block end} -->
+
+        <!-- {Teacher block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/base-teacher-details/3"><img src="{% static 'images/default-profile-picture1.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="/api/base-teacher-details/3">Teacher Name</a>
+                    </h5>
+                    <p class="card-text text-center">Description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Teacher block end} -->
+        <!-- {Teacher block start} -->
+        <div class="col-md-3">
+            <div class="card">
+                <a href="/api/base-teacher-details/4"><img src="{% static 'images/default-profile-picture1.jpg' %}" class="card-img-top" alt="No Image" /></a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="/api/base-teacher-details/4">Teacher Name</a>
+                    </h5>
+                    <p class="card-text text-center">Description</p>
+                </div>
+            </div>
+        </div>
+        <!-- {Teacher block end} -->
+    </div>
+    <!-- Course list end -->
+
+    <!-- Students Testomonial Start -->
+    <h3 class="pb-1 mb-4 mt-5 text-center">Students Testimonial</h3>
+
+    <div id="carouselExampleIndicators" class="carousel slide student-testomonal bg-primary text-white py-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        </div>
+
+        <!-- slider List start -->
+
+        <!-- Slide 1 -->
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <!-- Blockquote Start -->
+                <!-- <Blockquote></Blockquote> -->
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>
+                            Sukuna Multiple Campus sharpened my ICT skills with practical learning and great faculty.
+                        </p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer text-light fw-bold">
+                        Sarjan Rai
+                        <!-- Someone famous in <cite title="Source Title">Source Title</cite> -->
+                    </figcaption>
+                </figure>
+                <!-- Blockquote End -->
+            </div>
+
+            <!-- Slide 1 End-->
+
+            <!-- Slide 2 -->
+
+            <div class="carousel-item">
+                <!-- Blockquote Start -->
+                <!-- <img src="..." class="d-block w-100" alt="..."> -->
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>
+                            Supportive mentors and real-world training made my BICTE journey valuable.
+                        </p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer text-light fw-bold">
+                        Samjhana Bhattarai
+                        <!-- Someone famous in <cite title="Source Title">Source Title</cite> -->
+                    </figcaption>
+                </figure>
+                <!-- Blockquote End -->
+            </div>
+
+            <!-- Slide 2 End-->
+
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <!-- Blockquote Start -->
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>
+                            BICTE at Sukuna gave me hands-on experience and confidence for the tech world.
+                        </p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer text-light fw-bold">
+                        Dhairyata Rijal
+                        <!-- Someone famous in <cite title="Source Title">Source Title</cite> -->
+                    </figcaption>
+                </figure>
+
+                <!-- Blockquote End -->
+            </div>
+
+            <!-- Slide 3 End-->
+
+            <!-- Slide 4-->
+            <div class="carousel-item">
+                <!-- Blockquote Start -->
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>
+                            BICTE at Sukuna gave best ICT skils with active learning environment.
+                        </p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer text-light fw-bold">
+                        Ranjan BK
+                        <!-- Someone famous in <cite title="Source Title">Source Title</cite> -->
+                    </figcaption>
+                </figure>
+
+                <!-- Blockquote End -->
+            </div>
+
+            <!-- Slide 4 End-->
+        </div>
+
+        <!-- slider List end -->
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <!-- Students Testomonial End -->
+</div>
+<style>
+    .student-testomonal {
+        border-radius: 1.2rem;
+    }
+    
+    .for-more-link {
+        color: black;
+        text-decoration: none;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .for-more-link::after {
+        content: "→";
+        font-weight: bold;
+        position: absolute;
+        left: 50%;
+        color: white;
+        background-color: rgb(34, 59, 166);
+        top: 50%;
+        border-radius: 50%;
+        padding-left: 0.7rem;
+        padding-right: 0.7rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.4rem;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .for-more-link:hover span {
+        opacity: 0;
+    }
+    
+    .for-more-link:hover::after {
+        opacity: 1;
+    }
+    
+    .for-more-link:active {
+        opacity: 1;
+    }
+    
+    .end_block {
+        box-shadow: inset 0 4px 6px -1px rgba(0, 0, 0, 0.1), inset 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+</style>
+{% endblock %}

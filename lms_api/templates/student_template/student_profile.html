@@ -1,0 +1,58 @@
+{% extends 'student_template/st_base_template.html' %} {% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Student Profile</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle" alt="Profile Picture" />
+                    </div>
+                    <h4 class="text-center">John Doe</h4>
+                    <p class="text-center text-muted">
+                        BICTE Student | Sukuna Multiple Campus
+                    </p>
+                    <hr />
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Email:</strong> johndoe@example.com
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Enrollment Number:</strong> BICTE-2025-001
+                        </li>
+                        <li class="list-group-item"><strong>Year:</strong> Third Year</li>
+                        <li class="list-group-item">
+                            <strong>Completed Courses:</strong> 10
+                        </li>
+                        <li class="list-group-item"><strong>Ongoing Courses:</strong> 3</li>
+                        <li class="list-group-item">
+                            <strong>Assignments Pending:</strong> 2
+                        </li>
+                    </ul>
+                    <div class="text-center mt-3">
+                        <a href="#" class="btn btn-primary">Edit Profile</a>
+                        <a href="#" class="btn btn-danger">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document
+        .getElementById("profileDropdown")
+        .addEventListener("change", function() {
+            console.log("Dropdown changed"); // Debugging line
+            var selectedImage = this.value;
+            if (selectedImage) {
+                var fileInput = document.getElementById("profilepicture");
+                var file = new File([""], selectedImage.split("/").pop(), {
+                    type: "image/jpeg",
+                });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+            }
+        });
+</script>
+{% endblock %}

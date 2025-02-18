@@ -1,0 +1,151 @@
+{% extends "student_template/st_base_template.html" %} {% block title %} Latest
+Notices & News - BICTE LMS {% endblock %} {% load static %} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- News Section (Left - Larger Space) -->
+    <div class="col-md-8">
+      <h2 class="mb-4 text-center" style="color: #007bff">Latest News</h2>
+      <div class="card shadow-sm p-3 mb-5 rounded latestnews_section">
+        <div class="card-body">
+          <div class="list-group">
+            <!-- Static News Items -->
+            <div
+              class="list-group-item list-group-item-action flex-column align-items-start mb-3 animate__animated animate__fadeInLeft"
+              style="background-color: #f8f9fa; border: 1px solid #e9ecef"
+            >
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" style="color: #007bff">
+                  New Course Launched!
+                </h5>
+                <small class="text-muted">October 10, 2023</small>
+              </div>
+              <p class="mb-1" style="color: #333">
+                We are excited to announce the launch of our new course on
+                Artificial Intelligence. Enroll now to get early access!
+              </p>
+            </div>
+            <div
+              class="list-group-item list-group-item-action flex-column align-items-start mb-3 animate__animated animate__fadeInLeft"
+              style="background-color: #f8f9fa; border: 1px solid #e9ecef"
+            >
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" style="color: #007bff">
+                  Campus Recruitment Drive
+                </h5>
+                <small class="text-muted">October 5, 2023</small>
+              </div>
+              <p class="mb-1" style="color: #333">
+                A campus recruitment drive will be held on October 20, 2023.
+                Prepare your resumes and be ready!
+              </p>
+            </div>
+            <div
+              class="list-group-item list-group-item-action flex-column align-items-start mb-3 animate__animated animate__fadeInLeft"
+              style="background-color: #f8f9fa; border: 1px solid #e9ecef"
+            >
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" style="color: #007bff">
+                  Holiday Announcement
+                </h5>
+                <small class="text-muted">October 1, 2023</small>
+              </div>
+              <p class="mb-1" style="color: #333">
+                The college will remain closed on October 15, 2023, due to a
+                local festival. Happy holidays!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latest Notices Section (Right - Smaller Space) -->
+    <div class="col-md-4">
+      <h2 class="mb-4 text-center" style="color: red">Latest Notices</h2>
+      {% if notices %}
+      <div class="list-group">
+        {% for notice in notices %}
+        <a
+          href="{{ notice.notice.link }}"
+          class="list-group-item list-group-item-action flex-column align-items-start mb-3 animate__animated animate__fadeInRight"
+          style="background-color: #f8f9fa; border: 1px solid #e9ecef"
+        >
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1" style="color: #007bff">
+              {{ notice.notice.title }}
+            </h5>
+            <small class="text-danger ps-1 fw-bold"
+              >{{ notice.notice.timestamp|date:"F d, Y" }}</small
+            >
+          </div>
+          <p class="mb-1" style="color: #333">
+            {{ notice.notice.description|truncatewords:20 }}
+          </p>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div
+        class="alert alert-warning text-center animate__animated animate__fadeIn"
+      >
+        No notices available.
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Add Animate.css for animations -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/>
+
+<!-- Custom CSS for additional styling -->
+<style>
+  body {
+    background-color: #ffffff;
+    /* Light gray background for the page */
+  }
+  .latestnews_section {
+    background-color: #ffffff;
+    box-shadow: 0 8px 15px rgba(15, 13, 13, 0.2),
+      0 4px 10px rgba(27, 27, 27, 0.2) !important;
+    border-radius: 8px;
+  }
+
+  .list-group-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .list-group-item:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f3a026 !important;
+    /* 
+    background-color: #e9ecef;
+    Slightly darker background on hover */
+  }
+
+  .card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    color: #007bff;
+    /* Consistent color for titles */
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+    /* Muted text color for dates */
+  }
+</style>
+{% endblock %}

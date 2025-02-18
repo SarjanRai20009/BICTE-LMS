@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+from django.db.models import Sum
+
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
 
@@ -12,17 +14,26 @@ from django.contrib.auth.hashers import make_password, check_password
 # Create your models here.
 
 class Teacher(models.Model):
-    # profile_picture = models.ImageField(upload_to='teacher_pics/', null=True, blank=True)  # Profile picture
-   
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ]
+    profile_picture = models.ImageField(upload_to='teacher_pics/', null=True, blank=True, default='images/default_profile_image.jpg')    
     t_full_name = models.CharField(max_length=50)
-    t_phone_number = models.CharField(max_length=40)
-    t_address = models.CharField(max_length=100)
+    designation = models.CharField(max_length=100, default='Teacher Assistant')
     
     t_email = models.EmailField(max_length=100, unique=True)
     t_password = models.CharField(max_length=255) 
     
+    t_phone_number = models.CharField(max_length=40)
+    t_address = models.CharField(max_length=100)
+    
+    
     hire_date = models.DateField()
-    designation = models.CharField(max_length=100, default='Lecturer')
+    
+    gender = models.CharField(max_length=10,choices=GENDER_CHOICES, verbose_name="Gender",
+        default='male')
     
     # courses = models.ManyToManyField("Course", related_name="teachers")
     
@@ -108,6 +119,7 @@ class Semester(models.Model):
 
 
 class Course(models.Model):    
+    syllabus_file = models.FileField(upload_to='syllabus_files/', null=True, blank=True) 
     subject_code = models.CharField(max_length=20)
     title = models.CharField(max_length=50)
     description = models.TextField()
@@ -115,7 +127,6 @@ class Course(models.Model):
     
     is_elective = models.BooleanField(default=False, blank=True, null=True)
 
-    # syllabus_file = models.FileField(upload_to='syllabus_files/', null=True, blank=True)  # Syllabus file
 
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, blank=True)
@@ -129,17 +140,30 @@ class Course(models.Model):
         
     def get_course_teacher(self):
         return self.teacher.t_full_name if self.teacher else "Not Assigned"
+
+class CourseObjectives(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='objectives', verbose_name="Course")
+    objective = models.CharField(max_length=255)
+   
+
+    def __str__(self):
+        return f"Objective for {self.course.title}"
+
+    class Meta:
+        verbose_name = "Course Objective"
+        verbose_name_plural = "Course Objectives"
+        
+class Student(models.Model):    
+    profile_picture = models.ImageField(upload_to='student_pics/', null=True, blank=True , default='no_image2.jpg') 
     
-class Student(models.Model):
-    # profile_picture = models.ImageField(upload_to='student_pics/', null=True, blank=True)  # Profile picture
-    st_exam_roll_no = models.CharField(max_length=8, default='00000000')  # Use CharField with fixed length and default value
-    st_reg_no = models.CharField(max_length=40, default='0-0-000-00-0000')  # Provide a default value
+    st_exam_roll_no = models.CharField(max_length=8, default='00000000') 
+    st_reg_no = models.CharField(max_length=40, default='0-0-000-00-0000')  
     
     st_name = models.CharField(max_length=100)
     st_date_of_birth = models.DateField(null=True, blank=True)
     st_address = models.CharField(max_length=255)
     st_contact = models.CharField(max_length=15)
-    enrollment_date = models.IntegerField()  
+    enrollment_date = models.IntegerField(null=True, blank=True)  
     
     st_email = models.EmailField(unique=True)
     st_password = models.CharField(max_length=128, default='studentSMC1')  # Add default password
@@ -159,9 +183,9 @@ class Student(models.Model):
         if self.pk:  # Check if instance exists (i.e., if it's an update)
             original = Student.objects.get(pk=self.pk)
             if original.st_password != self.st_password:
-                self.st_password = make_password(self.st_password)  # Hash the new password if it's changed
+                self.st_password = make_password(self.st_password) 
         else:  # New user
-            self.st_password = make_password(self.st_password)  # Hash the password for a new user
+            self.st_password = make_password(self.st_password) 
 
         super().save(*args, **kwargs)
 
@@ -285,3 +309,130 @@ class Assignment(models.Model):
         verbose_name = "Assignment"
         verbose_name_plural = "Assignments"
         ordering = ["-posted_date"]  
+        
+class AssignmentSubmit(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    submit_date = models.DateTimeField(auto_now_add=True)
+    assignment_file = models.FileField(upload_to="assignments/")
+
+    def __str__(self):
+        return f"{self.student.username} - {self.assignment.title}"
+    class Meta:
+        verbose_name = "Assignment Submission"
+        verbose_name_plural = "Assignment Submissions"
+
+        
+        
+class Result(models.Model):
+    title = models.CharField(max_length=255, verbose_name="Result Title")
+    file = models.FileField(upload_to="results/", verbose_name="Result File")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name="Uploaded At")
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE,  blank=True, null=True)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name="results", verbose_name="Semester")
+
+    def __str__(self):
+        return f"{self.title} (Semester: {self.semester.se_name})"
+
+    class Meta:
+        verbose_name = "Result"
+        verbose_name_plural = "Results"
+        
+        
+        
+class Notice(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    link = models.URLField(blank=True, null=True) 
+    notic_file = models.FileField(upload_to="notices/", blank=True, null=True, verbose_name="Notice File")
+    timestamp = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Associate notice with a user
+
+    def __str__(self):
+        return self.title
+
+class Quiz(models.Model):
+    title = models.CharField(max_length=255, verbose_name="Quiz Title")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
+    is_active = models.BooleanField(default=True, verbose_name="Is Active")
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="quizzes", verbose_name="Course")
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="quizzes", verbose_name="Teacher")
+    def __str__(self):
+        return f"{self.title} - {self.course.title}"
+
+    class Meta:
+        verbose_name = "Quiz"
+        verbose_name_plural = "Quizzes"
+        
+class Question(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions", verbose_name="Quiz")
+    text = models.TextField(verbose_name="Question Text")
+    option1 = models.CharField(max_length=255, verbose_name="Option 1")
+    option2 = models.CharField(max_length=255, verbose_name="Option 2")
+    option3 = models.CharField(max_length=255, verbose_name="Option 3", blank=True, null=True)
+    option4 = models.CharField(max_length=255, verbose_name="Option 4", blank=True, null=True)
+    correct_option = models.CharField(
+        max_length=10,
+        choices=[("1", "Option 1"), ("2", "Option 2"), ("3", "Option 3"), ("4", "Option 4")],
+        verbose_name="Correct Option"
+    )
+    marks = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)], verbose_name="Marks")
+
+    def __str__(self):
+        return f"{self.text} (Quiz: {self.quiz.title})"
+
+    class Meta:
+        verbose_name = "Question"
+        verbose_name_plural = "Questions"
+
+
+class QuizAttempt(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="quiz_attempts", verbose_name="Student")
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="attempts", verbose_name="Quiz")
+    
+    score = models.PositiveIntegerField(default=0, verbose_name="Score")
+    attempted_at = models.DateTimeField(auto_now_add=True, verbose_name="Attempted At")
+
+    def __str__(self):
+        return f"{self.student.st_name} - {self.quiz.title} (Score: {self.score})"
+
+    class Meta:
+        verbose_name = "Quiz Attempt"
+        verbose_name_plural = "Quiz Attempts"
+class UserRank(models.Model):
+    student = models.OneToOneField('Student', on_delete=models.CASCADE, related_name="rank")
+    rank = models.IntegerField(null=True, blank=True)
+    total_score = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Rank {self.rank}: {self.student.st_name} (Total Score: {self.total_score})"
+
+    @receiver(post_save, sender= QuizAttempt)  # Use the correct model name
+    def update_user_rank(sender, instance, **kwargs):
+        update_leaderboard()
+
+
+def update_leaderboard():
+    user_scores = (
+        QuizAttempt.objects.values('student')
+        .annotate(total_score=Sum('score'))
+        .order_by('-total_score',)
+    )
+
+    rank = 1
+    for entry in user_scores:
+        student_id = entry['student']
+        total_score = entry['total_score']
+        
+        # Update or create a UserRank entry
+        user_rank, created = UserRank.objects.update_or_create(
+            student_id=student_id,
+            defaults={'total_score': total_score, 'rank': rank}
+        )
+        rank += 1
+        

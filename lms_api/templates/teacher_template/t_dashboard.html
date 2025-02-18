@@ -1,0 +1,67 @@
+{% extends 'teacher_template/t_basepage.html' %} {% block title %} Dashboard - BICTE-LMS {% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <aside class="col-md-3">
+            <div class="card">
+                <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
+                    Dashboard
+                </h4>
+                <div class="list-group list-group-flush">
+                    <a href="/api/teacher-dashboard-courses/ " class="list-group-item list-group-item-action bg-primary text-light text-center">
+            Course</a
+          >
+          <a
+            href="/api/teacher-dashboard-assignments/ "
+            class="list-group-item list-group-item-action"
+            >Manage Assignments</a
+          >
+          <a
+            href="/api/teacher-profile-setting/ "
+            class="list-group-item list-group-item-action"
+            >Profile Setting</a
+          >
+          <a
+            href="/api/teacher-change-password/ "
+            class="list-group-item list-group-item-action"
+            >Manage Password</a
+          >
+          <a
+            href="/ "
+            class="list-group-item list-group-item-action text-danger"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </aside>
+
+    <section class="col-md-9 mt-4 mt-md-0">
+      <div class="card">
+        <h5 class="card-header text-center" style="background-color: #c0c0c0">
+          My Course
+        </h5>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th><a href="# " class="text-dark">Semester</a></th>
+                    <th>Course Materials</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <td>Python</td>
+                        <td>Dhaulagiri (7th)</td>
+                        <td>Explor</td>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+            </section>
+    </div>
+</div>
+<style>
+    .list-group-item:hover {
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

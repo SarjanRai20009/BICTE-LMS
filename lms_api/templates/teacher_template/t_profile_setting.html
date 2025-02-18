@@ -1,0 +1,232 @@
+{% extends 'teacher_template/t_basepage.html' %}{% block title %} Dashboard - BICTE-LMS {% endblock %} {% load static %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <aside class="col-md-3">
+            <div class="card">
+                <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
+                    Dashboard
+                </h4>
+                <div class="list-group list-group-flush">
+                    <a href="/api/teacher-dashboard-courses/ " class="list-group-item list-group-item-action">
+            Course</a
+          >
+          <a
+            href="/api/teacher-dashboard-assignments/ "
+            class="list-group-item list-group-item-action"
+            >Manage Assignments</a
+          >
+          <a
+            href="/api/teacher-profile-setting/ "
+            class="list-group-item list-group-item-action bg-primary text-light text-center"
+            >Profile Setting</a
+          >
+          <a
+            href="/api/teacher-change-password/ "
+            class="list-group-item list-group-item-action"
+            >Manage Password</a
+          >
+          <a
+            href="/ "
+            class="list-group-item list-group-item-action text-danger"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </aside>
+
+    <section class="col-md-9 mt-4 mt-md-0">
+      <div class="card">
+        <h5 class="card-header text-center" style="background-color: #c0c0c0">
+          Profile Setting
+        </h5>
+        <div class="card-body pt-3">
+          <div class="mb-3 row ms-2">
+            <label for="profilepicture" class="col-sm-2 col-form-label"
+              >profile Picture</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="file"
+                class="form-control input-effect"
+                id="profilepicture"
+              />
+              <!-- Dropdown for selecting predefined images -->
+              <select
+                class="form-control input-effect mt-2"
+                id="profileDropdown"
+              >
+                <option value="">Or Select Avatar</option>
+                <option
+                  value="{% static 'images/m_teacher_avater/teacher_avater_1.jpg' %}"
+                >
+                  Male Avatar 1
+                </option>
+                <option
+                  value="{% static 'images/m_teacher_avater/teacher_avater_2.jpg' %}"
+                >
+                  Male Avatar 2
+                </option>
+                <option
+                  value="{% static 'images/m_teacher_avater/teacher_avater_3.jpg' %}"
+                >
+                  Male Avatar 2
+                </option>
+                <option
+                  value="{% static 'images/f_teacher_avater/f_teacher_avater_1.jpg' %}"
+                >
+                  Female Avatar 1
+                </option>
+
+                <option
+                value="{% static 'images/f_teacher_avater/f_teacher_avater_2.jpg' %}"
+              >
+                Female Avatar 2
+              </option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row ms-2">
+            <label for="fullName" class="col-sm-2 col-form-label"
+              >Full Name</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control input-effect"
+                id="fullName"
+              />
+            </div>
+          </div>
+          <div class="mb-3 row ms-2">
+            <label for="designation" class="col-sm-2 col-form-label"
+              >Designation</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control input-effect"
+                id="designation"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3 row ms-2">
+            <label for="staticEmail" class="col-sm-2 col-form-label"
+              >Email</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control input-effect"
+                id="staticEmail"
+              />
+            </div>
+          </div>
+          <div class="mb-3 row ms-2 pe-2">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Password</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="password"
+                class="form-control input-effect"
+                id="inputPassword"
+              />
+            </div>
+          </div>
+          <div class="mb-3 row ms-2 pe-2">
+            <label for="phoneNumber" class="col-sm-2 col-form-label"
+              >Phone Number</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="tel"
+                class="form-control input-effect"
+                id="phoneNumber"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3 row ms-2">
+            <label for="address" class="col-sm-2 col-form-label">Address</label>
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control input-effect"
+                id="address"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3 row ms-2 pe-2">
+            <label for="hiredate" class="col-sm-2 col-form-label"
+              >Hire Date</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="hiredate"
+                class="form-control input-effect"
+                id="dob"
+              />
+            </div>
+          </div>
+          <div class="mb-3 row ms-2 pe-2">
+            <label for="gender" class="col-sm-2 col-form-label">Gender</label>
+            <div class="col-sm-10">
+              <select class="form-control input-effect" id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3 row update-profile-div ms-2 pe-4">
+            <button class="btn btn-primary" type="button">
+              Update Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .update-profile-div {
+    justify-content: center;
+    align-items: center;
+  }
+  .input-effect {
+    transition: all 0.3s ease-in-out;
+    box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .input-effect:hover,
+  .input-effect:focus {
+    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .list-group-item:hover {
+    font-weight: bold;
+  }
+</style>
+
+<script>
+  document
+    .getElementById("profileDropdown")
+    .addEventListener("change", function () {
+      console.log("Dropdown changed"); // Debugging line
+      var selectedImage = this.value;
+      if (selectedImage) {
+        var fileInput = document.getElementById("profilepicture");
+        var file = new File([""], selectedImage.split("/").pop(), {
+          type: "image/jpeg",
+        });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    });
+</script>
+{% endblock %}

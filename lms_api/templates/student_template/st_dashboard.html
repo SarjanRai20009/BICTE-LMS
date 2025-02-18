@@ -1,0 +1,81 @@
+{% extends 'student_template/st_base_template.html' %} {% block title %} Student-Dashboard- BICTESMC {% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <aside class="col-md-3">
+            <div class="card">
+                <!-- <h4 class="card-header text-dark " style="background-color: #c0c0c0">
+                    Dashboard
+                </h4> -->
+
+                <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
+                    Dashboard
+                </h4>
+                <div class="list-group list-group-flush">
+                    <a href="/api/student-dashboard/" class="list-group-item list-group-item-action bg-primary text-light text-center">
+            Semester</a
+          >
+          <a
+            href="/api/student-dashboard-assignment/"
+            class="list-group-item list-group-item-action"
+            >Assignments</a
+          >
+          <a
+            href="/api/student-profile-setting/"
+            class="list-group-item list-group-item-action"
+            >Profile Setting</a
+          >
+          <a
+            href="/api/change-student-account-password/"
+            class="list-group-item list-group-item-action"
+            >Manage Password</a
+          >
+          <a href="/" class="list-group-item list-group-item-action text-danger"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </aside>
+
+    <section class="col-md-9 mt-4 mt-md-0">
+      <div class="card">
+        <h5 class="card-header text-center" style="background-color: #c0c0c0">
+          Semester
+        </h5>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th>
+                  <a href="#" class="text-dark" style="text-decoration: none"
+                    >Teacher</a
+                  >
+                </th>
+                <th>Course Materials</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for course in courses %}
+              <tr>
+                
+                <td>
+                  <a class="text-decoration-none " href="{% url 'st-course-detail' course.id %}">{{ course.title }}
+                  </a>
+                    </td>
+                    <td>{{ course.teacher.t_full_name }}</td>
+                    <td>Explor</td>
+                    {% endfor %}
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+            </section>
+    </div>
+</div>
+<style>
+    .list-group-item:hover {
+        font-weight: bold;
+    }
+</style>
+{%endblock%}
