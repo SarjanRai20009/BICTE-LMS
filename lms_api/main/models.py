@@ -311,7 +311,7 @@ class Assignment(models.Model):
         ordering = ["-posted_date"]  
         
 class AssignmentSubmit(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     submit_date = models.DateTimeField(auto_now_add=True)
     assignment_file = models.FileField(upload_to="assignments/")
