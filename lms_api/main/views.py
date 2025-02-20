@@ -236,6 +236,35 @@ class StudentCourse(LoginRequiredMixin, TemplateView):
         except Student.DoesNotExist:
             context['error'] = 'Student not found. Please log in again.'
         return context
+class StudentSemesterView(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/st_semester_view.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+     
+        semester = get_object_or_404(Semester, id=self.kwargs['pk'])
+        context['semester'] = semester
+        
+      
+        context['courses'] = semester.course_set.all()
+        context['teachers'] = Teacher.objects.filter(course__semester=semester).distinct()
+        context['students'] = semester.student_set.all()
+        
+ 
+        context['materials'] = CourseMaterial.objects.filter(course__semester=semester, is_active=True)
+        context['assignments'] = Assignment.objects.filter(course__semester=semester)
+        
+
+        try:
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = student
+        except Student.DoesNotExist:
+            context['error'] = 'Student not found. Please log in again.'
+        
+        return context
+    
 class STCourseDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'student_template/st_course_detail.html'
 
@@ -391,7 +420,41 @@ class StudentNoticeList(LoginRequiredMixin, TemplateView):
         context['notices'] = notices_with_post_by
         return context
 
+# class TeacherDetailStudentPage(LoginRequiredMixin,TemplateView):
+#     template_name = 'student_template/st_teacher_view.html'    
+#     login_url = '/api/login/'
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         try:
+         
+#             student = Student.objects.get(id=self.request.session.get('user_id'))
+#             context['student'] = student
+           
+       
+#         except Student.DoesNotExist:
+#             context['error'] = 'Student not found. Please log in again.'
+#         return context
 
+class TeacherDetailStudentPage(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/st_teacher_view.html'    
+    login_url = '/api/login/'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the teacher based on the pk from the URL
+        teacher = get_object_or_404(Teacher, id=self.kwargs['pk'])
+        context['teacher'] = teacher
+        
+        try:
+            # Fetch the student based on the session user_id
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = student
+        except Student.DoesNotExist:
+            context['error'] = 'Student not found. Please log in again.'
+        
+        return context
 
     
 # end student view 
@@ -543,319 +606,196 @@ class LogoutView(View):
 
 
 
-# class TeacherList(generics.ListCreateAPIView):
-#     queryset = models.Teacher.objects.all()
-#     serializer_class = TeacherSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def create(self, request, *args, **kwargs):
-      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save() 
-#             return Response({
-#                 "message": "Teacher added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-# class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.Teacher.objects.all()
-#     serializer_class = TeacherSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-# class SemesterList(generics.ListCreateAPIView):    
-#     queryset = models.Semester.objects.all()
-#     serializer_class = SemesterSerializer       
-#     permission_classes = [permissions.IsAuthenticated]
-    
-# def create(self, request, *args, **kwargs):      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save() 
-#             return Response({
-#                 "message": "Semester added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-# class SemesterDetail(generics.RetrieveUpdateDestroyAPIView):   
-#     queryset = models.Semester.objects.all()
-#     serializer_class = SemesterSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-# def create(self, request, *args, **kwargs):      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()  
-#             return Response({
-#                 "message": "Semester added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-# class StudentList(generics.ListCreateAPIView):
-#     queryset = models.Student.objects.all()
-#     serializer_class = StudentSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def create(self, request, *args, **kwargs):
-      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({
-#                 "message": "Student added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-# class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.Student.objects.all()
-#     serializer_class = StudentSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def delete(self, request, *args, **kwargs):
-#         """
-#         Override the delete method to handle deletion properly.
-#         After successfully deleting the student, return a success response.
-#         """
-#         student = self.get_object()
-#         student.delete() 
-#         return Response({
-#             "message": "Student deleted successfully!"
-#         }, status=status.HTTP_204_NO_CONTENT)
-        
-# class CourseList(generics.ListCreateAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = CourseSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-# def create(self, request, *args, **kwargs):      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()  
-#             return Response({
-#                 "message": "Course added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-# class CourseDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = CourseSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-# class AssignmentList(generics.ListCreateAPIView):
-#     queryset = Assignment.objects.all()
-#     serializer_class = AssignmentSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-# def create(self, request, *args, **kwargs):      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save() 
-#             return Response({
-#                 "message": "Assignment added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-# class AssignmentDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Assignment.objects.all()
-#     serializer_class = AssignmentSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-# class MaterialTypeList(generics.ListCreateAPIView):
-#     queryset = models.MaterialType.objects.all()
-#     serializer_class = MaterialTypeSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-# def create(self, request, *args, **kwargs):      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({
-#                 "message": "Material Type added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-# class MaterialTypeDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.MaterialType.objects.all()
-#     serializer_class = MaterialTypeSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-# class CourseMaterialList(generics.ListCreateAPIView):
-#     queryset = models.CourseMaterial.objects.all()
-#     serializer_class = CourseMaterialSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-# def create(self, request, *args, **kwargs):      
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({
-#                 "message": "Course added successfully!",
-#                 "data": serializer.data
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-# class CourseMaterialDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.CourseMaterial.objects.all()
-#     serializer_class = CourseMaterialSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-# class ResultList(generics.ListCreateAPIView):
-#     queryset = Result.objects.all()
-#     serializer_class = ResultSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def perform_create(self, serializer):
-#         serializer.save(uploaded_by=self.request.user)
-        
-        
-# class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Result.objects.all()
-#     serializer_class = ResultSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-  
-        
-# class NoticeList(generics.ListCreateAPIView):
-#     queryset = Notice.objects.all()
-#     serializer_class = NoticeSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def perform_create(self, serializer):
-       
-#         if self.request.user.is_superuser:
-#             serializer.save(user=self.request.user)
-#         else:
-#             raise permissions.PermissionDenied("Only superusers can add notices.")
-# class CourseObjectivesList(generics.ListCreateAPIView):
-#     queryset = CourseObjectives.objects.all()
-#     serializer_class = CourseObjectivesSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-# class CourseObjectivesDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = CourseObjectives.objects.all()
-#     serializer_class = CourseObjectivesSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-# class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Notice.objects.all()
-#     serializer_class = NoticeSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def perform_update(self, serializer):
-#         if self.request.user.is_superuser:
-#             serializer.save()
-#         else:
-#             raise permissions.PermissionDenied("Only superusers can update notices.")
-
-#     def perform_destroy(self, instance):
-#         if self.request.user.is_superuser:
-#             instance.delete()
-#         else:
-#             raise permissions.PermissionDenied("Only superusers can delete notices.")
-
-
-
-# for testing uncomment it
-
-
 class TeacherList(generics.ListCreateAPIView):
     queryset = models.Teacher.objects.all()
     serializer_class = TeacherSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
+    def create(self, request, *args, **kwargs):
+      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save() 
+            return Response({
+                "message": "Teacher added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Teacher.objects.all()
     serializer_class = TeacherSerializer
+    permission_classes = [permissions.IsAuthenticated]
+class BookListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
     
+    permission_classes = [permissions.IsAuthenticated]
     
 class SemesterList(generics.ListCreateAPIView):    
     queryset = models.Semester.objects.all()
     serializer_class = SemesterSerializer       
-
+    permission_classes = [permissions.IsAuthenticated]
+    
+def create(self, request, *args, **kwargs):      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save() 
+            return Response({
+                "message": "Semester added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class SemesterDetail(generics.RetrieveUpdateDestroyAPIView):   
     queryset = models.Semester.objects.all()
     serializer_class = SemesterSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
+def create(self, request, *args, **kwargs):      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  
+            return Response({
+                "message": "Semester added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class StudentList(generics.ListCreateAPIView):
     queryset = models.Student.objects.all()
     serializer_class = StudentSerializer
-  
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def create(self, request, *args, **kwargs):
+      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "Student added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Student.objects.all()
     serializer_class = StudentSerializer
-   
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def delete(self, request, *args, **kwargs):
+        """
+        Override the delete method to handle deletion properly.
+        After successfully deleting the student, return a success response.
+        """
+        student = self.get_object()
+        student.delete() 
+        return Response({
+            "message": "Student deleted successfully!"
+        }, status=status.HTTP_204_NO_CONTENT)
         
 class CourseList(generics.ListCreateAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
- 
+    permission_classes = [permissions.IsAuthenticated]
 
+def create(self, request, *args, **kwargs):      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  
+            return Response({
+                "message": "Course added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class CourseDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-   
+    permission_classes = [permissions.IsAuthenticated]
+
 class AssignmentList(generics.ListCreateAPIView):
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
+def create(self, request, *args, **kwargs):      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save() 
+            return Response({
+                "message": "Assignment added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class AssignmentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
-   
+    permission_classes = [permissions.IsAuthenticated]
     
 class MaterialTypeList(generics.ListCreateAPIView):
     queryset = models.MaterialType.objects.all()
     serializer_class = MaterialTypeSerializer
-    
+    permission_classes = [permissions.IsAuthenticated]
+def create(self, request, *args, **kwargs):      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "Material Type added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class MaterialTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.MaterialType.objects.all()
     serializer_class = MaterialTypeSerializer
-   
+    permission_classes = [permissions.IsAuthenticated]
+
 class CourseMaterialList(generics.ListCreateAPIView):
     queryset = models.CourseMaterial.objects.all()
     serializer_class = CourseMaterialSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
+def create(self, request, *args, **kwargs):      
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "Course added successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class CourseMaterialDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.CourseMaterial.objects.all()
     serializer_class = CourseMaterialSerializer
-    
+    permission_classes = [permissions.IsAuthenticated]
     
 class ResultList(generics.ListCreateAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
-    
+    permission_classes = [permissions.IsAuthenticated]
     
     def perform_create(self, serializer):
         serializer.save(uploaded_by=self.request.user)
@@ -864,7 +804,7 @@ class ResultList(generics.ListCreateAPIView):
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
-   
+    permission_classes = [permissions.IsAuthenticated]
   
         
 class NoticeList(generics.ListCreateAPIView):
@@ -881,12 +821,13 @@ class NoticeList(generics.ListCreateAPIView):
 class CourseObjectivesList(generics.ListCreateAPIView):
     queryset = CourseObjectives.objects.all()
     serializer_class = CourseObjectivesSerializer
-    
+    permission_classes = [permissions.IsAuthenticated]
 
 class CourseObjectivesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = CourseObjectives.objects.all()
     serializer_class = CourseObjectivesSerializer
-    
+    permission_classes = [permissions.IsAuthenticated]
+
 class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Notice.objects.all()
     serializer_class = NoticeSerializer
@@ -903,3 +844,135 @@ class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
             instance.delete()
         else:
             raise permissions.PermissionDenied("Only superusers can delete notices.")
+
+
+
+# for testing uncomment it
+
+
+# class TeacherList(generics.ListCreateAPIView):
+#     queryset = models.Teacher.objects.all()
+#     serializer_class = TeacherSerializer
+    
+    
+# class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.Teacher.objects.all()
+#     serializer_class = TeacherSerializer
+    
+    
+# class SemesterList(generics.ListCreateAPIView):    
+#     queryset = models.Semester.objects.all()
+#     serializer_class = SemesterSerializer       
+
+    
+
+# class SemesterDetail(generics.RetrieveUpdateDestroyAPIView):   
+#     queryset = models.Semester.objects.all()
+#     serializer_class = SemesterSerializer
+    
+    
+
+# class StudentList(generics.ListCreateAPIView):
+#     queryset = models.Student.objects.all()
+#     serializer_class = StudentSerializer
+  
+    
+# class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.Student.objects.all()
+#     serializer_class = StudentSerializer
+   
+        
+# class CourseList(generics.ListCreateAPIView):
+#     queryset = Course.objects.all()
+#     serializer_class = CourseSerializer
+ 
+
+    
+
+# class CourseDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Course.objects.all()
+#     serializer_class = CourseSerializer
+   
+# class AssignmentList(generics.ListCreateAPIView):
+#     queryset = Assignment.objects.all()
+#     serializer_class = AssignmentSerializer
+    
+    
+
+# class AssignmentDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Assignment.objects.all()
+#     serializer_class = AssignmentSerializer
+   
+    
+# class MaterialTypeList(generics.ListCreateAPIView):
+#     queryset = models.MaterialType.objects.all()
+#     serializer_class = MaterialTypeSerializer
+    
+    
+
+# class MaterialTypeDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.MaterialType.objects.all()
+#     serializer_class = MaterialTypeSerializer
+   
+# class CourseMaterialList(generics.ListCreateAPIView):
+#     queryset = models.CourseMaterial.objects.all()
+#     serializer_class = CourseMaterialSerializer
+    
+    
+
+# class CourseMaterialDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.CourseMaterial.objects.all()
+#     serializer_class = CourseMaterialSerializer
+    
+    
+# class ResultList(generics.ListCreateAPIView):
+#     queryset = Result.objects.all()
+#     serializer_class = ResultSerializer
+    
+    
+#     def perform_create(self, serializer):
+#         serializer.save(uploaded_by=self.request.user)
+        
+        
+# class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Result.objects.all()
+#     serializer_class = ResultSerializer
+   
+  
+        
+# class NoticeList(generics.ListCreateAPIView):
+#     queryset = Notice.objects.all()
+#     serializer_class = NoticeSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def perform_create(self, serializer):
+       
+#         if self.request.user.is_superuser:
+#             serializer.save(user=self.request.user)
+#         else:
+#             raise permissions.PermissionDenied("Only superusers can add notices.")
+# class CourseObjectivesList(generics.ListCreateAPIView):
+#     queryset = CourseObjectives.objects.all()
+#     serializer_class = CourseObjectivesSerializer
+    
+
+# class CourseObjectivesDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = CourseObjectives.objects.all()
+#     serializer_class = CourseObjectivesSerializer
+    
+# class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Notice.objects.all()
+#     serializer_class = NoticeSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def perform_update(self, serializer):
+#         if self.request.user.is_superuser:
+#             serializer.save()
+#         else:
+#             raise permissions.PermissionDenied("Only superusers can update notices.")
+
+#     def perform_destroy(self, instance):
+#         if self.request.user.is_superuser:
+#             instance.delete()
+#         else:
+#             raise permissions.PermissionDenied("Only superusers can delete notices.")

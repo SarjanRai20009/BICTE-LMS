@@ -1,4 +1,4 @@
-{% extends 'student_template/st_base_template.html' %} {% block title %} Teacher Detail - BICTESMC {% endblock %} {% block content %}
+{% extends 'student_template/st_base_template.html' %} {% load static %} {% block title %} Teacher Detail - BICTESMC {% endblock %} {% block content %}
 <style>
     /* General Styles */
     
@@ -190,6 +190,12 @@
             width: 95%;
         }
     }
+    
+    .disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        cursor: default;
+    }
 </style>
 
 <!-- Add Font Awesome for Icons -->
@@ -200,25 +206,25 @@
 
     <!-- Profile Picture Section -->
     <div class="profile-picture-section">
-        <img src="{% static 'images/default-profile-picture1.jpg' %}" alt="Profile Picture" class="profile-picture" />
+        <img src="{% if teacher.profile_picture %}{{ teacher.profile_picture.url }}{% else %}{% static 'images/default-profile-picture1.jpg' %}{% endif %}" alt="Profile Picture" class="profile-picture" />
     </div>
 
     <!-- Profile Details Section -->
     <div class="profile-details-section">
-        <div class="teacher-name">Santosh Dahal</div>
-        <div class="designation">Focal Person, Assistant Teacher</div>
+        <div class="teacher-name">{{ teacher.t_full_name }}</div>
+        <div class="designation">{{ teacher.designation }}</div>
 
         <div class="details">
-            <p><strong>Email:</strong> santoshdahal123@gmail.com</p>
-            <p><strong>Phone:</strong> 9812345677</p>
-            <p><strong>Address:</strong> Sundarharincha - 12, Morange</p>
+            <p><strong>Email:</strong> {{ teacher.t_email }}</p>
+            <p><strong>Phone:</strong> {{ teacher.t_phone_number }}</p>
+            <p><strong>Address:</strong> {{ teacher.t_address }}</p>
             <!-- <p><strong>Rating:</strong>4.5/5</p> -->
         </div>
 
-        <div class="hire-date"><strong>Hire Date:</strong> January 15, 2018</div>
+        <div class="hire-date text-primary"><strong>Hire Date:</strong><span class="text-dark"> {{ teacher.hire_date }}</span></div>
 
         <!-- Social Media Links -->
-        <div class="social-media">
+        <!-- <div class="social-media">
             <a href="https://facebook.com" target="_blank" title="Facebook"><i class="fab fa-facebook"></i
       ></a>
             <a href="https://twitter.com" target="_blank" title="Twitter"><i class="fab fa-twitter"></i
@@ -229,19 +235,44 @@
       ></a>
             <a href="https://github.com" target="_blank" title="GitHub"><i class="fab fa-github"></i
       ></a>
-            <!-- WhatsApp Link -->
+
             <a href="https://wa.me/9812345677" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i
       ></a>
-            <!-- Google Classroom Link -->
+
             <a href="https://classroom.google.com" target="_blank" title="Google Classroom"><i class="fab fa-google"></i
       ></a>
         </div>
 
-        <!-- <button class="edit-profile-btn">Edit Profile</button> -->
+
+    </div>
+</div> -->
+        <div class="social-media">
+            <a href="{{ teacher.facebook_link|default:'#' }}" class="{% if not teacher.facebook_link %}disabled{% endif %}" target="_blank" title="Facebook">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="{{ teacher.twitter_link|default:'#' }}" class="{% if not teacher.twitter_link %}disabled{% endif %}" target="_blank" title="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="{{ teacher.linkedin_link|default:'#' }}" class="{% if not teacher.linkedin_link %}disabled{% endif %}" target="_blank" title="LinkedIn">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="{{ teacher.instagram_link|default:'#' }}" class="{% if not teacher.instagram_link %}disabled{% endif %}" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="{{ teacher.github_link|default:'#' }}" class="{% if not teacher.github_link %}disabled{% endif %}" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="{{ teacher.whatsapp_link|default:'#' }}" class="{% if not teacher.whatsapp_link %}disabled{% endif %}" target="_blank" title="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="{{ teacher.google_classroom_link|default:'#' }}" class="{% if not teacher.google_classroom_link %}disabled{% endif %}" target="_blank" title="Google Classroom">
+                <i class="fab fa-google"></i>
+            </a>
+        </div>
     </div>
 </div>
 
-<div class="card courselist ps-3 pe-3 pt-2 pb-2">
+<!-- <div class="card courselist ps-3 pe-3 pt-2 pb-2">
     <p class="fw-bold courselist-header text-center">Course</p>
     <ul class="list-group list-group-flush">
         <li class="list-group-item d-flex material-item">
@@ -272,6 +303,19 @@
             </a>
         </li>
     </ul>
-</div>
+</div> -->
 
+<div class="card courselist ps-3 pe-3 pt-2 pb-2">
+    <p class="fw-bold courselist-header text-center">Courses</p>
+    <ul class="list-group list-group-flush">
+        {% for course in teacher.course_set.all %}
+        <li class="list-group-item d-flex material-item">
+            <a href="/api/course-detail/{{ course.id }}" target="_blank" class="material-link d-flex align-items-center w-100 text-decoration-none">
+                <span class="flex-grow-1">{{ course.title }}</span>
+                <span class="export-text ms-2">Explore</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

@@ -48,96 +48,114 @@
                     {% for course in courses %}
                     <tr>
                         <td>
-                            <a class="text-decoration-none " href="{% url 'st-course-detail' course.id %}">{{ course.subject_code }}</a></td>
-                        <td> <a class="text-decoration-none " href="{% url 'st-course-detail' course.id %}">{{ course.title }}
-            </a></td>
-                        <td>{{ course.teacher.t_full_name }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            <a class="text-decoration-none" href="{% url 'st-course-detail' course.id %}">{{ course.subject_code }}</a
+              >
+            </td>
+            <td>
+              <a
+                class="text-decoration-none"
+                href="{% url 'st-course-detail' course.id %}"
+                >{{ course.title }}</a
+              >
+            </td>
+            <td>
+              {% if course.teacher %}
+              <a
+                class="text-decoration-none"
+                href="{% url 'student-teacher-detail' course.teacher.id %}"
+                >{{ course.teacher.t_full_name }}</a
+              >
+              {% else %} <span>No teacher assigned</span> {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% endif %}
+  </div>
+  {% endif %}
 
-    <!-- Assignments Section -->
-    {% if assignments %}
-    <div class="mt-5">
-        <h3 class="mb-4">Assignments</h3>
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Assignment Title</th>
-                        <th>Course</th>
-                        <th>Deadline</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for assignment in assignments %}
-                    <tr>
-                        <td>{{ assignment.title }}</td>
-                        <td>{{ assignment.course.title }}</td>
-                        <td>{{ assignment.deadline|date:"F d, Y H:i" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+  <!-- Assignments Section -->
+  {% if assignments %}
+  <div class="mt-5">
+    <h3 class="mb-4">Assignments</h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Assignment Title</th>
+            <th>Course</th>
+            <th>Deadline</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for assignment in assignments %}
+          <tr>
+            <td>{{ assignment.title }}</td>
+            <td>{{ assignment.course.title }}</td>
+            <td>{{ assignment.deadline|date:"F d, Y H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% endif %}
+  </div>
+  {% endif %}
 
-    <!-- Quizzes Section -->
-    {% if quizzes %}
-    <div class="mt-5">
-        <h3 class="mb-3">Quizzes</h3>
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Quiz Title</th>
-                        <th>Course</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for quiz in quizzes %}
-                    <tr>
-                        <td>{{ quiz.title }}</td>
-                        <td>{{ quiz.course.title }}</td>
-                        <td>
-                            {% if quiz.is_active %}
-                            <span class="text-success">Active</span> {% else %}
-                            <span class="text-danger">Inactive</span> {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+  <!-- Quizzes Section -->
+  {% if quizzes %}
+  <div class="mt-5">
+    <h3 class="mb-3">Quizzes</h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Quiz Title</th>
+            <th>Course</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for quiz in quizzes %}
+          <tr>
+            <td>{{ quiz.title }}</td>
+            <td>{{ quiz.course.title }}</td>
+            <td>
+              {% if quiz.is_active %}
+              <span class="text-success">Active</span> {% else %}
+              <span class="text-danger">Inactive</span> {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% endif %}
+  </div>
+  {% endif %}
 
-    <!-- No Results Message -->
-    {% if not students and not courses and not assignments and not quizzes %}
-    <div class="alert alert-info mt-4">No results found for "{{ query }}".</div>
-    {% endif %}
+  <!-- No Results Message -->
+  {% if not students and not courses and not assignments and not quizzes %}
+  <div class="alert alert-info mt-4">No results found for "{{ query }}".</div>
+  {% endif %}
 </div>
 <div class="mt-2">
-    <a href="/api/student-home/" class="go_back_link text-decoration-none">
-        <button class="btn btn-dark d-flex align-items-center px-3 py-2" style="border-radius: 50%">
+  <a href="/api/student-home/" class="go_back_link text-decoration-none">
+    <button
+      class="btn btn-dark d-flex align-items-center px-3 py-2"
+      style="border-radius: 50%"
+    >
       <i class="bi bi-arrow-left-short" style="font-size: 2rem"></i>
       <!-- <span class="ms-2">Go Back</span> -->
     </button>
-    </a>
-</div>
+  </a>
+        </div>
 
-<style>
-    .go_back {
-        background-color: blue;
-        width: 3rem;
-        height: 3rem;
-        border-radius: 50%;
-    }
-</style>
-{% endblock %}
+        <style>
+            .go_back {
+                background-color: blue;
+                width: 3rem;
+                height: 3rem;
+                border-radius: 50%;
+            }
+        </style>
+        {% endblock %}

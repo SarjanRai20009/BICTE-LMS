@@ -39,6 +39,8 @@ urlpatterns = [
     
     # student template views:
     path('student-home/', views.StudentHomePage.as_view(), name='student'),
+    path('student-teacher-detail/<int:pk>/', views.TeacherDetailStudentPage.as_view(), name='student-teacher-detail'),
+    path('st-semester-view/<int:pk>/', views.StudentSemesterView.as_view(), name='st-semester-view'),
     path('student-notice-list/', views.StudentNoticeList.as_view(), name='student-notice-list'),
     path('student-profile/', views.StudentProfile.as_view(), name='student-profile'),
     path('student-course/', views.StudentCourse.as_view(), name='student-course'),
@@ -48,7 +50,7 @@ urlpatterns = [
     path('student-profile-setting/', views.StudentProfileSetting.as_view(), name='student-profile-setting'),
     path('update-student-profile/', views.UpdateStudentProfile.as_view(), name='update-student-profile'),
     
-    path('st-course-detail/<int:course_id>', views.STCourseDetailView.as_view(), name='st-course-detail'),
+    path('st-course-detail/<int:course_id>/', views.STCourseDetailView.as_view(), name='st-course-detail'),
     
     path('change-student-account-password/', views.ChangeStudentPassword.as_view(), name='change-student-account-password'),
     # Todo List
@@ -100,4 +102,8 @@ urlpatterns = [
     
     path('course-objectives/', CourseObjectivesList.as_view(), name='api-course-objectives-list'),
     path('course-objectives/<int:pk>/', CourseObjectivesDetail.as_view(), name='api-course-objectives-detail'),
+    
+    path('books/', views.BookListCreateAPIView.as_view(), name='api-book-list-create'),
+    path('books/<int:id>/', views.BookRetrieveUpdateDestroyAPIView.as_view(), name='api-book-detail'),
+
 ]

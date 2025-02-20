@@ -1,0 +1,203 @@
+{% extends "student_template/st_base_template.html" %} {% load static %} {% block title %} Semester Detail - BICTESMC {% endblock %} {% block content %}
+<style>
+    /* General Styles */
+    
+    body {
+        font-family: 'Roboto', sans-serif;
+        color: #333;
+    }
+    
+    .semester-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    
+    .semester-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .semester-header h1 {
+        font-size: 2.2rem;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .semester-header p {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+    }
+    
+    .semester-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .semester-card {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .semester-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    .semester-card h2 {
+        font-size: 1.4rem;
+        color: #34495e;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+    
+    .semester-card p {
+        font-size: 1rem;
+        color: #555;
+        margin: 0.5rem 0;
+    }
+    
+    .semester-card p strong {
+        color: #2980b9;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0.5rem;
+    }
+    
+    .list-group {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .list-group-item {
+        background: #ffffff;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .list-group-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    .list-group-item a {
+        text-decoration: none;
+        color: #34495e;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    .list-group-item a:hover {
+        color: #2980b9;
+    }
+    
+    .list-group-item .badge {
+        background-color: #2980b9;
+        color: #fff;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        margin-left: 0.5rem;
+    }
+    /* Responsive Design */
+    
+    @media (max-width: 768px) {
+        .semester-details {
+            grid-template-columns: 1fr;
+        }
+        .semester-header h1 {
+            font-size: 2rem;
+        }
+        .semester-header p {
+            font-size: 1rem;
+        }
+        .section-title {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+
+<div class="semester-container">
+    <!-- Semester Header -->
+    <div class="semester-header">
+        <h1>{{ semester.get_se_name_display }} - Batch {{ semester.batch }}</h1>
+        <p>Start Date: {{ semester.start_date }} | End Date: {{ semester.end_date|default:"Ongoing" }}</p>
+    </div>
+
+    <!-- Semester Details -->
+    <div class="semester-details">
+        <div class="semester-card">
+            <h2>Courses</h2>
+            <p><strong>Total Courses:</strong> {{ courses|length }}</p>
+            <p><strong>Elective Courses:</strong> {{ courses|length }}</p>
+        </div>
+        <div class="semester-card">
+            <h2>Teachers</h2>
+            <p><strong>Total Teachers:</strong> {{ teachers|length }}</p>
+        </div>
+        <div class="semester-card">
+            <h2>Students</h2>
+            <p><strong>Total Students:</strong> {{ students|length }}</p>
+        </div>
+    </div>
+
+    <!-- Course List -->
+    <div class="course-list">
+        <h3 class="section-title">Courses in This Semester</h3>
+        <ul class="list-group">
+            {% for course in courses %}
+            <li class="list-group-item">
+                <a href="{% url 'st-course-detail' course.id %}">
+                    {{ course.title }} ({{ course.subject_code }})
+                    <span class="badge">{{ course.credits }} Credits</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Teacher List -->
+    <div class="teacher-list">
+        <h3 class="section-title">Teachers in This Semester</h3>
+        <ul class="list-group">
+            {% for teacher in teachers %}
+            <li class="list-group-item">
+                <a href="{% url 'student-teacher-detail' teacher.id %}">
+                    {{ teacher.t_full_name }} - {{ teacher.designation }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Student List -->
+    <div class="student-list">
+        <h3 class="section-title">Students in This Semester</h3>
+        <ul class="list-group">
+            {% for student in students %}
+            <li class="list-group-item">
+                {{ student.st_name }} - {{ student.st_exam_roll_no }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

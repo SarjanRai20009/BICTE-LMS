@@ -99,6 +99,10 @@ class TeacherSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Phone number should be numeric and at least 10 digits long.")
         return value
 
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'author']
 class SemesterSerializer(serializers.ModelSerializer):
     teachers = serializers.SerializerMethodField()
     students = serializers.SerializerMethodField()

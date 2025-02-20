@@ -10,12 +10,12 @@
             <p>{{course.description}}</p>
             <p class="fw-bold">
                 Semester:
-                <a href="/api/semester-course/1" class="text-dark">{{ course.semester.get_se_name_display }}</a>
+                <a href="{% url 'st-semester-view' course.semester.id %}" class="text-dark">{{ course.semester.get_se_name_display }}</a>
             </p>
             {% if course.teacher.t_full_name%}
             <p class="fw-bold">
                 Teacher:
-                <a href="{% url 'teacher-details' pk=1 %}?course_id={{ course_id }}" class="text-dark">{{ course.teacher.t_full_name }}</a
+                <a href="{% url 'student-teacher-detail' teacher.id %}?course_id={{ course_id }}" class="text-dark">{{ course.teacher.t_full_name }}</a
         >
         {% else %}
         <p class="fw-bold">
@@ -125,7 +125,7 @@
 <div class="card mt-4 ps-3 pe-3 pt-2 pb-2 mb-3">
     <p class="fw-bold text-center">Course Materials</p>
     <ul class="list-group list-group-flush">
-        {% for material in course_materials %}
+        {% if course_materials %} {% for material in course_materials %}
         <li class="list-group-item d-flex material-item">
             {% if material.file %}
             <a href="{{ material.file.url }}" target="_blank" class="material-link d-flex align-items-center w-100 text-decoration-none">
@@ -147,7 +147,9 @@
             </div>
             {% endif %}
         </li>
-        {% endfor %}
+        {% endfor %} {% else %}
+        <li class="list-group-item text-center">No materials available</li>
+        {% endif %}
     </ul>
 </div>
 

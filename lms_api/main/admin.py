@@ -62,7 +62,19 @@ class StudentAdmin(admin.ModelAdmin):
     ordering = ('st_name',)
     # fields = ('st_exam_roll_no', 'st_reg_no', 'st_name', 'st_address', 'st_contact', 'enrollment_date', 'st_email', 'st_password', 'st_gender', 'st_father_name', 'st_date_of_birth', 'semester')
 
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+   
+    list_display = ('title', 'author')
 
+   
+    search_fields = ('title', 'author')
+
+    
+    list_filter = ('author',)
+
+    
+    ordering = ['author', 'title']
 
 @admin.register(MaterialType)
 class MaterialTypeAdmin(admin.ModelAdmin):

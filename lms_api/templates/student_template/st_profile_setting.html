@@ -112,7 +112,7 @@
                                   <option value="">Select Semester</option>
                                   {% for semester in semesters %}
                                       <option value="{{ semester.se_name }}" {% if student.semester.se_name == semester.se_name %}selected{% endif %}>
-                                          {{ semester.se_name }}
+                                          {{  semester.get_se_name_display  }}
                                       </option>
                                   {% endfor %}
                               </select>
