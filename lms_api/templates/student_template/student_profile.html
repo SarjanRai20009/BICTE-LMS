@@ -1,4 +1,4 @@
-{% extends 'student_template/st_base_template.html' %} {% block content %}
+{% extends 'student_template/st_base_template.html' %} {% block title%} My Profile -BICTE-LMS{% endblock %} {% load static %}{% block content %}
 <div class="container mt-4">
     <h2 class="text-center">Student Profile</h2>
     <div class="row justify-content-center">
@@ -6,21 +6,23 @@
             <div class="card shadow-lg">
                 <div class="card-body">
                     <div class="text-center mb-3">
-                        <img src="https://via.placeholder.com/150" class="rounded-circle" alt="Profile Picture" />
+                        {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px" /> {% else %}
+                        <img src="{% static 'images/no_image2.jpg' %}" alt="Default Profile Picture" class="rounded-circle" style="width: 150px; height: 150px" /> {% endif %}
                     </div>
-                    <h4 class="text-center">John Doe</h4>
-                    <p class="text-center text-muted">
+                    <h4 class="text-center">{{student.st_name}}</h4>
+                    <p class="text-center text-muted fw-bold">
                         BICTE Student | Sukuna Multiple Campus
                     </p>
                     <hr />
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            <strong>Email:</strong> johndoe@example.com
+                            <strong>Email:</strong> {{student.st_email}}
                         </li>
                         <li class="list-group-item">
-                            <strong>Enrollment Number:</strong> BICTE-2025-001
+                            <strong>Batch:</strong> {{student.semester.batch}}
                         </li>
-                        <li class="list-group-item"><strong>Year:</strong> Third Year</li>
+                        <li class="list-group-item"><strong>Current-Semester:</strong> {{student.semester.get_se_name_display}}</li>
                         <li class="list-group-item">
                             <strong>Completed Courses:</strong> 10
                         </li>

@@ -337,8 +337,13 @@ class StudentProfileSetting(LoginRequiredMixin, TemplateView):
            
             student = Student.objects.get(id=self.request.session.get('user_id'))
             context['student'] = student
+            
+            
+            context['courses'] = Course.objects.filter(semester=student.semester)
+            context['assignments'] = Assignment.objects.filter(course__semester=student.semester)
+            context['quizzes'] = Quiz.objects.filter(course__semester=student.semester)
            
-            context['semesters'] = Semester.objects.all()
+          
         except Student.DoesNotExist:
             context['error'] = 'Student not found. Please log in again.'
         return context
