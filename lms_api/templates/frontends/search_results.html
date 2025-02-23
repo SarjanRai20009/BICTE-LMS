@@ -1,6 +1,50 @@
 {% extends 'student_template/st_base_template.html' %} {% block content %}
+
+
+<div class="container mt-5">
+    <div class="search-bar ps-5">
+        <form class="d-flex justify-content-center" action="{% url 'search' %}" method="get">
+            <input type="text" class="form-control search-input" name="q" placeholder="Search courses, assignments, quizzes..." aria-label="Search" />
+            <button class="btn btn-primary search-btn" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+    </div>
+</div>
+
 <div class="container mt-4 text-center">
     <h2 class="mb-4">Search Results for "{{ query }}"</h2>
+
+    <!-- Teachers Section -->
+    {% if teachers %}
+    <div class="mt-5">
+        <h3 class="mb-4">Teachers</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Designation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td>
+                            <a class="text-decoration-none" href="{% url 'student-teacher-detail' teacher.id %}">{{ teacher.t_full_name }}</a>
+                        </td>
+                        <td>{{ teacher.t_email }}</td>
+                        <td>{{ teacher.t_phone_number }}</td>
+                        <td>{{ teacher.designation }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Students Section -->
     {% if students %}
@@ -22,7 +66,10 @@
                         <td>{{ student.st_name }}</td>
                         <td>{{ student.st_email }}</td>
                         <td>{{ student.st_exam_roll_no }}</td>
-                        <td>{{ student.semester.se_name }}</td>
+                        <td>
+                            {% if student.semester %} {{ student.semester.get_se_name_display }} {% else %}
+                            <span class="text-muted">No semester assigned</span> {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -48,114 +95,124 @@
                     {% for course in courses %}
                     <tr>
                         <td>
-                            <a class="text-decoration-none" href="{% url 'st-course-detail' course.id %}">{{ course.subject_code }}</a
-              >
-            </td>
-            <td>
-              <a
-                class="text-decoration-none"
-                href="{% url 'st-course-detail' course.id %}"
-                >{{ course.title }}</a
-              >
-            </td>
-            <td>
-              {% if course.teacher %}
-              <a
-                class="text-decoration-none"
-                href="{% url 'student-teacher-detail' course.teacher.id %}"
-                >{{ course.teacher.t_full_name }}</a
-              >
-              {% else %} <span>No teacher assigned</span> {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+                            <a class="text-decoration-none" href="{% url 'st-course-detail' course.id %}">{{ course.subject_code }}</a>
+                        </td>
+                        <td>
+                            <a class="text-decoration-none" href="{% url 'st-course-detail' course.id %}">{{ course.title }}</a>
+                        </td>
+                        <td>
+                            {% if course.teacher %}
+                            <a class="text-decoration-none" href="{% url 'student-teacher-detail' course.teacher.id %}">{{ course.teacher.t_full_name }}</a> {% else %}
+                            <span class="text-muted">No teacher assigned</span> {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
-  {% endif %}
+    {% endif %}
 
-  <!-- Assignments Section -->
-  {% if assignments %}
-  <div class="mt-5">
-    <h3 class="mb-4">Assignments</h3>
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Assignment Title</th>
-            <th>Course</th>
-            <th>Deadline</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for assignment in assignments %}
-          <tr>
-            <td>{{ assignment.title }}</td>
-            <td>{{ assignment.course.title }}</td>
-            <td>{{ assignment.deadline|date:"F d, Y H:i" }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <!-- Assignments Section -->
+    {% if assignments %}
+    <div class="mt-5">
+        <h3 class="mb-4">Assignments</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Assignment Title</th>
+                        <th>Course</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                    <tr>
+                        <td>
+                            <a class="text-decoration-none" href="{% url 'st-assignment-detail' assignment.id %}">{{ assignment.title }}</a> </td>
+                        <td> <a class="text-decoration-none" href="{% url 'st-course-detail' assignment.course.id %}">{{ assignment.course.title }}</a></td>
+                        <td class="text-danger">{{ assignment.deadline|date:"F d, Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
-  {% endif %}
+    {% endif %}
 
-  <!-- Quizzes Section -->
-  {% if quizzes %}
-  <div class="mt-5">
-    <h3 class="mb-3">Quizzes</h3>
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Quiz Title</th>
-            <th>Course</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for quiz in quizzes %}
-          <tr>
-            <td>{{ quiz.title }}</td>
-            <td>{{ quiz.course.title }}</td>
-            <td>
-              {% if quiz.is_active %}
-              <span class="text-success">Active</span> {% else %}
-              <span class="text-danger">Inactive</span> {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <!-- Quizzes Section -->
+    {% if quizzes %}
+    <div class="mt-5">
+        <h3 class="mb-3">Quizzes</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Quiz Title</th>
+                        <th>Course</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quiz in quizzes %}
+                    <tr>
+                        <td>{{ quiz.title }}</td>
+                        <td><a class="text-decoration-none" href="{% url 'st-course-detail' quiz.course.id %}">{{ quiz.course.title }}</a></td>
+                        <td>
+                            {% if quiz.is_active %}
+                            <span class="text-success">Active</span> {% else %}
+                            <span class="text-danger">Inactive</span> {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
-  {% endif %}
+    {% endif %}
 
-  <!-- No Results Message -->
-  {% if not students and not courses and not assignments and not quizzes %}
-  <div class="alert alert-info mt-4">No results found for "{{ query }}".</div>
-  {% endif %}
+    <!-- No Results Message -->
+    {% if not students and not courses and not assignments and not quizzes and not teachers %}
+    <div class="alert alert-info mt-4">No results found for "{{ query }}".</div>
+    {% endif %}
 </div>
 <div class="mt-2">
-  <a href="/api/student-home/" class="go_back_link text-decoration-none">
-    <button
-      class="btn btn-dark d-flex align-items-center px-3 py-2"
-      style="border-radius: 50%"
-    >
-      <i class="bi bi-arrow-left-short" style="font-size: 2rem"></i>
-      <!-- <span class="ms-2">Go Back</span> -->
-    </button>
-  </a>
-        </div>
+    <a href="/api/student-home/" class="go_back_link text-decoration-none">
+        <button class="btn btn-dark d-flex align-items-center px-3 py-2" style="border-radius: 50%">
+            <i class="bi bi-arrow-left-short" style="font-size: 2rem"></i>
+        </button>
+    </a>
+</div>
 
-        <style>
-            .go_back {
-                background-color: blue;
-                width: 3rem;
-                height: 3rem;
-                border-radius: 50%;
-            }
-        </style>
-        {% endblock %}
+<style>
+    .go_back {
+        background-color: blue;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+    }
+    /* Search Bar Styles */
+    
+    .search-bar {
+        max-width: 600px;
+        margin: 0 auto;
+        padding-bottom: 2rem;
+    }
+    
+    .search-input {
+        border: 3px solid black;
+        background-color: rgba(255, 255, 255, 0.889);
+        border-radius: 25px;
+        padding: 10px 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-btn {
+        border: 1px solid black;
+        border-radius: 50%;
+        padding: 10px 20px;
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}

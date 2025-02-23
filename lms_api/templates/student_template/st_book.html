@@ -1,0 +1,139 @@
+{% extends 'student_template/st_base_template.html' %} {% block title %}Available Books - BICTESMC{% endblock %} {% block content %}
+<div class="container mt-4 mb-4">
+    <h2 class="mb-4 text-center fw-bold text-dark fs-3">Available Books</h2>
+
+    {% if error %}
+    <div class="alert alert-danger text-center">{{ error }}</div>
+    {% else %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover shadow-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="text-center fw-bold fs-5">Title</th>
+                    <th class="text-center fw-bold fs-5">Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr class="animate__animated animate__fadeIn">
+                    <td class="text-center">{{ book.title }}</td>
+                    <td class="text-center">{{ book.author }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="text-center text-muted">No books available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} {% block extra_css %}
+<style>
+    /* Custom Styling */
+    
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .table thead th {
+        background-color: #15305b;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 15px;
+    }
+    
+    .table tbody tr {
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.02);
+    }
+    
+    .table tbody td {
+        padding: 12px;
+        vertical-align: middle;
+    }
+    
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(21, 48, 91, 0.05);
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(21, 48, 91, 0.1);
+    }
+    
+    .shadow-sm {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    /* Animations */
+    
+    .animate__animated {
+        animation-duration: 0.5s;
+    }
+    /* Responsive Design */
+    
+    @media (max-width: 768px) {
+        .table thead {
+            display: none;
+        }
+        .table,
+        .table tbody,
+        .table tr,
+        .table td {
+            display: block;
+            width: 100%;
+        }
+        .table tr {
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .table td {
+            text-align: right;
+            padding-left: 50%;
+            position: relative;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 10px;
+            width: 50%;
+            padding-right: 15px;
+            text-align: left;
+            font-weight: bold;
+            color: #15305b;
+        }
+        .table td:first-child {
+            background-color: #f8f9fa;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .table td:last-child {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border-bottom: none;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        h2 {
+            font-size: 1.5rem;
+        }
+        .table td {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %} {% block extra_js %}
+<!-- Include Animate.css for animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> {% endblock %}

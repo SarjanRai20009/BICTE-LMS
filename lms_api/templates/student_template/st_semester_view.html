@@ -1,14 +1,21 @@
 {% extends "student_template/st_base_template.html" %} {% load static %} {% block title %}Semester Detail - BICTESMC{% endblock %} {% block content %}
 <div class="container mt-5">
+    <!-- Error Message Section -->
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
     <!-- Semester Header -->
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold text-dark">{{ semester.get_se_name_display }}</h1>
-        <p class="lead text-muted">Semester Code: {{ semester.code }}</p>
+        <p class="lead text-muted">Batch: {{ semester.batch }}</p>
     </div>
 
     <!-- Courses Section -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-header text-white" style="background: linear-gradient(135deg, #28a745, #218838);">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
             <h3 class="card-title mb-0">Courses in This Semester</h3>
         </div>
         <div class="card-body">
@@ -19,7 +26,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ course.name }}</h5>
                             <p class="card-text text-muted">{{ course.description|truncatechars:100 }}</p>
-                            <a href="{% url 'st-course-detail' course.id %}" class="btn btn-success btn-sm">View Details</a>
+                            <a href="{% url 'st-course-detail' course.id %}" class="btn btn-dark btn-sm">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -34,21 +41,21 @@
 
     <!-- Teachers Section -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-header text-white" style="background: linear-gradient(135deg, #ffc107, #e0a800);">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
             <h3 class="card-title mb-0 text-center">Teachers</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
-                    <thead class="thead-light">
+                    <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Full Name</th>
-                            <th scope="col">Designation</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Phone Number</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">Gender</th>
-                            <th scope="col">Hire Date</th>
+                            <th class="text-center" scope="col">Full Name</th>
+                            <th class="text-center" scope="col">Designation</th>
+                            <th class="text-center" scope="col">Email</th>
+                            <th class="text-center" scope="col">Phone Number</th>
+                            <th class="text-center" scope="col">Address</th>
+                            <th class="text-center" scope="col">Gender</th>
+                            <th class="text-center" scope="col">Hire Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,35 +82,48 @@
 
     <!-- Students Section -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-header text-white" style="background: linear-gradient(135deg, #17a2b8, #138496);">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
             <h3 class="card-title mb-0">Students</h3>
         </div>
         <div class="card-body">
-            <div class="row">
-                {% for student in students %}
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="{% if student.profile_picture %}{{ student.profile_picture.url }}{% else %}{% static 'images/no_image2.jpg' %}{% endif %}" alt="{{ student.full_name }}" class="rounded-circle me-3" width="60" height="60">
-                                <h5 class="card-title mb-0">{{ student.full_name }}</h5>
-                            </div>
-                            <p class="card-text text-muted">{{ student.email }}</p>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-12">
-                    <p class="text-muted">No students enrolled in this semester.</p>
-                </div>
-                {% endfor %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th class="text-center" scope="col">Full Name</th>
+                            <th class="text-center" cope="col">Reg No.</th>
+                            <th class="text-center" scope="col">Roll No</th>
+                            <th class="text-center" scope="col">Contact</th>
+                            <th class="text-center" scope="col">Address</th>
+                            <th class="text-center" scope="col">Email</th>
+                            <th class="text-center" scope="col">Father Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.st_name }}</td>
+                            <td>{{ student.st_reg_no }}</td>
+                            <td>{{ student.st_exam_roll_no }}</td>
+                            <td>{{ student.st_contact }}</td>
+                            <td>{{ student.st_address }}</td>
+                            <td>{{ student.st_email }}</td>
+                            <td>{{ student.st_father_name }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No students enrolled in this semester.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <!-- Materials Section -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-header text-white" style="background: linear-gradient(135deg, #dc3545, #c82333);">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
             <h3 class="card-title mb-0">Course Materials</h3>
         </div>
         <div class="card-body">
@@ -114,7 +134,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ material.title }}</h5>
                             <p class="card-text text-muted">{{ material.description|truncatechars:100 }}</p>
-                            <a href="#" class="btn btn-danger btn-sm" download>Download</a>
+                            <a href="#" class="btn btn-dark btn-sm" download>Download</a>
                         </div>
                     </div>
                 </div>
@@ -129,7 +149,7 @@
 
     <!-- Assignments Section -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-header text-white" style="background: linear-gradient(135deg, #6f42c1, #5a3d8a);">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
             <h3 class="card-title mb-0">Assignments</h3>
         </div>
         <div class="card-body">
@@ -141,7 +161,7 @@
                             <h5 class="card-title">{{ assignment.title }}</h5>
                             <p class="card-text text-muted">{{ assignment.description|truncatechars:100 }}</p>
                             <p class="card-text"><small class="text-muted">Due Date: {{ assignment.due_date }}</small></p>
-                            <a href="#" class="btn btn-primary btn-sm" download>Download</a>
+                            <a href="#" class="btn btn-dark btn-sm" download>Download</a>
                         </div>
                     </div>
                 </div>
@@ -154,53 +174,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Custom Table Styling */
-    
-    .table thead th {
-        background-color: #343a40;
-        /* Dark gray header */
-        color: white;
-        /* White text */
-        font-weight: bold;
-        /* Bold text */
-    }
-    
-    .table tbody tr:hover {
-        background-color: #f8f9fa;
-        /* Light gray hover effect */
-    }
-    
-    .table tbody td {
-        vertical-align: middle;
-        /* Center-align content vertically */
-    }
-    
-    .rounded-circle {
-        border: 2px solid #343a40;
-        /* Add a border to profile pictures */
-    }
-    /* Button Styling */
-    
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
-    }
-    
-    .btn-warning {
-        background-color: #ffc107;
-        border-color: #ffc107;
-    }
-    
-    .btn-danger {
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-    
-    .btn-primary {
-        background-color: #6f42c1;
-        border-color: #6f42c1;
-    }
-</style>
 {% endblock %}

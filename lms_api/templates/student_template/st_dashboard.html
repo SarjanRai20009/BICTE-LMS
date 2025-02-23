@@ -1,81 +1,94 @@
-{% extends 'student_template/st_base_template.html' %} {% block title %} Student-Dashboard- BICTESMC {% endblock %} {% block content %}
+{% extends 'student_template/st_base_template.html' %} {% block title %} Student-Dashboard - BICTESMC {% endblock %} {% block content %}
 <div class="container mt-4">
     <div class="row">
+        <!-- Sidebar -->
         <aside class="col-md-3">
             <div class="card">
-                <!-- <h4 class="card-header text-dark " style="background-color: #c0c0c0">
-                    Dashboard
-                </h4> -->
-
                 <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
                     Dashboard
                 </h4>
                 <div class="list-group list-group-flush">
                     <a href="/api/student-dashboard/" class="list-group-item list-group-item-action bg-primary text-light text-center">
-            Semester</a
-          >
-          <a
-            href="/api/student-dashboard-assignment/"
-            class="list-group-item list-group-item-action"
-            >Assignments</a
-          >
-          <a
-            href="/api/student-profile-setting/"
-            class="list-group-item list-group-item-action"
-            >Profile Setting</a
-          >
-          <a
-            href="/api/change-student-account-password/"
-            class="list-group-item list-group-item-action"
-            >Manage Password</a
-          >
-          <a href="/" class="list-group-item list-group-item-action text-danger"
-            >Logout</a
-          >
-        </div>
-      </div>
-    </aside>
-
-    <section class="col-md-9 mt-4 mt-md-0">
-      <div class="card">
-        <h5 class="card-header text-center" style="background-color: #c0c0c0">
-          Semester
-        </h5>
-        <div class="card-body">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Course</th>
-                <th>
-                  <a href="#" class="text-dark" style="text-decoration: none"
-                    >Teacher</a
-                  >
-                </th>
-                <th>Course Materials</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for course in courses %}
-              <tr>
-                
-                <td>
-                  <a class="text-decoration-none " href="{% url 'st-course-detail' course.id %}">{{ course.title }}
-                  </a>
-                    </td>
-                    <td>{{ course.teacher.t_full_name }}</td>
-                    <td>Explor</td>
-                    {% endfor %}
-                    </tr>
-                    </tbody>
-                    </table>
+                        Semester
+                    </a>
+                    <a href="/api/student-dashboard-assignment/" class="list-group-item list-group-item-action">
+                        Assignments
+                    </a>
+                    <a href="/api/student-profile-setting/" class="list-group-item list-group-item-action">
+                        Profile Setting
+                    </a>
+                    <a href="/api/change-student-account-password/" class="list-group-item list-group-item-action">
+                        Manage Password
+                    </a>
+                    <a href="/" class="list-group-item list-group-item-action text-danger">
+                        Logout
+                    </a>
                 </div>
             </div>
-            </section>
+        </aside>
+
+        <!-- Main Content -->
+        <section class="col-md-9 mt-4 mt-md-0">
+            <div class="card">
+                <h5 class="card-header text-center" style="background-color: #c0c0c0">
+                    Semester Courses
+                </h5>
+                <div class="card-body">
+                    {% if error %}
+                    <div class="alert alert-danger text-center fw-bold" role="alert">
+                        {{ error }}
+                    </div>
+                    {% elif warning %}
+                    <div class="alert alert-warning text-center fw-bold" role="alert">
+                        {{ warning }}
+                    </div>
+                    {% endif %} {% if courses %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Teacher</th>
+                                <th>Course Materials</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in courses %}
+                            <tr>
+                                <td>
+                                    <a class="text-decoration-none" href="{% url 'st-course-detail' course.id %}">
+                                            {{ course.title }}
+                                        </a>
+                                </td>
+                                <td>
+                                    {% if course.teacher %}
+                                    <a class="text-decoration-none" href="{% url 'student-teacher-detail' course.teacher.id %}">
+                                      {{ course.teacher.t_full_name }}
+                                    </a> {% else %}
+                                    <span class="text-muted">Not Assigned</span> {% endif %}
+                                </td>
+                                <td>
+                                    {% if course.materials.all %}
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Explore</a> {% else %}
+                                    <span class="text-muted">No Materials</span> {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="alert alert-info text-center fw-bold" role="alert">
+                        No courses available for the current semester.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
     </div>
 </div>
+
 <style>
     .list-group-item:hover {
         font-weight: bold;
     }
 </style>
-{%endblock%}
+{% endblock %}

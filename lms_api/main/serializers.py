@@ -57,26 +57,25 @@ from django.contrib.auth.models import User
 
 
 class TeacherSerializer(serializers.ModelSerializer):
-    courses_taught = serializers.SerializerMethodField()  # For courses taught by the teacher
-    course_count = serializers.SerializerMethodField()  # For counting how many courses the teacher teaches
-    semester_details = serializers.SerializerMethodField()  # For getting the semester details for each course
-    full_name_and_email = serializers.SerializerMethodField()  # A custom field combining full name and email
+    courses_taught = serializers.SerializerMethodField()
+    course_count = serializers.SerializerMethodField() 
+    semester_details = serializers.SerializerMethodField()  
+    full_name_and_email = serializers.SerializerMethodField()  
     
     class Meta:
         model = Teacher
         fields = ['id', 'profile_picture', 't_full_name', 't_phone_number', 't_address', 't_email', 't_password', 'hire_date', 'designation', 
                   'courses_taught', 'course_count', 'semester_details', 'full_name_and_email']
 
-    # SerializerMethodField to get courses taught by the teacher
+    
     def get_courses_taught(self, obj):
-        courses = obj.course_set.all()  # Getting all courses associated with the teacher
-        return [course.title for course in courses]  # Returning course titles as a list
-
-    # SerializerMethodField to get the count of courses taught by the teacher
+        courses = obj.course_set.all() 
+        return [course.title for course in courses]  
+   
     def get_course_count(self, obj):
-        return obj.course_set.count()  # Returning the count of courses
+        return obj.course_set.count()  
 
-    # SerializerMethodField to return details of semesters for each course the teacher teaches
+  
     def get_semester_details(self, obj):
         courses = obj.course_set.all()
         semester_details = []
@@ -88,13 +87,13 @@ class TeacherSerializer(serializers.ModelSerializer):
             })
         return semester_details
 
-    # Custom field that combines the full name and email into a single string
+    
     def get_full_name_and_email(self, obj):
         return f"{obj.t_full_name} ({obj.t_email})"
 
-    # Optional: Validation to check the phone number format
+    
     def validate_t_phone_number(self, value):
-        # Ensure the phone number follows a particular pattern
+        
         if not value.isdigit() or len(value) < 10:
             raise serializers.ValidationError("Phone number should be numeric and at least 10 digits long.")
         return value
@@ -156,6 +155,10 @@ class CourseSerializer(serializers.ModelSerializer):
             "semester_name": obj.semester.get_se_name_display(),
             "semester_batch": obj.semester.batch
         }
+class OldQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OldQuestion
+        fields = '__all__'
 class CourseObjectivesSerializer(serializers.ModelSerializer):    
     class Meta:
         model = CourseObjectives
@@ -204,6 +207,32 @@ class AssignmentSubmitSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You have already submitted this assignment.")
 
         return data
+    
+    
+    
+class AssignmentFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssignmentFeedback
+        fields = ['id', 'assignment_submit', 'teacher', 'feedback', 'feedback_date']
+        read_only_fields = ['id', 'feedback_date'] 
+
+    def validate_assignment_submit(self, value):
+        """
+        Ensure the assignment_submit exists and is valid.
+        """
+        if not AssignmentSubmit.objects.filter(id=value.id).exists():
+            raise serializers.ValidationError("Invalid assignment submission.")
+        return value
+
+    def validate_teacher(self, value):
+        """
+        Ensure the teacher exists and is valid.
+        """
+        if not Teacher.objects.filter(id=value.id).exists():
+            raise serializers.ValidationError("Invalid teacher.")
+        return value
+    
+    
 class MaterialTypeSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -249,3 +278,14 @@ class NoticeSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'link': {'required': False, 'allow_null': True}  # Make 'link' optional
         }
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'
+
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = '__all__'
+

@@ -106,6 +106,12 @@ class CourseMaterialAdmin(admin.ModelAdmin):
             'classes': ('collapse',),  # Optional: make this section collapsible
         }),
     )
+    
+@admin.register(OldQuestion)
+class OldQuestionAdmin(admin.ModelAdmin):
+    list_display = ('course', 'semester', 'question_type')
+    list_filter = ('semester', 'question_type')
+    search_fields = ('course__name', 'semester__name')
 
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
@@ -120,7 +126,21 @@ class AssignmentSubmitAdmin(admin.ModelAdmin):
     list_display = ('student', 'assignment', 'submit_date')
     search_fields = ('student__username', 'assignment__title')
     list_filter = ('submit_date',)
-    
+
+
+@admin.register(AssignmentFeedback)
+class AssignmentFeedbackAdmin(admin.ModelAdmin):
+    list_display = ('assignment_submit', 'teacher', 'feedback_date')
+    list_filter = ('teacher', 'feedback_date')
+    search_fields = ('assignment_submit__assignment__title', 'teacher__t_full_name', 'feedback')
+    fieldsets = (
+        (None, {
+            'fields': ('assignment_submit', 'teacher', 'feedback')
+        }),
+    )
+    ordering = ('-feedback_date',)
+
+
 @admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
     list_display = ['title', 'uploaded_at', 'user', 'semester']
@@ -180,3 +200,17 @@ class UserRankAdmin(admin.ModelAdmin):
     list_display = ('student', 'rank', 'total_score')
     search_fields = ('student__st_name',)
     ordering = ('rank',)
+    
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('title', 'posted_by', 'news_image', 'posted_at', 'is_active')
+    list_filter = ('is_active', 'posted_at')
+    search_fields = ('title', 'content', 'posted_by__username')
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'news_image', 'content', 'posted_by', 'is_active')
+        }),
+        # Removed 'posted_at' from fieldsets since it's non-editable
+    )
+    ordering = ('-posted_at',)

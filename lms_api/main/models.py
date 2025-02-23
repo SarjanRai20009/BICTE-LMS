@@ -10,7 +10,10 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
-
+from django.core.mail import send_mail
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
 
 # Create your models here.
 
@@ -188,10 +191,13 @@ class Student(models.Model):
 
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)   
     
+    email_sent = models.BooleanField(default=False) 
+    
     
     
     def save(self, *args, **kwargs):
         """Hashes password only if it's a new password or changed"""
+        self._raw_password = self.st_password
         if self.pk:  # Check if instance exists (i.e., if it's an update)
             original = Student.objects.get(pk=self.pk)
             if original.st_password != self.st_password:
@@ -200,6 +206,9 @@ class Student(models.Model):
             self.st_password = make_password(self.st_password) 
 
         super().save(*args, **kwargs)
+        
+        
+      
 
     def check_password(self, raw_password):
         """Checks if the entered password matches the stored hashed password"""
@@ -327,13 +336,49 @@ class AssignmentSubmit(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     submit_date = models.DateTimeField(auto_now_add=True)
     assignment_file = models.FileField(upload_to="assignments/")
+    edit_count = models.PositiveIntegerField(default=0)  
 
     def __str__(self):
-        return f"{self.student.username} - {self.assignment.title}"
+        return f"{self.student.st_name} - {self.assignment.title}"  # Use st_name instead of username
+
     class Meta:
         verbose_name = "Assignment Submission"
         verbose_name_plural = "Assignment Submissions"
+        
+class AssignmentFeedback(models.Model):
+    assignment_submit = models.ForeignKey(AssignmentSubmit, on_delete=models.CASCADE, related_name='feedbacks')
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='feedbacks_given')
+    feedback = models.TextField(verbose_name="Feedback")
+    feedback_date = models.DateTimeField(auto_now_add=True, verbose_name="Feedback Date")
 
+    def __str__(self):
+        return f"Feedback by {self.teacher.t_full_name} on {self.assignment_submit.assignment.title}"
+
+    class Meta:
+        verbose_name = "Assignment Feedback"
+        verbose_name_plural = "Assignment Feedbacks"
+        ordering = ['-feedback_date']     
+
+class OldQuestion(models.Model):
+    QUESTION_TYPES = [
+        ('Objective', 'Objective'),
+        ('Subjective', 'Subjective'),
+       
+    ] 
+    QUESTION_LEVELS = [
+        ('Internal', 'Internal'),
+        ('Final', 'Final'),
+       
+    ]
+  
+    question_level = models.CharField(max_length=20, choices=QUESTION_LEVELS, default='Internal')
+    file = models.FileField(upload_to='old_questions/')
+    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    semester = models.ForeignKey('Semester', on_delete=models.CASCADE)
+    question_type = models.CharField(max_length=20, choices=QUESTION_TYPES)
+
+    def __str__(self):
+        return f"{self.course} - {self.semester} ({self.question_type})"
         
         
 class Result(models.Model):
@@ -479,6 +524,7 @@ class Notification(models.Model):
         ordering = ["-created_at"]
 class News(models.Model):
     title = models.CharField(max_length=255, verbose_name="News Title")
+    news_image = models.ImageField(upload_to='news_images/', null=True, blank=True, verbose_name="News Image") 
     content = models.TextField(verbose_name="News Content")
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posted_news", verbose_name="Posted By")
     posted_at = models.DateTimeField(auto_now_add=True, verbose_name="Posted At")
@@ -491,76 +537,3 @@ class News(models.Model):
         verbose_name = "News"
         verbose_name_plural = "News"
         ordering = ["-posted_at"]
-
-class MessageGroup(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Group Name")
-    teacher_creator = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="created_groups", null=True, blank=True)
-    student_creator = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="created_groups", null=True, blank=True)
-    students = models.ManyToManyField(Student, related_name="message_groups", blank=True)
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name="message_groups", null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
-
-    def __str__(self):
-        return f"{self.name} (Semester: {self.semester.se_name if self.semester else 'No Semester'})"
-
-    class Meta:
-        verbose_name = "Message Group"
-        verbose_name_plural = "Message Groups"
-class Message(models.Model):
-    # Allow sender to be either a Teacher or a Student
-    teacher_sender = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="sent_messages", null=True, blank=True)
-    student_sender = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="sent_messages", null=True, blank=True)
-    
-    # Receiver can be a Student, Teacher, or Group
-    student_receiver = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="received_messages", null=True, blank=True)
-    teacher_receiver = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="received_messages", null=True, blank=True)
-    group = models.ForeignKey('MessageGroup', on_delete=models.CASCADE, related_name="group_messages", null=True, blank=True)
-    
-    content = models.TextField(verbose_name="Message Content")
-    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Timestamp")
-    is_read = models.BooleanField(default=False, verbose_name="Is Read")
-
-    def __str__(self):
-        if self.group:
-            return f"Group Message in {self.group.name} by {self.get_sender_name()}"
-        return f"Message from {self.get_sender_name()} to {self.get_receiver_name()}"
-
-    def get_sender_name(self):
-        """Returns the name of the sender, whether it's a teacher or a student."""
-        if self.teacher_sender:
-            return self.teacher_sender.t_full_name
-        elif self.student_sender:
-            return self.student_sender.st_name
-        return "Anonymous"
-
-    def get_receiver_name(self):
-        """Returns the name of the receiver, whether it's a student, teacher, or group."""
-        if self.student_receiver:
-            return self.student_receiver.st_name
-        elif self.teacher_receiver:
-            return self.teacher_receiver.t_full_name
-        elif self.group:
-            return f"Group: {self.group.name}"
-        return "Unknown"
-
-    def save(self, *args, **kwargs):
-        """Override save method to handle group messaging."""
-        if self.group:  # If the message is sent to a group
-            group_members = self.group.students.all()  # Retrieve all group members
-            for member in group_members:
-                # Create a new message for each group member
-                Message.objects.create(
-                    student_sender=self.student_sender,
-                    teacher_sender=self.teacher_sender,
-                    student_receiver=member,  # Set the receiver to the group member
-                    content=self.content,
-                    is_read=False,
-                )
-            # Do not save the original group message (it's redundant)
-            return
-        super().save(*args, **kwargs)  # Save individual messages
-
-    class Meta:
-        verbose_name = "Message"
-        verbose_name_plural = "Messages"
-        ordering = ["-timestamp"]

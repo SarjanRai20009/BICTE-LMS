@@ -1,93 +1,105 @@
-{% extends 'student_template/st_base_template.html' %} {% block title %}
-Student-Dashboard- BICTESMC {% endblock %} {% block content %}
-<div class="container mt-4">
-  <div class="row">
-    <aside class="col-md-3">
-      <div class="card">
-        <h4
-          class="card-header text-dark text-center"
-          style="background-color: #c0c0c0"
-        >
-          Dashboard
-        </h4>
-        <div class="list-group list-group-flush">
-          <a
-            href="/api/student-dashboard/"
-            class="list-group-item list-group-item-action"
-          >
-            Semester
-          </a>
-          <a
-            href="/api/student-dashboard-assignment/"
-            class="list-group-item list-group-item-action bg-primary text-light text-center"
-          >
-            Assignments
-          </a>
-          <a
-            href="/api/student-profile-setting/ "
-            class="list-group-item list-group-item-action"
-          >
-            Profile Setting
-          </a>
-          <a
-            href="/api/change-student-account-password/"
-            class="list-group-item list-group-item-action"
-          >
-            Manage Password
-          </a>
-          <a
-            href="/"
-            class="list-group-item list-group-item-action text-danger"
-          >
-            Logout
-          </a>
-        </div>
-      </div>
-    </aside>
+{% extends 'student_template/st_base_template.html' %} {% block title %} Student-Dashboard - BICTESMC {% endblock %} {% block content %}
+<div class="container assignment_dashboard mt-4 ">
+    <div class="row">
+        <!-- Sidebar -->
+        <aside class="col-md-3">
+            <div class="card">
+                <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
+                    Dashboard
+                </h4>
+                <div class="list-group list-group-flush">
+                    <a href="/api/student-dashboard/" class="list-group-item list-group-item-action">
+                        Semester
+                    </a>
+                    <a href="/api/student-dashboard-assignment/" class="list-group-item list-group-item-action bg-primary text-light text-center">
+                        Assignments
+                    </a>
+                    <a href="/api/student-profile-setting/" class="list-group-item list-group-item-action">
+                        Profile Setting
+                    </a>
+                    <a href="/api/change-student-account-password/" class="list-group-item list-group-item-action">
+                        Manage Password
+                    </a>
+                    <a href="/" class="list-group-item list-group-item-action text-danger">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </aside>
 
-    <section class="col-md-9 mt-4 mt-md-0">
-      <!-- mt-4 for small screens and mt-md-0 for medium and above screens -->
-      <div class="card">
-        <h5 class="card-header text-center" style="background-color: #c0c0c0">
-          Assignments
-        </h5>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-bordered mb-0">
-              <thead>
-                <tr>
-                  <th>Assignment Overview</th>
-                  <th>Course</th>
-                  <th>
-                    <a href="# " class="text-dark" style="text-decoration: none"
-                      >Teacher</a
-                    >
-                  </th>
-                  <th>Assignment Stage</th>
-                  <th>Assign At</th>
-                  <th>Submit Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>View</td>
-                  <td>Python</td>
-                  <td>Santosh Dahal</td>
-                  <td>Final Assignment</td>
-                  <td>2081/10/6</td>
-                  <td>2081/10/20</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+        <!-- Main Content -->
+        <section class="col-md-9 mt-4 mt-md-0">
+            <div class="card">
+                <h5 class="card-header text-center" style="background-color: #c0c0c0">
+                    Assignments
+                </h5>
+                <div class="card-body p-0">
+                    {% if error %}
+                    <div class="alert alert-danger text-center fw-bold" role="alert">
+                        {{ error }}
+                    </div>
+                    {% elif warning %}
+                    <div class="alert alert-warning text-center fw-bold" role="alert">
+                        {{ warning }}
+                    </div>
+                    {% endif %} {% if assignments %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0 mt-1">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Teacher</th>
+                                    <th>Assignment Stage</th>
+                                    <th>Assign At</th>
+                                    <th>Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for assignment in assignments %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'st-course-detail' assignment.course.id %}" class="text-decoration-none">
+                                                {{ assignment.course.title }}
+                                            </a>
+                                    </td>
+                                    <td>
+                                        {% if assignment.teacher %}
+                                        <a href="{% url 'student-teacher-detail' assignment.teacher.id %}" class="text-decoration-none">
+                                                    {{ assignment.teacher.t_full_name }}
+                                                </a> {% else %}
+                                        <span class="text-muted">Not Assigned</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if assignment %}
+                                        <a href="{% url 'st-assignment-detail' assignment.id %}" class="text-decoration-none"> {{ assignment.title }}
+                                        </a> {% else %}
+                                        <span class="text-muted">No Assignment Available</span> {% endif %}
+                                    </td>
+                                    <td class="text-success">{{ assignment.posted_date|date:"Y/m/d" }}</td>
+                                    <td class="text-danger">{{ assignment.deadline|date:"Y/m/d" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info text-center fw-bold mt-3" role="alert">
+                        No assignments available for the current semester.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
 </div>
+
 <style>
-  .list-group-item:hover {
-    font-weight: bold;
-  }
+    .list-group-item:hover {
+        font-weight: bold;
+    }
+    
+    .assignment_dashboard {
+        margin-bottom: 2rem;
+    }
 </style>
 {% endblock %}

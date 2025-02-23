@@ -14,7 +14,7 @@ urlpatterns = [
     # Template views
     path('', views.BaseView.as_view(), name='base'),
     path('main/', views.MainView.as_view(), name='main'),
-    path('news/', views.NewsView.as_view(), name='news'),
+    path('news-view/', views.NewsView.as_view(), name='news'),
     # path('home/', views.IndexView.as_view(), name='index'),
     path('home/', views.index_view, name='index'),
     path('course-detail/<int:course_id>', views.CourseDetailView.as_view(), name='course-detail'),
@@ -36,9 +36,18 @@ urlpatterns = [
     
     # search 
      path('search/', views.search, name='search'),
+     
+    #  update student to new semester
+    path('update-student-semester/', update_student_semester, name='update-student-semester'),
     
     # student template views:
     path('student-home/', views.StudentHomePage.as_view(), name='student'),
+    
+    
+    path('student-home-books/', views.StudentBooksPage.as_view(), name='student-home-books'),
+    path('student-home-oldquestions/', views.StudentOldQuestionsPage.as_view(), name='student-home-oldquestions'),
+    
+    
     path('student-teacher-detail/<int:pk>/', views.TeacherDetailStudentPage.as_view(), name='student-teacher-detail'),
     path('st-semester-view/<int:pk>/', views.StudentSemesterView.as_view(), name='st-semester-view'),
     path('student-notice-list/', views.StudentNoticeList.as_view(), name='student-notice-list'),
@@ -47,9 +56,11 @@ urlpatterns = [
     path('student-dashboard/', views.StudentDashboard.as_view(), name='student-dashboard'),
     path('student-dashboard-course/', views.StudentDashboardCourse.as_view(), name='student-dashboard-course'),
     path('student-dashboard-assignment/', views.StudentDashboardAssignment.as_view(), name='student-dashboard-assignment'),
+    path('student-assignment-view/', views.StudentViewAssignment.as_view(), name='student-assignment-view'),
     path('student-profile-setting/', views.StudentProfileSetting.as_view(), name='student-profile-setting'),
     path('update-student-profile/', views.UpdateStudentProfile.as_view(), name='update-student-profile'),
-    
+    path('st-assignment/<int:assignment_id>/', StudentAssignmentDetailView.as_view(), name='st-assignment-detail'),
+    path('st-submit-assignment/<int:assignment_id>/', views.SubmitAssignmentView.as_view(), name='st-submit-assignment'),
     path('st-course-detail/<int:course_id>/', views.STCourseDetailView.as_view(), name='st-course-detail'),
     
     path('change-student-account-password/', views.ChangeStudentPassword.as_view(), name='change-student-account-password'),
@@ -88,6 +99,12 @@ urlpatterns = [
     path('assignment/', views.AssignmentList.as_view(), name='api-assignment-list'),
     path('assignment/<int:pk>/', views.AssignmentDetail.as_view(), name='api-assignment-detail'),
 
+    path('assignment-submissions/', AssignmentSubmitListCreateView.as_view(), name='api-assignment-submission-list-create'),
+    path('assignment-submissions/<int:pk>/', AssignmentSubmitRetrieveUpdateDestroyView.as_view(), name='api-assignment-submission-retrieve-update-destroy'),
+
+    path('assignment-feedbacks/', AssignmentFeedbackListCreateView.as_view(), name='api-assignment-feedback-list-create'),
+    path('assignment-feedbacks/<int:pk>/', AssignmentFeedbackRetrieveUpdateDestroyView.as_view(), name='api-assignment-feedback-retrieve-update-destroy'),
+
     path('material-type/', views.MaterialTypeList.as_view(), name='api-materialtype-list'),
     path('material-type/<int:pk>/', views.MaterialTypeDetail.as_view(), name='api-materialtype-detail'),
 
@@ -105,5 +122,15 @@ urlpatterns = [
     
     path('books/', views.BookListCreateAPIView.as_view(), name='api-book-list-create'),
     path('books/<int:id>/', views.BookRetrieveUpdateDestroyAPIView.as_view(), name='api-book-detail'),
+    
+    path('oldquestions/', OldQuestionList.as_view(), name='api-oldquestion-list'),
+    path('oldquestions/<int:pk>/', OldQuestionDetail.as_view(), name='api-oldquestion-detail'),
+    
+    path('notifications/', NotificationList.as_view(), name='api-notification-list'),
+    path('notifications/<int:pk>/', NotificationDetail.as_view(), name='api-notification-detail'),
+    
+    path('news/', NewsList.as_view(), name='api-news-list'),
+    path('news/<int:pk>/', NewsDetail.as_view(), name='api-news-detail'),
+    
 
 ]

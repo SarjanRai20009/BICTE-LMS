@@ -1,0 +1,114 @@
+{% extends 'student_template/st_base_template.html' %} {% load static %} {% block title %}Submit Assignment - BICTE-LMS{% endblock %} {% block content %}
+<div class="container my-5">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-dark animate__animated animate__fadeInDown">
+            {% if submission %}Edit Assignment{% else %}Submit Assignment{% endif %}
+        </h1>
+        <p class="lead text-muted animate__animated animate__fadeInUp fw-bold">Course: {{ assignment.course.title }}</p>
+        <p class="text-danger fw-bold animate__animated animate__fadeInUp">Deadline: {{ assignment.deadline }}</p>
+    </div>
+
+    <!-- Assignment Submission Form -->
+    <div class="card border-0 shadow-lg animate__animated animate__zoomIn">
+        <div class="card-header assin-submit_form text-white">
+            <h3 class="card-title mb-0 text-center">
+                {% if submission %}Edit Your Assignment{% else %}Upload Your Assignment{% endif %}
+            </h3>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group mb-4">
+                    <label for="assignment_file" class="form-label fw-bold">Choose File:</label>
+                    <input type="file" class="form-control" id="assignment_file" name="assignment_file" required>
+                </div>
+                {% if submission and submission.edit_count >= 2 %}
+                <button type="button" class="btn btn-secondary btn-lg w-100" disabled>
+                        <i class="bi bi-upload me-2"></i> Edit Limit Reached
+                    </button> {% else %}
+                <button type="submit" class="btn btn-primary btn-lg w-100 animate__animated ">
+                        <i class="bi bi-upload me-2"></i>
+                        {% if submission %}Edit Assignment{% else %}Submit Assignment{% endif %}
+                    </button> {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Messages Section -->
+    {% if messages %}
+    <div class="mt-4 animate__animated animate__fadeIn">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Custom Styles -->
+<style>
+    /* Custom Card Styling */
+    
+    .assin-submit_form {
+        background-color: #daa925;
+    }
+    
+    .card {
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    /* Button Animation */
+    
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+    /* Alert Styling */
+    
+    .alert {
+        border-radius: 10px;
+        transition: opacity 0.3s ease;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+    
+    .alert-error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+    /* Animation for Messages */
+    
+    .animate__animated {
+        animation-duration: 1s;
+    }
+    /* Custom Background for Header */
+    
+    .bg-primary {
+        background-color: #007bff !important;
+    }
+</style>
+
+<!-- Animate.css Library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"> {% endblock %}

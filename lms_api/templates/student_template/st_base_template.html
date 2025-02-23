@@ -29,6 +29,24 @@
             padding: 10px 15px;
             text-transform: uppercase;
             transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .navbar .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: white;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        
+        .navbar .navbar-nav .nav-link.active::after,
+        .navbar .navbar-nav .nav-link:hover::after {
+            width: 100%;
         }
         
         .navbar-nav .nav-link:hover {
@@ -342,6 +360,10 @@
                 padding: 0.5rem;
             }
         }
+        
+        .error_semester {
+            color: transparent!important;
+        }
     </style>
 </head>
 
@@ -350,7 +372,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <div class="navbar-logo">
-                <img src="{% static 'images/main_logo.png' %}" alt="Logo" />
+                <img class="mt-auto mb-auto" src="{% static 'images/main_logo.png' %}" alt="Logo" />
             </div>
             <a class="navbar-brand ms-5" href="#">BICTE LMS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -358,29 +380,32 @@
         </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto this_pading">
-                    <li class="nav-item custom-padding">
-                        <a class="nav-link {% if request.path == '/api/student-home/' %}active{% endif %}" href="/api/student-home/">Home</a
+                    <<li class="nav-item custom-padding dropdown">
+                        <a class="nav-link {% if request.path == '/api/student-home/' %}active{% endif %}" href="/api/student-home/">Home</a>
+                        <ul class="dropdown-menu insights-dropdown dropuseroption mt-2" aria-labelledby="navbarDropdown" style="margin-left: -2rem !important;">
+                            <hr class="dropdown-divider" style="color: #000000 !important;" />
+                            <li class="text-center fs-6 fw-bold text-info" style="color: #facf5a !important; ">RESOURCES</li>
+                            <hr class="dropdown-divider" />
+                            <li>
+                                <a class="fs-7 nav-link {% if request.path == '/api/student-home-books/' %}active{% endif %}" href="/api/student-home-books/" style="text-align: center;">BICTE BOOKS</a>
+                            </li>
+                            <li>
+                                <a class="fs-8 nav-link {% if request.path == '/api/student-home-oldquestions/' %}active{% endif %}" href="/api/student-home-oldquestions/" style="text-align: center;">OLD QUESTIONS</a>
+                            </li>
+
+                            <hr class="dropdown-divider" />
+
+                        </ul>
+                        </li>
+                        <li class="nav-item custom-padding">
+                            <a class="nav-link {% if request.path == '/api/st-semester-view/' %}active{% endif %}" href="/api/st-semester-view/{{ student.semester.id }}/">Semester</a
               >
             </li>
-            <li class="nav-item custom-padding">
-              <a
-                class="nav-link {% if request.path == '/api/student-course/' %}active{% endif %}"
-                href="/api/student-course/"
-                >Semester</a
-              >
-            </li>
-            <li class="nav-item custom-padding">
-              <a
-                class="nav-link {% if request.path == '/assignment/' %}active{% endif %}"
-                href="api/student-assignment/"
-                >Assignments</a
-              >
-            </li>
-            <li class="nav-item custom-padding">
-              <a
-                class="nav-link {% if request.path == '/api/leaderboard/' %}active{% endif %}"
-                href="/api/leaderboard/"
-                >Quizzes</a
+              <li class="nav-item custom-padding">
+                        <a class="nav-link {% if request.path == '/api/student-assignment-view/' %}active{% endif %}" href="/api/student-assignment-view/">Assignments</a>
+                        </li>
+                        <li class="nav-item custom-padding">
+                            <a class="nav-link {% if request.path == '/api/leaderboard/' %}active{% endif %}" href="/api/leaderboard/">Quizzes</a
               >
             </li>
 
@@ -509,12 +534,12 @@
                 />
                 {% endif %}
               </a>
-                        <ul class="dropdown-menu dropuseroption me-4" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item text-center logout_button" href="/">Logout</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-center" href="/api/student-profile/">Profile</a
+                            <ul class="dropdown-menu dropuseroption me-4" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item text-center logout_button" href="/">Logout</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-center" href="/api/student-profile/">Profile</a
                   >
                 </li>
                 <li>
@@ -544,18 +569,22 @@
               <!-- Left Section: Brand Info -->
               <div class="footer-brand">
                   <div class="navbar-logo">
-                      <img src="{% static 'images/main_logo.png' %}" alt="Logo" />
-                  </div>
-                  <h3 class="brand-name">BICTE LMS</h3>
-                  <p class="brand-tagline">Empowering Education Through Innovation</p>
-                  <div class="social-icons">
-                      <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
-                                <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
-                                <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
-                                <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                      <a href="#">
+
+                        <img src="{% static 'images/main_logo.png' %}" alt="Logo" />
+                      </a>
+            </div>
+            <h3 class="brand-name" style="color:white !important;">BICTE LMS</h3>
+            <p class="brand-tagline">Empowering Education Through Innovation</p>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
             </div>
         </div>
         </div>
+
 
         <!-- Right Section: Links and Newsletter -->
         <div class="footer-links mt-5 pe-5" style=" justify-content: center;  ">
@@ -564,7 +593,11 @@
                 <h4 class="links-title">Quick Links</h4>
                 <ul>
                     <li><a href="/api/student-home/">Home</a></li>
-                    <li><a href="/api/student-course/">Semester</a></li>
+                    <li>
+                        {% if student.semester %}
+                        <a href="{% url 'st-semester-view' student.semester.id %}">Semester</a> {% else %}
+                        <span class="text-muted error_semester ">Semester (Not Assigned)</span> {% endif %}
+                    </li>
                     <li><a href="/api/student-assignment/">Assignments</a></li>
                     <li><a href="/api/leaderboard/">Quizzes</a></li>
                     <li><a href="/api/student-profile/">Profile</a></li>
@@ -575,22 +608,18 @@
             <div class="links-column">
                 <h4 class="links-title  text-center">Contact Us</h4>
                 <ul>
-                    <li><i class="bi bi-geo-alt"></i> 123 Education Street, Kathmandu, Nepal</li>
-                    <li><i class="bi bi-telephone"></i> +977 123 456 7890</li>
+                    <li><i class="bi bi-geo-alt"></i> sundarharaincha-12, Morang, Nepal</li>
+                    <li><i class="bi bi-telephone"></i> 021-545617, 545717</li>
                     <li><i class="bi bi-envelope"></i> info@bicte-lms.com</li>
                 </ul>
             </div>
 
             <!-- Newsletter -->
             <div class="links-column">
-                <h4 class="links-title text-center">Newsletter</h4>
-                <p class=" text-center"> to get the latest updates.</p>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="Your Email" required />
-                    <button type="submit"><i class="bi bi-send"></i></button>
-                </form>
+                <h4 class="links-title text-center">News &amp; Notice</h4>
+                <p class=" text-center bi bi-arrow-right-square-fill">
+                    <a href="/api/student-notice-list/" class="text-decoration-none text-light fw-bold"> Click Here </a><span class="bi bi-arrow-left-square-fill"> To get the latest updates</span>.</p>
             </div>
-        </div>
         </div>
 
         <!-- Bottom Section: Copyright -->
@@ -600,9 +629,7 @@
         </div>
         </footer>
 
-        <script>
-            document.getElementById("current-year").textContent = new Date().getFullYear();
-        </script>
+
         <script>
             document.getElementById("current-year").textContent =
                 new Date().getFullYear();
