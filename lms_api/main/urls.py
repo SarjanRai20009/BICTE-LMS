@@ -37,6 +37,10 @@ urlpatterns = [
     # search 
      path('search/', views.search, name='search'),
      
+     
+    # Student Profile
+    path('view-other-profile/<int:student_id>/', StudentProfileViewByOther.as_view(), name='view-other-profile'),
+     
     #  update student to new semester
     path('update-student-semester/', update_student_semester, name='update-student-semester'),
     
@@ -49,6 +53,8 @@ urlpatterns = [
     
     
     path('student-teacher-detail/<int:pk>/', views.TeacherDetailStudentPage.as_view(), name='student-teacher-detail'),
+    
+    
     path('st-semester-view/<int:pk>/', views.StudentSemesterView.as_view(), name='st-semester-view'),
     path('student-notice-list/', views.StudentNoticeList.as_view(), name='student-notice-list'),
     path('student-profile/', views.StudentProfile.as_view(), name='student-profile'),

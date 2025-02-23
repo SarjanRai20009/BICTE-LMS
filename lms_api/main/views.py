@@ -184,6 +184,53 @@ def search(request):
 
 
 # Student view
+
+
+# other profile view start
+
+class StudentProfileViewByOther(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/student_profile_view_by_other.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the target student's profile using the ID from the URL
+        target_student = get_object_or_404(Student, id=self.kwargs['student_id'])
+        context['target_student'] = target_student
+        
+        # Fetch related data for the target student
+        courses = Course.objects.filter(semester=target_student.semester)
+        assignments_submitted = AssignmentSubmit.objects.filter(student=target_student)
+        quiz_attempts = QuizAttempt.objects.filter(student=target_student)
+        user_rank = UserRank.objects.filter(student=target_student).first()
+        
+        # Add target student's data to the context
+        context['courses'] = courses
+        context['assignments_submitted'] = assignments_submitted
+        context['quiz_attempts'] = quiz_attempts
+        context['user_rank'] = user_rank
+        
+        # Fetch the logged-in student's profile (optional, for context)
+        try:
+            logged_student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = logged_student
+        except Student.DoesNotExist:
+            context['error'] = 'Logged-in student not found. Please log in again.'
+        
+        return context
+
+
+ 
+# other profile view end
+ 
+
+
+
+
+
+
+
 def update_student_semester(request):
     if request.method == 'POST':
         semester_id = request.POST.get('semester_id')

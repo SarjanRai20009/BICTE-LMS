@@ -1,0 +1,110 @@
+{% extends 'student_template/st_base_template.html' %} {% block title %}Profile - BICTE-LMS{% endblock %} {% load static %} {% block content %}
+<div class="container-fluid other_st_Profile " style="margin-bottom: 2rem !important;">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <!-- Profile Header Section -->
+            <div class="card shadow-lg border-0 rounded-lg mt-5 animated fadeIn">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0 text-center">Student Profile</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Profile Picture -->
+                        <div class="col-md-4 text-center">
+                            <img src="{{ target_student.profile_picture.url }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover" />
+                            <h4 class="mb-0">{{ target_student.st_name }}</h4>
+                            <p class="text-muted">{{ target_student.st_email }}</p>
+                        </div>
+                        <!-- Profile Details -->
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p>
+                                        <strong>Roll No:</strong> {{ target_student.st_exam_roll_no }}
+                                    </p>
+                                    <p>
+                                        <strong>Registration No:</strong> {{ target_student.st_reg_no }}
+                                    </p>
+                                    <p>
+                                        <strong>Semester:</strong> {{ target_student.semester.get_se_name_display }}
+                                    </p>
+                                    {% if target_student.rank %} {% if target_student.rank.total_score == 0 %}
+                                    <p><strong>User Quiz Rank:</strong> UD</p>
+                                    {% else %}
+                                    <p><strong>User Quiz Rank:</strong> {{ target_student.rank.rank }}</p>
+                                    {% endif %} {% else %}
+                                    <p><strong>User Quiz Rank:</strong> Not Available</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <p>
+                                        <strong>Date of Birth:</strong> {{ target_student.st_date_of_birth|date:"F j, Y" }}
+                                    </p>
+                                    <p>
+                                        <strong>Contact:</strong> {{ target_student.st_contact }}
+                                    </p>
+                                    <p>
+                                        <strong>Address:</strong> {{ target_student.st_address }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endblock %} {% block extra_css %}
+<style>
+    /* Custom CSS for animations and responsiveness */
+    
+    .animated {
+        animation-duration: 1s;
+        animation-fill-mode: both;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    .fadeIn {
+        animation-name: fadeIn;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .fadeInUp {
+        animation-name: fadeInUp;
+    }
+    /* Responsive adjustments */
+    
+    @media (max-width: 768px) {
+        .card-body .row>div {
+            margin-bottom: 1rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-body .row>div {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+{% endblock %}
