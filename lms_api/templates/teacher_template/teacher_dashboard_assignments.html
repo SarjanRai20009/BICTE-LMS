@@ -1,133 +1,133 @@
-{% extends 'teacher_template/t_basepage.html' %} {% block title %}Upload
-Assignment - BICTE-LMS{% endblock %} {% block content %}
+{% extends 'teacher_template/t_basepage.html' %} {% block title %}Upload Assignment - BICTE-LMS{% endblock %} {% block content %}
 <div class="container mt-4">
-  <div class="row">
-    <!-- Sidebar -->
-    <aside class="col-md-3">
-      <div class="card">
-        <h4
-          class="card-header text-dark text-center"
-          style="background-color: #c0c0c0"
-        >
-          Dashboard
-        </h4>
-        <div class="list-group list-group-flush">
-          <a
-            href="/api/teacher-dashboard-courses/"
-            class="list-group-item list-group-item-action"
-          >
-            Course
-          </a>
-          <a
-            href="/api/teacher-dashboard-assignments/"
-            class="list-group-item list-group-item-action bg-primary text-light text-center"
-          >
-            Manage Assignments
-          </a>
-          <a
-            href="/api/teacher-profile-setting/"
-            class="list-group-item list-group-item-action"
-          >
-            Profile Setting
-          </a>
-          <a
-            href="/api/teacher-change-password/"
-            class="list-group-item list-group-item-action"
-          >
-            Manage Password
-          </a>
-          <a
-            href="/"
-            class="list-group-item list-group-item-action text-danger"
-          >
-            Logout
-          </a>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <section class="col-md-9 mt-4 mt-md-0">
-      <div class="card">
-        <h5 class="card-header text-center" style="background-color: #c0c0c0">
-          Upload Assignment
-        </h5>
-        <div class="card-body">
-          <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <!-- Course Selection -->
-            <div class="mb-3">
-              <label for="course" class="form-label">Select Course</label>
-              <select class="form-select" id="course" name="course" required>
-                <option value="" selected disabled>-- Select Course --</option>
-                {% for course in courses %}
-                <option value="{{ course.id }}">
-                  {{ course.name }} ({{ course.semester }})
-                </option>
-                {% endfor %}
-              </select>
+    <div class="row">
+        <!-- Sidebar -->
+        <aside class="col-md-3">
+            <div class="card">
+                <h4 class="card-header text-dark text-center" style="background-color: #ccccff">
+                    Dashboard
+                </h4>
+                <div class="list-group list-group-flush">
+                    <a href="/api/teacher-dashboard-courses/" class="list-group-item list-group-item-action">
+                        Course
+                    </a>
+                    <a href="/api/teacher-dashboard-assignments/" class="list-group-item list-group-item-action bg-primary text-light text-center">
+                        Manage Assignments
+                    </a>
+                    <a href="/api/teacher-profile-setting/" class="list-group-item list-group-item-action">
+                        Profile Setting
+                    </a>
+                    <a href="/api/teacher-change-password/" class="list-group-item list-group-item-action">
+                        Manage Password
+                    </a>
+                    <a href="/" class="list-group-item list-group-item-action text-danger">
+                        Logout
+                    </a>
+                </div>
             </div>
+        </aside>
 
-            <!-- Assignment Title -->
-            <div class="mb-3">
-              <label for="title" class="form-label">Assignment Title</label>
-              <input
-                type="text"
-                class="form-control"
-                id="title"
-                name="title"
-                placeholder="Enter assignment title"
-                required
-              />
-            </div>
+        <!-- Main Content -->
+        <section class="col-md-9 mt-4 mt-md-0">
+            <div class="card">
+                <h5 class="card-header text-center" style="background-color: #ccccff">
+                    Upload Assignment
+                </h5>
+                <div class="card-body">
+                    <!-- Display success or error messages -->
+                    {% if messages %} {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show text-center" role="alert">
+                        {{ message }}
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+                    </div>
+                    {% endfor %} {% endif %}
 
-            <!-- Assignment File Upload -->
-            <div class="mb-3">
-              <label for="assignment_file" class="form-label"
-                >Upload File</label
-              >
-              <input
-                type="file"
-                class="form-control"
-                id="assignment_file"
-                name="assignment_file"
-                accept=".pdf,.doc,.docx,.zip"
-                required
-              />
-              <small class="text-muted"
-                >Allowed formats: PDF, DOC, DOCX, ZIP</small
-              >
-            </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
 
-            <!-- Due Date Picker -->
-            <div class="mb-3">
-              <label for="due_date" class="form-label">Due Date</label>
-              <input
-                type="date"
-                class="form-control"
-                id="due_date"
-                name="due_date"
-                required
-              />
-            </div>
+                        <!-- Course Selection -->
+                        <div class="mb-3">
+                            <label class="fw-bold" for="course" class="form-label">Select Course:</label>
+                            <select class="form-select" id="course" name="course" required>
+                                <option class="text-center" value="" selected disabled>-- Select Course --</option>
+                                {% for course in courses %}
+                                    <option class="text-center" value="{{ course.id }}">{{ course.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-            <!-- Submit Button -->
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary">
-                Upload Assignment
-              </button>
+                        <!-- Semester - Batch -->
+                        <div class="mb-3">
+                            <label class="fw-bold" for="semester" class="form-label">Select Semester:</label>
+                            <select class="form-select" id="semester" name="semester" required>
+                                <option class="text-center" value="" selected disabled>-- Select Semester --</option>
+                                {% for semester in semesters %}
+                                    <option class="text-center" value="{{ semester.id }}">
+                                        {{ semester.get_se_name_display }} - Batch {{ semester.batch }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Assignment Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Assignment Title</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Enter assignment title" required />
+                        </div>
+
+                        <!-- Assignment Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Assignment Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter assignment description"></textarea>
+                        </div>
+
+                        <!-- Assignment File Upload -->
+                        <div class="mb-3">
+                            <label for="assignment_file" class="form-label">Upload File</label>
+                            <input type="file" class="form-control" id="assignment_file" name="assignment_file" accept=".pdf,.doc,.docx,.zip" required />
+                            <small class="text-muted">Allowed formats: PDF, DOC, DOCX, ZIP</small>
+                        </div>
+
+                        <!-- Due Date Picker -->
+                        <div class="mb-3">
+                            <label for="due_date" class="form-label">Due Date</label>
+                            <input type="datetime-local" class="form-control" id="due_date" name="due_date" required />
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Upload Assignment</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
-        </div>
-      </div>
-    </section>
-  </div>
+        </section>
+    </div>
 </div>
 
+<!-- JavaScript to auto-hide messages after 3 seconds -->
+<script>
+    // Function to hide alerts after 3 seconds
+    function hideAlerts() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.style.transition = 'opacity 1s';
+                alert.style.opacity = '0';
+                setTimeout(() => {
+                    alert.remove();
+                }, 1000); // Remove after fade-out
+            }, 3000); // Hide after 3 seconds
+        });
+    }
+
+    // Call the function when the page loads
+    document.addEventListener('DOMContentLoaded', hideAlerts);
+</script>
+
 <style>
-  .list-group-item:hover {
-    font-weight: bold;
-  }
+    .list-group-item:hover {
+        font-weight: bold;
+    }
 </style>
 {% endblock %}

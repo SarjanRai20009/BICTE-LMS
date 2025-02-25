@@ -45,6 +45,7 @@ class Teacher(models.Model):
         """Hashes password only if it's a new password or changed"""
         if self.pk:  # Check if instance exists (i.e., if it's an update)
             original = Teacher.objects.get(pk=self.pk)
+            
             if original.t_password != self.t_password:
                 self.t_password = make_password(self.t_password)  # Hash the new password if it’s changed
         else:  # New user
@@ -55,6 +56,10 @@ class Teacher(models.Model):
     def check_password(self, raw_password):
         """Checks if the entered password matches the stored hashed password"""
         return check_password(raw_password, self.t_password)
+    
+    def verify_current_password(self, raw_password):
+        """Verifies the current password without displaying it"""
+        return self.check_password(raw_password)
 
     def __str__(self):
         return f"{self.t_full_name} - {self.t_email} - {self.t_phone_number}"

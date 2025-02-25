@@ -380,7 +380,7 @@
         </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto this_pading">
-                    <<li class="nav-item custom-padding dropdown">
+                    <li class="nav-item custom-padding dropdown">
                         <a class="nav-link {% if request.path == '/api/student-home/' %}active{% endif %}" href="/api/student-home/">Home</a>
                         <ul class="dropdown-menu insights-dropdown dropuseroption mt-2" aria-labelledby="navbarDropdown" style="margin-left: -2rem !important;">
                             <hr class="dropdown-divider" style="color: #000000 !important;" />
@@ -396,16 +396,16 @@
                             <hr class="dropdown-divider" />
 
                         </ul>
-                        </li>
-                        <li class="nav-item custom-padding">
-                            <a class="nav-link {% if request.path == '/api/st-semester-view/' %}active{% endif %}" href="/api/st-semester-view/{{ student.semester.id }}/">Semester</a
+                    </li>
+                    <li class="nav-item custom-padding">
+                        <a class="nav-link {% if request.path == '/api/st-semester-view/' %}active{% endif %}" href="/api/st-semester-view/{{ student.semester.id }}/">Semester</a
               >
             </li>
               <li class="nav-item custom-padding">
                         <a class="nav-link {% if request.path == '/api/student-assignment-view/' %}active{% endif %}" href="/api/student-assignment-view/">Assignments</a>
-                        </li>
-                        <li class="nav-item custom-padding">
-                            <a class="nav-link {% if request.path == '/api/leaderboard/' %}active{% endif %}" href="/api/leaderboard/">Quizzes</a
+                    </li>
+                    <li class="nav-item custom-padding">
+                        <a class="nav-link {% if request.path == '/api/leaderboard/' %}active{% endif %}" href="/api/leaderboard/">Quizzes</a
               >
             </li>
 
@@ -534,12 +534,12 @@
                 />
                 {% endif %}
               </a>
-                            <ul class="dropdown-menu dropuseroption me-4" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item text-center logout_button" href="/">Logout</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-center" href="/api/student-profile/">Profile</a
+                        <ul class="dropdown-menu dropuseroption me-4" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item text-center logout_button" href="/">Logout</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-center" href="/api/student-profile/">Profile</a
                   >
                 </li>
                 <li>

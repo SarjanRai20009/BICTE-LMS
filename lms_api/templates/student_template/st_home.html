@@ -12,8 +12,8 @@
                 <li class="notice-list">
                     <span class="title"><a href="#">{{ notice.title }}</a></span>
                     <span class="timestamp text-danger fw-bold">
-                        - {{ notice.timestamp|date:"F d, Y" }}
-                    </span>
+            - {{ notice.timestamp|date:"F d, Y" }}
+          </span>
                 </li>
                 {% endfor %}
             </ul>
@@ -24,8 +24,8 @@
                 <li class="notice-list">
                     <span class="title"><a href="#">{{ notice.title }}</a></span>
                     <span class="timestamp text-danger fw-bold">
-                        - {{ notice.timestamp|date:"F d, Y" }}
-                    </span>
+            - {{ notice.timestamp|date:"F d, Y" }}
+          </span>
                 </li>
                 {% endfor %}
             </ul>
@@ -42,9 +42,7 @@
 
     <!-- Display error message if any -->
     {% if error %}
-    <div class="alert alert-danger" role="alert">
-        {{ error }}
-    </div>
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
     {% endif %}
 
     <!-- Search Bar -->
@@ -52,8 +50,8 @@
         <form id="searchForm" class="d-flex justify-content-center" action="{% url 'search' %}" method="get">
             <input type="text" class="form-control search-input" name="q" placeholder="Search courses, assignments, quizzes..." aria-label="Search" />
             <button class="btn btn-primary search-btn" type="submit">
-                <i class="bi bi-search"></i>
-            </button>
+        <i class="bi bi-search"></i>
+      </button>
         </form>
     </div>
 </div>
@@ -159,13 +157,13 @@
 
         <!-- Carousel Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
     </div>
 </div>
 
@@ -195,14 +193,14 @@
                                 <td>{{ course.subject_code }}</td>
                                 <td>
                                     <a class="text-decoration-none" href="{% url 'st-course-detail' course.id %}">
-                                                {{ course.title }}
-                                            </a>
+                    {{ course.title }}
+                  </a>
                                 </td>
                                 <td>
                                     {% if course.teacher %}
                                     <a class="text-decoration-none" href="{% url 'student-teacher-detail' course.teacher.id %}">
-                                                    {{ course.teacher.t_full_name }}
-                                                </a> {% else %} No Teacher Assigned {% endif %}
+                    {{ course.teacher.t_full_name }}
+                  </a> {% else %} No Teacher Assigned {% endif %}
                                 </td>
                             </tr>
                             {% endfor %} {% else %}
@@ -240,8 +238,8 @@
                                 <td>{{ quiz.title }}</td>
                                 <td>
                                     <a class="text-decoration-none" href="{% url 'st-course-detail' quiz.course.id %}">
-                                                {{ quiz.course.title }}
-                                            </a>
+                    {{ quiz.course.title }}
+                  </a>
                                 </td>
                                 <td>
                                     {% if quiz.is_active %}
@@ -262,7 +260,6 @@
     </div>
 
     <!-- Assignments Card -->
-
 </div>
 <!-- Custom Styles -->
 <style>

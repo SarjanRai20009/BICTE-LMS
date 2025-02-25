@@ -1,6 +1,204 @@
-{% extends 'teacher_template/t_basepage.html' %} {% block content %}{% block title %} My Home- BICTE-LMS{% endblock %}
-<h1>Welcome to the Teacher Home Page</h1>
-<p>
-    This is the home page for teachers. You can manage your courses, assignments, and quizzes from here.
-</p>
+{% extends 'teacher_template/t_basepage.html' %} {% block title %}My Home - BICTE-LMS{% endblock %} {% block content %}
+<!-- <div class="latest-notice-section">
+    <a href="#" class="text-decoration-none text-light fw-bold">
+        <div class="latest-notice-label">Latest Notice</div>
+    </a>
+    <div class="stock-ticker">
+        <div class="ticker-container">
+            <ul class="ticker-ul">
+                {% for notice in latest_notices %}
+                <li class="notice-list">
+                    <span class="title"><a href="#">{{ notice.title }}</a></span>
+                    <span class="timestamp text-danger fw-bold">
+            - {{ notice.timestamp|date:"F d, Y" }}
+          </span>
+                </li>
+                {% endfor %}
+            </ul>
+
+
+            <ul class="ticker-ul" aria-hidden="true">
+                {% for notice in latest_notices %}
+                <li class="notice-list">
+                    <span class="title"><a href="#">{{ notice.title }}</a></span>
+                    <span class="timestamp text-danger fw-bold">
+            - {{ notice.timestamp|date:"F d, Y" }}
+          </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div> -->
+<!-- Hero Section -->
+<section class="hero d-flex align-items-center">
+    <div class="container welcome_teacher text-center text-white">
+        <h1 class="mb-4">
+            WELCOME {{teacher.t_full_name}},<br /> TO BICTE-LMS
+        </h1>
+        <p class="mb-4">Manage your courses note, assignments, quizzes and more.</p>
+
+        <!-- Search Form -->
+        <form id="searchForm" class="form-inline justify-content-center mb-4" action="#" method="get">
+            <input class="form-control form-control-lg mr-2" type="text" placeholder="Search courses, students, teacher" aria-label="Search" style="min-width: 300px" />
+            <button class="btn btn-warning btn-lg" type="submit">Search</button>
+        </form>
+
+        <!-- CTA Buttons/Links -->
+        <div>
+            <a href="#" class="btn btn-outline-light btn-lg mr-2">All Courses</a>
+            <a href="#" class="btn btn-light btn-lg read_more">Read More</a>
+        </div>
+    </div>
+</section>
+<!-- End Hero Section -->
+
+<!-- Icons/Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <div class="feature-box p-4 border rounded">
+                    <h5>Academy</h5>
+                    <p class="text-muted">Short description about Academy</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="feature-box p-4 border rounded">
+                    <h5>Courses</h5>
+                    <p class="text-muted">Short description about Courses</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="feature-box p-4 border rounded">
+                    <h5>Seminar</h5>
+                    <p class="text-muted">Short description about Seminar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .stock-ticker {
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        margin-top: 1rem;
+        margin-bottom: 1.6rem;
+        font-size: 1rem;
+        padding-block: 4px;
+        border-block: 0.7px solid red;
+        display: flex;
+        overflow: hidden;
+        user-select: none;
+        height: 4.3rem;
+    }
+    
+    .stock-ticker .ticker-container {
+        display: flex;
+        gap: 2rem;
+        animation: scroll 20s linear infinite;
+    }
+    
+    .stock-ticker ul {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+        flex-shrink: 0;
+        padding-bottom: 10px;
+    }
+    
+    @keyframes scroll {
+        to {
+            transform: translateX(calc(-100% - 2rem));
+        }
+    }
+    
+    .stock-ticker .ticker-container:hover {
+        animation-play-state: paused;
+    }
+    
+    .stock-ticker .title {
+        font-weight: bold;
+        text-decoration: none;
+    }
+    
+    .stock-ticker .timestamp {
+        margin-inline: 4px;
+    }
+    
+    .stock-ticker .title a {
+        text-decoration: none;
+        color: black;
+    }
+    
+    .notice-list {
+        margin-top: 1rem;
+    }
+    
+    .latest-notice-label {
+        background-color: #ee9552;
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 600;
+        padding: 8px 15px;
+        border-radius: 4px;
+        margin: 1rem auto;
+        width: 80%;
+        text-align: center;
+        white-space: nowrap;
+    }
+    
+    .read_more:hover {
+        background: rgba(0, 0, 0, 0.4);
+        color: #ffffff;
+    }
+    
+    .hero {
+        background: url("/static/images/college_image.jpg") no-repeat center center/cover;
+        min-height: 80vh;
+        position: relative;
+    }
+    
+    .hero .container {
+        z-index: 2;
+    }
+    /* You can add a subtle overlay if you want a darker background behind the text */
+    
+    .welcome_teacher {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+    
+    .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        /* Adjust the alpha for darker/lighter overlay */
+    }
+    /* Make sure text stands out on hero image */
+    
+    .hero h1,
+    .hero p,
+    .hero form,
+    .hero a {
+        position: relative;
+        z-index: 3;
+    }
+    /* Top Bar */
+    
+    .topbar-left i {
+        margin-right: 3px;
+    }
+    /* Feature Boxes */
+    
+    .feature-box {
+        background-color: #ffffff;
+    }
+</style>
 {% endblock %}

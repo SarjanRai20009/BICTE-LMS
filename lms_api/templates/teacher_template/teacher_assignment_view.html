@@ -1,0 +1,132 @@
+{% extends 'teacher_template/t_basepage.html' %} {% block title %}View Assignments - BICTE-LMS{% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <h5 class="card-header text-center" style="background-color: #ccccff">
+            View Submitted Assignments
+        </h5>
+        <div class="card-body">
+            <!-- Filter Form -->
+            <form method="GET" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="semester" class="form-label">Semester</label>
+                        <select class="form-select" id="semester" name="semester">
+                            <option value="">All Semesters</option>
+                            {% for semester in semesters %}
+                                <option value="{{ semester.id }}" {% if request.GET.semester == semester.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ semester.get_se_name_display }} - Batch {{ semester.batch }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="course" class="form-label">Course</label>
+                        <select class="form-select" id="course" name="course">
+                            <option value="">All Courses</option>
+                            {% for course in courses %}
+                                <option value="{{ course.id }}" {% if request.GET.course == course.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ course.title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary mt-4">Filter</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Submitted Assignments Table -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Assignment</th>
+                        <th>Submitted File</th>
+                        <th>Submission Date</th>
+                        <th>Feedback</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submission in submitted_assignments %}
+                    <tr>
+                        <td>{{ submission.student.st_name }}</td>
+                        <td>{{ submission.assignment.title }}</td>
+                        <td>
+                            <a href="{{ submission.assignment_file.url }}" class="btn btn-sm btn-primary" download>
+                                Download
+                            </a>
+                        </td>
+                        <td>{{ submission.submit_date }}</td>
+                        <td>
+                            {% if submission.feedbacks.exists %}
+                            <!-- Display existing feedback with an Edit button -->
+                            <div class="feedback-display">
+                                <p>{{ submission.feedbacks.first.feedback }}</p>
+                                <button class="btn btn-sm btn-warning edit-feedback-btn" data-submission-id="{{ submission.id }}">
+                                        Edit
+                                    </button>
+                            </div>
+                            <!-- Edit feedback form (hidden by default) -->
+                            <form method="POST" action="{% url 'edit-feedback' submission.id %}" class="feedback-form" style="display: none;">
+                                {% csrf_token %}
+                                <textarea name="feedback" class="form-control" rows="2">{{ submission.feedbacks.first.feedback }}</textarea>
+                                <button type="submit" class="btn btn-sm btn-success mt-2">Update Feedback</button>
+                            </form>
+                            {% else %}
+                            <!-- Form to submit new feedback -->
+                            <form method="POST" action="{% url 'add-feedback' submission.id %}" class="feedback-form">
+                                {% csrf_token %}
+                                <textarea name="feedback" class="form-control" rows="2" placeholder="Enter feedback"></textarea>
+                                <button type="submit" class="btn btn-sm btn-success mt-2">Feedback</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to handle Edit Feedback button -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listeners to all Edit buttons
+        document.querySelectorAll('.edit-feedback-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const submissionId = this.getAttribute('data-submission-id');
+                const feedbackDisplay = this.closest('.feedback-display');
+                const feedbackForm = feedbackDisplay.nextElementSibling;
+
+                // Toggle visibility
+                feedbackDisplay.style.display = 'none';
+                feedbackForm.style.display = 'block';
+            });
+        });
+    });
+</script>
+
+<style>
+    .feedback-form textarea {
+        width: 100%;
+        resize: vertical;
+    }
+    
+    .feedback-display {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    .feedback-display p {
+        margin: 0;
+    }
+    
+    .edit-feedback-btn {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}

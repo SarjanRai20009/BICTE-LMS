@@ -3,7 +3,7 @@
     <div class="row">
         <aside class="col-md-3">
             <div class="card">
-                <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
+                <h4 class="card-header text-dark text-center" style="background-color:#CCCCFF">
                     Dashboard
                 </h4>
                 <div class="list-group list-group-flush">
@@ -36,24 +36,39 @@
 
     <section class="col-md-9 mt-4 mt-md-0">
       <div class="card">
-        <h5 class="card-header text-center" style="background-color: #c0c0c0">
+        <h5 class="card-header text-center" style="background-color: #CCCCFF">
           My Course
         </h5>
         <div class="card-body">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Course</th>
-                <th><a href="# " class="text-dark">Semester</a></th>
-                    <th>Course Materials</th>
+                <th class="text-center" >Course</th>
+                <th class="text-center"><a href="# " class="text-dark">Semester</a></th>
+                    <th class="text-center">Course Materials</th>
                     </tr>
                     </thead>
+                    {% if courses %}
+                    <!--  -->
+                    {% for course in courses %}
                     <tbody>
-                        <td>Python</td>
-                        <td>Dhaulagiri (7th)</td>
-                        <td>Explor</td>
+
+                        <td class="text-center">{{course.title}}</td>
+                        <td class="text-center">{{course.semester.get_se_name_display}}</td>
+                        <!-- / <td>Dhaulagiri (7th)</td> -->
+                        <td class="text-center explor_link text-primary">Explor</td>
                     </tbody>
+                    {% endfor %}
+                    <!--  -->
+                    {% else %}
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="text-center text-warning bg-secondary">No course found</td>
+                        </tr>
+                    </tbody>
+                    {% endif %}
                     </table>
+
                 </div>
             </div>
             </section>
@@ -62,6 +77,13 @@
 <style>
     .list-group-item:hover {
         font-weight: bold;
+    }
+    
+    .explor_link:hover {
+        font-size: large;
+        color: red !important;
+        font-weight: bold;
+        transition: 1s ease;
     }
 </style>
 {% endblock %}

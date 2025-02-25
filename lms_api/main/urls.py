@@ -83,11 +83,22 @@ urlpatterns = [
     path('teacher-home/', views.TeacherHomePage.as_view(), name='teacher-home'),
     path('teacher-dashboard/', views.TeacherDashboard.as_view(), name='teacher-dashboard'),   
     path('teacher-dashboard-courses/', views.TeacherDashboardCourses.as_view(), name='teacher-courses'),
-    path('teacher-dashboard-assignments/', views.TeacherDassboardAssignments.as_view(), name='teacher-assignments'),
+    
+    path('teacher-upload-course-material/', views.CourseMaterialUploadView.as_view(), name='teacher-upload-course-material'),
+    
+    path('teacher-view-student-profile/<int:student_id>/', TeacherStudentProfileView.as_view(), name='teacher-view-student-profile'),
+    
+    path('teacher-dashboard-assignments/', views.TeacherDassboardAssignments.as_view(), name='teacher-dashboard-assignments'),
+    
+    path('teacher-assignments-view/', TeacherAssignmentView.as_view(), name='teacher-assignmentsv-view'),
+    path('add-feedback/<int:submission_id>/', add_feedback, name='add-feedback'),
+    path('edit-feedback/<int:submission_id>/', edit_feedback, name='edit-feedback'),
+    
     path('teacher-profile-setting/', views.TeacherDashpoardProfileSeting.as_view(), name='teacher-profile-setting'),
     path('teacher-change-password/', views.TeacherDashboardChangePassword.as_view(), name='teacher-change-password'),
     path('teacher-details/<int:pk>', views.TeacherDetails.as_view(), name='teacher-details'),
     path('base-teacher-details/<int:pk>', views.BaseTeacherDetails.as_view(), name='base-teacher-details'),
+    path('teacher-active-semester/<int:course_id>/', TeacherActiveSemesterView.as_view(), name='teacher-active-semester'),
 
     # API views with explicit names
     path('teacher/', views.TeacherList.as_view(), name='api-teacher-list'),

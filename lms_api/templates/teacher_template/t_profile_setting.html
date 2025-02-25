@@ -1,232 +1,159 @@
-{% extends 'teacher_template/t_basepage.html' %}{% block title %} Dashboard - BICTE-LMS {% endblock %} {% load static %} {% block content %}
+{% extends 'teacher_template/t_basepage.html' %} {% block title %} Dashboard - BICTE-LMS {% endblock %} {% load static %} {% block content %}
 <div class="container mt-4">
     <div class="row">
         <aside class="col-md-3">
             <div class="card">
-                <h4 class="card-header text-dark text-center" style="background-color: #c0c0c0">
+                <h4 class="card-header text-dark text-center" style="background-color:#CCCCFF">
                     Dashboard
                 </h4>
                 <div class="list-group list-group-flush">
-                    <a href="/api/teacher-dashboard-courses/ " class="list-group-item list-group-item-action">
-            Course</a
-          >
-          <a
-            href="/api/teacher-dashboard-assignments/ "
-            class="list-group-item list-group-item-action"
-            >Manage Assignments</a
-          >
-          <a
-            href="/api/teacher-profile-setting/ "
-            class="list-group-item list-group-item-action bg-primary text-light text-center"
-            >Profile Setting</a
-          >
-          <a
-            href="/api/teacher-change-password/ "
-            class="list-group-item list-group-item-action"
-            >Manage Password</a
-          >
-          <a
-            href="/ "
-            class="list-group-item list-group-item-action text-danger"
-            >Logout</a
-          >
-        </div>
-      </div>
-    </aside>
+                    <a href="/api/teacher-dashboard-courses/" class="list-group-item list-group-item-action">Course</a>
+                    <a href="/api/teacher-dashboard-assignments/" class="list-group-item list-group-item-action">Manage Assignments</a>
+                    <a href="/api/teacher-profile-setting/" class="list-group-item list-group-item-action bg-primary text-light text-center">Profile Setting</a>
+                    <a href="/api/teacher-change-password/" class="list-group-item list-group-item-action">Manage Password</a>
+                    <a href="/" class="list-group-item list-group-item-action text-danger">Logout</a>
+                </div>
+            </div>
+        </aside>
 
-    <section class="col-md-9 mt-4 mt-md-0">
-      <div class="card">
-        <h5 class="card-header text-center" style="background-color: #c0c0c0">
-          Profile Setting
-        </h5>
-        <div class="card-body pt-3">
-          <div class="mb-3 row ms-2">
-            <label for="profilepicture" class="col-sm-2 col-form-label"
-              >profile Picture</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="file"
-                class="form-control input-effect"
-                id="profilepicture"
-              />
-              <!-- Dropdown for selecting predefined images -->
-              <select
-                class="form-control input-effect mt-2"
-                id="profileDropdown"
-              >
-                <option value="">Or Select Avatar</option>
-                <option
-                  value="{% static 'images/m_teacher_avater/teacher_avater_1.jpg' %}"
-                >
-                  Male Avatar 1
-                </option>
-                <option
-                  value="{% static 'images/m_teacher_avater/teacher_avater_2.jpg' %}"
-                >
-                  Male Avatar 2
-                </option>
-                <option
-                  value="{% static 'images/m_teacher_avater/teacher_avater_3.jpg' %}"
-                >
-                  Male Avatar 2
-                </option>
-                <option
-                  value="{% static 'images/f_teacher_avater/f_teacher_avater_1.jpg' %}"
-                >
-                  Female Avatar 1
-                </option>
+        <section class="col-md-9 mt-4 mt-md-0">
+            <div class="card">
+                <h5 class="card-header text-center" style="background-color:#CCCCFF">
+                    Profile Setting
+                </h5>
+                <div class="card-body pt-3">
+                    <!-- Message Section -->
+                    {% if messages %} {% for message in messages %}
+                    <div id="message" class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %} {% endif %}
 
-                <option
-                value="{% static 'images/f_teacher_avater/f_teacher_avater_2.jpg' %}"
-              >
-                Female Avatar 2
-              </option>
-              </select>
-            </div>
-          </div>
-          <div class="mb-3 row ms-2">
-            <label for="fullName" class="col-sm-2 col-form-label"
-              >Full Name</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control input-effect"
-                id="fullName"
-              />
-            </div>
-          </div>
-          <div class="mb-3 row ms-2">
-            <label for="designation" class="col-sm-2 col-form-label"
-              >Designation</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control input-effect"
-                id="designation"
-              />
-            </div>
-          </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3 row ms-2">
+                            <label for="profilepicture" class="col-sm-2 col-form-label">Profile Picture</label>
+                            <div class="col-sm-10">
+                                <!-- Display the current profile picture -->
+                                {% if teacher.profile_picture %}
+                                <img src="{{ teacher.profile_picture.url }}?v={{ now|date:'U' }}" alt="Profile Picture" class="img-thumbnail mb-2" style="max-width: 150px;"> {% else %}
+                                <img src="{% static 'images/default_profile_image.jpg' %}" alt="Default Profile Picture" class="img-thumbnail mb-2" style="max-width: 150px;"> {% endif %}
 
-          <div class="mb-3 row ms-2">
-            <label for="staticEmail" class="col-sm-2 col-form-label"
-              >Email</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control input-effect"
-                id="staticEmail"
-              />
+                                <!-- File input for uploading a new profile picture -->
+                                <input type="file" class="form-control input-effect" id="profilepicture" name="profilepicture">
+                            </div>
+                        </div>
+                        <div class="mb-3 row ms-2">
+                            <label for="fullName" class="col-sm-2 col-form-label">Full Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="fullName" name="fullName" value="{{ teacher.t_full_name }}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row ms-2">
+                            <label for="designation" class="col-sm-2 col-form-label">Designation</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="designation" name="designation" value="{{ teacher.designation }}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row ms-2">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="staticEmail" name="staticEmail" value="{{ teacher.t_email }}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="phoneNumber" class="col-sm-2 col-form-label">Phone Number</label>
+                            <div class="col-sm-10">
+                                <input type="tel" class="form-control input-effect" id="phoneNumber" name="phoneNumber" value="{{ teacher.t_phone_number }}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row ms-2">
+                            <label for="address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-effect" id="address" name="address" value="{{ teacher.t_address }}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="hiredate" class="col-sm-2 col-form-label">Hire Date</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control input-effect" id="hiredate" name="hiredate" value="{{ teacher.hire_date|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row ms-2 pe-2">
+                            <label for="gender" class="col-sm-2 col-form-label">Gender</label>
+                            <div class="col-sm-10">
+                                <select class="form-control input-effect" id="gender" name="gender">
+                                    <option value="male" {% if teacher.gender == 'male' %}selected{% endif %}>Male</option>
+                                    <option value="female" {% if teacher.gender == 'female' %}selected{% endif %}>Female</option>
+                                    <option value="other" {% if teacher.gender == 'other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3 row update-profile-div ms-2 pe-4">
+                            <button class="btn btn-primary" type="submit">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </div>
-          <div class="mb-3 row ms-2 pe-2">
-            <label for="inputPassword" class="col-sm-2 col-form-label"
-              >Password</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="password"
-                class="form-control input-effect"
-                id="inputPassword"
-              />
-            </div>
-          </div>
-          <div class="mb-3 row ms-2 pe-2">
-            <label for="phoneNumber" class="col-sm-2 col-form-label"
-              >Phone Number</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="tel"
-                class="form-control input-effect"
-                id="phoneNumber"
-              />
-            </div>
-          </div>
-
-          <div class="mb-3 row ms-2">
-            <label for="address" class="col-sm-2 col-form-label">Address</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control input-effect"
-                id="address"
-              />
-            </div>
-          </div>
-
-          <div class="mb-3 row ms-2 pe-2">
-            <label for="hiredate" class="col-sm-2 col-form-label"
-              >Hire Date</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="hiredate"
-                class="form-control input-effect"
-                id="dob"
-              />
-            </div>
-          </div>
-          <div class="mb-3 row ms-2 pe-2">
-            <label for="gender" class="col-sm-2 col-form-label">Gender</label>
-            <div class="col-sm-10">
-              <select class="form-control input-effect" id="gender">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="mb-3 row update-profile-div ms-2 pe-4">
-            <button class="btn btn-primary" type="button">
-              Update Profile
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+        </section>
+    </div>
 </div>
 
 <style>
-  .update-profile-div {
-    justify-content: center;
-    align-items: center;
-  }
-  .input-effect {
-    transition: all 0.3s ease-in-out;
-    box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
-  }
-
-  .input-effect:hover,
-  .input-effect:focus {
-    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .list-group-item:hover {
-    font-weight: bold;
-  }
+    .update-profile-div {
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .input-effect {
+        transition: all 0.3s ease-in-out;
+        box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .input-effect:hover,
+    .input-effect:focus {
+        box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .list-group-item:hover {
+        font-weight: bold;
+    }
+    /* Style for the message alert */
+    
+    .alert {
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    /* Style for the profile picture */
+    
+    .img-thumbnail {
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+    }
 </style>
 
 <script>
-  document
-    .getElementById("profileDropdown")
-    .addEventListener("change", function () {
-      console.log("Dropdown changed"); // Debugging line
-      var selectedImage = this.value;
-      if (selectedImage) {
-        var fileInput = document.getElementById("profilepicture");
-        var file = new File([""], selectedImage.split("/").pop(), {
-          type: "image/jpeg",
-        });
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-      }
-    });
+    // Hide the message after 3 seconds
+    setTimeout(function() {
+        var messageElement = document.getElementById("message");
+        if (messageElement) {
+            messageElement.style.display = "none";
+        }
+    }, 3000);
 </script>
 {% endblock %}

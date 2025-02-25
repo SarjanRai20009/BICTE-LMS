@@ -1,0 +1,176 @@
+{% extends 'teacher_template/t_basepage.html' %} {% block title %}Upload Course Material - BICTE-LMS{% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <!-- Increased width -->
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-green text-white">
+                    <!-- Green header -->
+                    <h4 class="mb-0 text-center ">
+                        Upload Course Material
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <!-- Title Field -->
+                        <div class="form-group mb-4">
+                            <label for="title" class="font-weight-bold">Title</label>
+                            <input type="text" class="form-control form-control-lg" id="title" name="title" placeholder="Enter material title" required />
+                        </div>
+
+                        <!-- File Upload Field -->
+                        <div class="form-group mb-4">
+                            <label for="file" class="font-weight-bold">File</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="file" name="file" />
+                                <label class="custom-file-label" for="file">Choose file</label>
+                            </div>
+                        </div>
+
+                        <!-- External Link Field -->
+                        <div class="form-group mb-4">
+                            <label for="external_link" class="font-weight-bold">External Link</label
+              >
+              <input
+                type="url"
+                class="form-control form-control-lg"
+                id="external_link"
+                name="external_link"
+                placeholder="Enter external link (optional)"
+              />
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group mb-4">
+              <label for="description" class="font-weight-bold"
+                >Description</label
+              >
+              <textarea
+                class="form-control form-control-lg"
+                id="description"
+                name="description"
+                rows="4"
+                placeholder="Enter a brief description"
+              ></textarea>
+            </div>
+
+            <!-- Material Type Dropdown -->
+            <div class="form-group mb-4">
+              <label for="material_type" class="font-weight-bold"
+                >Material Type</label
+              >
+              <select
+                class="form-control form-control-lg"
+                id="material_type"
+                name="material_type"
+                required
+              >
+                <option value="" disabled selected>Select material type</option>
+                {% for material_type in material_types %}
+                <option value="{{ material_type.id }}">
+                  {{ material_type.name }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Course Dropdown -->
+            <div class="form-group mb-4">
+              <label for="course" class="font-weight-bold">Course</label>
+                            <select class="form-control form-control-lg" id="course" name="course" required>
+                <option value="" disabled selected>Select a course</option>
+                {% for course in courses %}
+                <option value="{{ course.id }}">
+                  {{ course.title }} - {{ course.semester.get_se_name_display }}
+                  - Batch {{ course.semester.batch }}
+                </option>
+                {% endfor %}
+              </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-orange btn-lg px-5 hover-effect">
+                <i class="fas fa-upload mr-2"></i>Upload Material
+              </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom File Input Script -->
+<script>
+    document
+        .querySelector(".custom-file-input")
+        .addEventListener("change", function(e) {
+            var fileName = e.target.files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+</script>
+
+<style>
+    /* Custom Green Background */
+    
+    .bg-green {
+        background-color: #28a745;
+        color: #fff;
+    }
+    
+    .btn-orange {
+        background-color: #fc5226;
+        color: #000;
+        border: 2px solid #fc5226;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .hover-effect {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hover-effect::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%) rotate(45deg);
+        transition: all 0.5s ease;
+        z-index: 0;
+    }
+    
+    .hover-effect:hover::after {
+        width: 0;
+        height: 0;
+    }
+    
+    .hover-effect:hover {
+        background-color: #ff3b1f;
+        border-color: #ff3b1f;
+        color: #fff;
+        transform: scale(1.05);
+    }
+    /* Custom File Input Styling */
+    
+    .custom-file-label::after {
+        content: "Browse";
+        background-color: #28a745;
+        /* Green */
+        color: #fff;
+        border-left: 1px solid #28a745;
+    }
+    
+    .custom-file-input:focus~.custom-file-label {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+</style>
+{% endblock %}
