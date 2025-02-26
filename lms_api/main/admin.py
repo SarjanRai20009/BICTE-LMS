@@ -140,6 +140,25 @@ class AssignmentFeedbackAdmin(admin.ModelAdmin):
     )
     ordering = ('-feedback_date',)
 
+@admin.register(PrescribedBook)
+class PrescribedBookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'course', 'semester', 'book_link', 'created_at')
+    search_fields = ('title', 'course__title', 'semester__se_name')
+    list_filter = ('course', 'semester', 'created_at')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'course', 'semester', 'book_file', 'book_link')
+        }),
+        ('Dates', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
+        }),
+    )
+
+
 
 @admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):

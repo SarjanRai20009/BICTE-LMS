@@ -259,6 +259,30 @@ class CourseMaterialSerializer(serializers.ModelSerializer):
         if not data.get('course'):
             raise serializers.ValidationError("Course is required.")
         return data
+    
+class PrescribedBookSerializer(serializers.ModelSerializer):
+    course_title = serializers.SerializerMethodField()
+    semester_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PrescribedBook
+        fields = ['id', 'title', 'course', 'semester', 'course_title', 'semester_name', 'book_file', 'book_link', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+    def get_course_title(self, obj):
+        return obj.course.title
+
+    def get_semester_name(self, obj):
+        return obj.semester.get_se_name_display()
+
+    def validate(self, data):
+        if not data.get('title'):
+            raise serializers.ValidationError("Title is required.")
+        if not data.get('course'):
+            raise serializers.ValidationError("Course is required.")
+        if not data.get('semester'):
+            raise serializers.ValidationError("Semester is required.")
+        return data
 
 class ResultSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')  # Display the username of the uploader

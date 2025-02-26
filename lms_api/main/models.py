@@ -314,7 +314,21 @@ class CourseMaterial(models.Model):
         }
         
         
+class PrescribedBook(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='prescribed_books')
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='prescribed_books')
+    title = models.CharField(max_length=255)
+    book_file = models.FileField(upload_to='prescribed_books/', null=True, blank=True)
+    book_link = models.URLField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"{self.title} - {self.course.title} ({self.semester.get_se_name_display()})"
+
+    class Meta:
+        verbose_name = "Prescribed Book"
+        verbose_name_plural = "Prescribed Books"
 
 
 class Assignment(models.Model):

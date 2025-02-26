@@ -2027,6 +2027,21 @@ class NewsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    
+
+class PrescribedBookListCreateView(generics.ListCreateAPIView):
+    queryset = PrescribedBook.objects.all()
+    serializer_class = PrescribedBookSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+class PrescribedBookRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PrescribedBook.objects.all()
+    serializer_class = PrescribedBookSerializer
+    permission_classes = [permissions.IsAuthenticated]
 # for testing uncomment it
 
 # class NotificationList(generics.ListCreateAPIView):

@@ -156,5 +156,9 @@ urlpatterns = [
     path('news/', NewsList.as_view(), name='api-news-list'),
     path('news/<int:pk>/', NewsDetail.as_view(), name='api-news-detail'),
     
+    
+    path('prescribed-books/', PrescribedBookListCreateView.as_view(), name='api-prescribed-book-list-create'),
+    path('prescribed-books/<int:pk>/', PrescribedBookRetrieveUpdateDestroyView.as_view(), name='api-prescribed-book-retrieve-update-destroy'),
+    
 
 ]
