@@ -428,16 +428,65 @@ class Result(models.Model):
         for student in students_in_semester:
             self.notify_student(student)
 
+   
+
     def notify_student(self, student):
-        """Notify a student about the new result."""
-      
-        print(f"Notifying student {student.st_name} about the new result: {self.title}")
+     
+        subject = f"New Result Uploaded: {self.title}"
+        message = f"Dear {student.st_name},\n\nA new result has been uploaded for your semester ({self.semester.get_se_name_display()}). Please check your portal.\n\nRegards,\nThe Administration Team"
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [student.st_email],
+            fail_silently=False,
+        )
 
     class Meta:
         verbose_name = "Result"
         verbose_name_plural = "Results"
         
+class StudentSocialMedia(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='social_media_links')
+    platform = models.CharField(max_length=50, choices=[
+        ('facebook', 'Facebook'),
+        ('twitter', 'Twitter'),
+        ('linkedin', 'LinkedIn'),
+        ('instagram', 'Instagram'),
+        ('github', 'GitHub'),
+        ('other', 'Other'),
+    ])
+    link = models.URLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.student.st_name}'s {self.platform}"
+
+    class Meta:
+        verbose_name = "Student Social Media"
+        verbose_name_plural = "Student Social Media"
         
+class TeacherSocialMedia(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='social_media_links')
+    platform = models.CharField(max_length=50, choices=[
+        ('facebook', 'Facebook'),
+        ('twitter', 'Twitter'),
+        ('linkedin', 'LinkedIn'),
+        ('instagram', 'Instagram'),
+        ('github', 'GitHub'),
+        ('other', 'Other'),
+    ])
+    link = models.URLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.teacher.t_full_name}'s {self.platform}"
+
+    class Meta:
+        verbose_name = "Teacher Social Media"
+        verbose_name_plural = "Teacher Social Media"
         
 class Notice(models.Model):
     title = models.CharField(max_length=200)

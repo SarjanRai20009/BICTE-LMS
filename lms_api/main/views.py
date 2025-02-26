@@ -2037,6 +2037,35 @@ class PrescribedBookListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
+        
+class StudentSocialMediaListCreateView(generics.ListCreateAPIView):
+    queryset = StudentSocialMedia.objects.all()
+    serializer_class = StudentSocialMediaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class StudentSocialMediaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = StudentSocialMedia.objects.all()
+    serializer_class = StudentSocialMediaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class TeacherSocialMediaListCreateView(generics.ListCreateAPIView):
+    queryset = TeacherSocialMedia.objects.all()
+    serializer_class = TeacherSocialMediaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class TeacherSocialMediaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TeacherSocialMedia.objects.all()
+    serializer_class = TeacherSocialMediaSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class PrescribedBookRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PrescribedBook.objects.all()

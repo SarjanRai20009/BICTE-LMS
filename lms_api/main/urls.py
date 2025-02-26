@@ -161,4 +161,11 @@ urlpatterns = [
     path('prescribed-books/<int:pk>/', PrescribedBookRetrieveUpdateDestroyView.as_view(), name='api-prescribed-book-retrieve-update-destroy'),
     
 
+    path('social-media/', StudentSocialMediaListCreateView.as_view(), name='api-student-social-media-list-create'),
+    path('social-media/<int:pk>/', StudentSocialMediaRetrieveUpdateDestroyView.as_view(), name='api-student-social-media-retrieve-update-destroy'),
+
+    # Teacher Social Media URLs
+    path('social-teacher-media/', TeacherSocialMediaListCreateView.as_view(), name='api-teacher-social-media-list-create'),
+    path('social-teacher-media/<int:pk>/', TeacherSocialMediaRetrieveUpdateDestroyView.as_view(), name='api-teacher-social-media-retrieve-update-destroy'),
+
 ]

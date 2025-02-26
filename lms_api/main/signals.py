@@ -6,14 +6,11 @@ from .models import Student
 
 @receiver(post_save, sender=Student)
 def send_welcome_email(sender, instance, created, **kwargs):
-    """
-    Send a welcome email to the student when a new Student instance is created.
-    """
-    if created and not instance.email_sent:  # Check if it's a new student and email hasn't been sent
-        # Access the raw password from the temporary attribute
-        raw_password = getattr(instance, '_raw_password', None)
+   
+    if created and not instance.email_sent:
+    
+        
 
-        if raw_password:
             subject = 'Welcome to BICTE-SMC!'
             message = f"""
             Dear {instance.st_name},
@@ -25,7 +22,7 @@ def send_welcome_email(sender, instance, created, **kwargs):
             - Email: {instance.st_email}
             - Roll No: {instance.st_exam_roll_no}
             - Registration No: {instance.st_reg_no}
-            - Password: {raw_password}  <!-- Include the raw password here -->
+            - Password: studentSMC1 
 
             Please keep your credentials safe and log in to your account to explore more.
 

@@ -259,7 +259,31 @@ class CourseMaterialSerializer(serializers.ModelSerializer):
         if not data.get('course'):
             raise serializers.ValidationError("Course is required.")
         return data
-    
+
+class StudentSocialMediaSerializer(serializers.ModelSerializer):
+    student_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = StudentSocialMedia
+        fields = ['id', 'student', 'student_name', 'platform', 'link', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+    def get_student_name(self, obj):
+        return obj.student.st_name
+
+
+class TeacherSocialMediaSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TeacherSocialMedia
+        fields = ['id', 'teacher', 'teacher_name', 'platform', 'link', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+    def get_teacher_name(self, obj):
+        return obj.teacher.t_full_name
+
+
 class PrescribedBookSerializer(serializers.ModelSerializer):
     course_title = serializers.SerializerMethodField()
     semester_name = serializers.SerializerMethodField()

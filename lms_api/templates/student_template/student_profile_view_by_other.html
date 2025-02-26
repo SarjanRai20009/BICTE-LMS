@@ -1,5 +1,5 @@
-{% extends 'student_template/st_base_template.html' %} {% block title %}Profile - BICTE-LMS{% endblock %} {% load static %} {% block content %}
-<div class="container-fluid other_st_Profile" style="margin-bottom: 2rem !important;">
+{% extends 'student_template/st_base_template.html' %} {% block title %} Profile - BICTE-LMS{% endblock %} {% load static %} {% block content %}
+<div class="container-fluid other_st_Profile" style="margin-bottom: 2rem !important">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-sm-12">
             <!-- Profile Header Section -->
@@ -34,7 +34,9 @@
                                     {% if target_student.rank %} {% if target_student.rank.total_score == 0 %}
                                     <p><strong>User Quiz Rank:</strong> UD</p>
                                     {% else %}
-                                    <p><strong>User Quiz Rank:</strong> {{ target_student.rank.rank }}</p>
+                                    <p>
+                                        <strong>User Quiz Rank:</strong> {{ target_student.rank.rank }}
+                                    </p>
                                     {% endif %} {% else %}
                                     <p><strong>User Quiz Rank:</strong> Not Available</p>
                                     {% endif %}
@@ -45,9 +47,7 @@
                                         <strong>Date of Birth:</strong> {{ target_student.st_date_of_birth|date:"F j, Y" }}
                                     </p>
                                     {% else %}
-                                    <p>
-                                        <strong>Date of Birth:</strong>*******
-                                    </p>
+                                    <p><strong>Date of Birth:</strong>*******</p>
                                     {% endif %}
                                     <!-- Conditionally display Contact Information -->
                                     {% if show_sensitive_info %}
@@ -59,13 +59,14 @@
                                         <strong>Contact:</strong> {{ target_student.st_contact|slice:":2" }}********
                                     </p>
                                     {% endif %} {% if show_sensitive_info %}
-                                    <p> <strong>Address:</strong> {{ target_student.st_address}}</p>
+                                    <p>
+                                        <strong>Address:</strong> {{ target_student.st_address}}
+                                    </p>
                                     {% else %}
                                     <p>
                                         <strong>Address:</strong> {{ target_student.st_address|slice:":4" }}*****
                                     </p>
                                     {% endif %}
-
                                 </div>
                             </div>
                             <!-- Conditionally display Social Media Links -->

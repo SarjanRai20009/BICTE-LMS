@@ -1,26 +1,89 @@
 {% extends 'teacher_template/t_basepage.html' %} {% block title %}Create Quiz - BICTE-LMS{% endblock %} {% block content %}
-<div class="container">
-    <h2>Create Quiz</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h2 class="card-title mb-0 fw-bold text-dark">Create Quiz</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <!-- Quiz Title -->
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-bold text-dark">Quiz Title</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Enter quiz title" required>
+                            <small class="form-text text-muted">Provide a clear and concise title for your quiz.</small>
+                        </div>
+
+                        <!-- Quiz Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-bold text-dark">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Enter a brief description of the quiz"></textarea>
+                            <small class="form-text text-muted">Add a description to help students understand the quiz's purpose.</small>
+                        </div>
+
+                        <!-- Course Selection -->
+                        <div class="mb-4">
+                            <label for="course" class="form-label fw-bold text-dark">Select Course</label>
+                            <select class="form-select" id="course" name="course" required>
+                                <option value="" disabled selected>Choose a course</option>
+                                {% for course in courses %}
+                                <option value="{{ course.id }}">{{ course.title }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Select the course this quiz belongs to.</small>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success fw-bold">Create Quiz</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="course">Course</label>
-            <select class="form-control" id="course" name="course" required>
-                <option value="">Select Course</option>
-                {% for course in courses %}
-                <option value="{{ course.id }}">{{ course.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Create Quiz</button>
-    </form>
+    </div>
 </div>
+
+<style>
+    /* Custom Styles for a Professional Look */
+    
+    .card {
+        border-radius: 8px;
+    }
+    
+    .card-header {
+        padding: 1.5rem;
+    }
+    
+    .card-body {
+        padding: 2rem;
+    }
+    
+    .form-control,
+    .form-select {
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 0.75rem;
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #28a745;
+        /* Green accent */
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+    
+    .btn-success:hover {
+        background-color: #218838;
+    }
+</style>
 {% endblock %}

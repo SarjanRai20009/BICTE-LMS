@@ -191,7 +191,39 @@ class NoticeAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
+@admin.register(StudentSocialMedia)
+class StudentSocialMediaAdmin(admin.ModelAdmin):
+    list_display = ('student', 'platform', 'link', 'created_at')
+    search_fields = ('student__st_name', 'platform', 'link')
+    list_filter = ('platform', 'created_at')
+    readonly_fields = ('created_at', 'updated_at')
 
+    fieldsets = (
+        (None, {
+            'fields': ('student', 'platform', 'link')
+        }),
+        ('Dates', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
+        }),
+    )
+
+@admin.register(TeacherSocialMedia)
+class TeacherSocialMediaAdmin(admin.ModelAdmin):
+    list_display = ('teacher', 'platform', 'link', 'created_at')
+    search_fields = ('teacher__t_full_name', 'platform', 'link')
+    list_filter = ('platform', 'created_at')
+    readonly_fields = ('created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('teacher', 'platform', 'link')
+        }),
+        ('Dates', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
+        }),
+    )
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
