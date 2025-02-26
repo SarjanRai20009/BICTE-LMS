@@ -312,6 +312,11 @@ class CourseMaterial(models.Model):
             "email": self.teacher.t_email,
             "designation": self.teacher.designation,
         }
+        
+        
+
+
+
 class Assignment(models.Model):
     title = models.CharField(max_length=255, verbose_name="Assignment Title")
     description = models.TextField(blank=True, null=True, verbose_name="Description")

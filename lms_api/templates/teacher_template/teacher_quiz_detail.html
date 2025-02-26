@@ -1,0 +1,35 @@
+{% extends 'teacher_template/t_basepage.html' %} {% block title %}Quiz Detail - BICTE-LMS{% endblock %} {% block content %}
+<div class="container">
+    <h2>{{ quiz.title }}</h2>
+    <p>{{ quiz.description }}</p>
+    <a href="{% url 'teacher-add-question' quiz.id %}" class="btn btn-primary mb-3">Add Question</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Options</th>
+                <th>Correct Option</th>
+                <th>Marks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td>{{ question.text }}</td>
+                <td>
+                    <ul>
+                        <li>{{ question.option1 }}</li>
+                        <li>{{ question.option2 }}</li>
+                        {% if question.option3 %}
+                        <li>{{ question.option3 }}</li>{% endif %} {% if question.option4 %}
+                        <li>{{ question.option4 }}</li>{% endif %}
+                    </ul>
+                </td>
+                <td>{{ question.get_correct_option_display }}</td>
+                <td>{{ question.marks }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

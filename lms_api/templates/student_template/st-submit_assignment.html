@@ -1,4 +1,13 @@
-{% extends 'student_template/st_base_template.html' %} {% load static %} {% block title %}Submit Assignment - BICTE-LMS{% endblock %} {% block content %}
+{% extends 'student_template/st_base_template.html' %} {% load static %} {% block title %}Submit Assignment - BICTE-LMS{% endblock %} {% block content %} {% if messages %}
+<div class="mt-4 animate__animated animate__fadeIn">
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show text-center" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 <div class="container my-5">
     <!-- Page Header -->
     <div class="text-center mb-5">
@@ -36,16 +45,7 @@
     </div>
 
     <!-- Messages Section -->
-    {% if messages %}
-    <div class="mt-4 animate__animated animate__fadeIn">
-        {% for message in messages %}
-        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
+
 </div>
 
 <!-- Custom Styles -->

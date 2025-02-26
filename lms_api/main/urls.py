@@ -94,6 +94,13 @@ urlpatterns = [
     path('add-feedback/<int:submission_id>/', add_feedback, name='add-feedback'),
     path('edit-feedback/<int:submission_id>/', edit_feedback, name='edit-feedback'),
     
+    # quiz teacher section
+    path('teacher-dashboard-quizzes/', views.TeacherDashboardQuizzes.as_view(), name='teacher-dashboard-quizzes'),
+    path('teacher-create-quiz/', views.TeacherCreateQuiz.as_view(), name='teacher-create-quiz'),
+    path('teacher-quiz-detail/<int:quiz_id>/', views.TeacherQuizDetail.as_view(), name='teacher-quiz-detail'),
+    path('teacher-add-question/<int:quiz_id>/', views.TeacherAddQuestion.as_view(), name='teacher-add-question'),
+    
+    
     path('teacher-profile-setting/', views.TeacherDashpoardProfileSeting.as_view(), name='teacher-profile-setting'),
     path('teacher-change-password/', views.TeacherDashboardChangePassword.as_view(), name='teacher-change-password'),
     path('teacher-details/<int:pk>', views.TeacherDetails.as_view(), name='teacher-details'),

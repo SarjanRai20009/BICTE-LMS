@@ -454,7 +454,7 @@ class SubmitAssignmentView(LoginRequiredMixin, TemplateView):
                     submission.assignment_file = assignment_file
                     submission.edit_count += 1
                     submission.save()
-                    messages.success(request, 'Assignment updated successfully!')
+                    messages.success(request, 'Yoh have updated the assignment successfully!')
                 else:
                     messages.error(request, 'You have reached the maximum number of edits (2).')
             else:
@@ -464,7 +464,7 @@ class SubmitAssignmentView(LoginRequiredMixin, TemplateView):
                     assignment=assignment,
                     assignment_file=assignment_file
                 )
-                messages.success(request, 'Assignment submitted successfully!')
+                messages.success(request, 'Your assignment has been submitted successfully!')
             return redirect('st-assignment-detail', assignment_id=assignment.id)
         else:
             messages.error(request, 'Please upload a file.')
@@ -1098,7 +1098,8 @@ def add_feedback(request, submission_id):
         )
         messages.success(request, 'Feedback submitted successfully!')
     
-    return redirect('teacher-assignments')
+    return redirect('teacher-assignmentsv-view')
+    # return redirect('teacher-assignments')
 def edit_feedback(request, submission_id):
     if request.method == 'POST':
         feedback_text = request.POST.get('feedback')
@@ -1169,6 +1170,14 @@ class TeacherDashpoardProfileSeting(LoginRequiredMixin, TemplateView):
             # Fetch the logged-in teacher
             teacher = Teacher.objects.get(id=self.request.session.get('user_id'))
             context['teacher'] = teacher
+            
+            
+            active_semesters = Semester.objects.filter(is_active=True)
+            courses = Course.objects.filter(teacher=teacher, semester__in=active_semesters)
+            context['courses'] = courses
+            
+            
+            
         except Teacher.DoesNotExist:
             context['error'] = 'Teacher not found. Please log in again.'
         return context
@@ -1177,6 +1186,7 @@ class TeacherDashpoardProfileSeting(LoginRequiredMixin, TemplateView):
         try:
             # Fetch the logged-in teacher
             teacher = Teacher.objects.get(id=request.session.get('user_id'))
+            
 
             # Update profile picture if a file is uploaded
             if 'profilepicture' in request.FILES:
@@ -1213,6 +1223,11 @@ class TeacherDashboardChangePassword(LoginRequiredMixin, TemplateView):
             teacher_id = self.request.session.get('user_id')
             teacher = Teacher.objects.get(id=teacher_id)
             context['teacher'] = teacher
+            
+            
+            active_semesters = Semester.objects.filter(is_active=True)
+            courses = Course.objects.filter(teacher=teacher, semester__in=active_semesters)
+            context['courses'] = courses
         except Teacher.DoesNotExist:
             context['error'] = 'Teacher not found. Please log in again.'
         return context
@@ -1261,61 +1276,246 @@ class TeacherStudentProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Fetch the logged-in teacher
+     
         teacher = get_object_or_404(Teacher, id=self.request.session.get('user_id'))
         context['teacher'] = teacher
         courses = Course.objects.filter(teacher=teacher)
         context['courses'] = courses
         
-        # Fetch the target student's profile using the ID from the URL
+       
         target_student = get_object_or_404(Student, id=self.kwargs['student_id'])
         context['target_student'] = target_student
         
-        # Check if the semester is active
+       
         if not target_student.semester.is_active:
             context['semester_inactive'] = True
             context['error_message'] = 'The semester associated with this student is not active.'
         else:
             context['semester_inactive'] = False
         
-        # Fetch courses taught by the logged-in teacher in the student's semester
+      
         teacher_courses = Course.objects.filter(
             semester=target_student.semester,
-            teacher=teacher  # Filter by the logged-in teacher
+            teacher=teacher 
         )
         context['teacher_courses'] = teacher_courses
         
-        # Fetch total assignments assigned by the logged-in teacher to the student
+       
         total_assignments = Assignment.objects.filter(
-            course__in=teacher_courses,  # Filter by the teacher's courses
-            teacher=teacher  # Filter by the logged-in teacher
+            course__in=teacher_courses,  
+            teacher=teacher 
         ).count()
         context['total_assignments'] = total_assignments
         
-        # Fetch assignments submitted by the student for the logged-in teacher's courses
+     
         assignments_submitted = AssignmentSubmit.objects.filter(
             student=target_student,
             assignment__course__in=teacher_courses  # Filter by the teacher's courses
         )
         context['assignments_submitted'] = assignments_submitted
         
-        # Fetch quiz attempts by the student for the logged-in teacher's courses
+      
         quiz_attempts = QuizAttempt.objects.filter(
             student=target_student,
-            quiz__course__in=teacher_courses  # Filter by the teacher's courses
+            quiz__course__in=teacher_courses  
         )
         context['quiz_attempts'] = quiz_attempts
         
-        # Fetch user rank for the student (if applicable)
+     
         user_rank = UserRank.objects.filter(student=target_student).first()
         context['user_rank'] = user_rank
         
-        # Add sensitive data to context (since it's a teacher view)
+        
         context['show_sensitive_info'] = True
         
         return context
     
+# Teacher quiz section start
+class TeacherDashboardQuizzes(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_dashboard_quizzes.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the logged-in teacher
+        teacher = get_object_or_404(Teacher, id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+
+        # Fetch active semesters and courses
+        active_semesters = Semester.objects.filter(is_active=True)
+        courses = Course.objects.filter(teacher=teacher, semester__in=active_semesters)
+        context['courses'] = courses
+
+        # Fetch quizzes for the teacher's courses
+        quizzes = Quiz.objects.filter(course__in=courses)
+        context['quizzes'] = quizzes
+
+        return context
+
+class TeacherCreateQuiz(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_create_quiz.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the logged-in teacher
+        teacher = get_object_or_404(Teacher, id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+
+        # Fetch active semesters and courses
+        active_semesters = Semester.objects.filter(is_active=True)
+        courses = Course.objects.filter(teacher=teacher, semester__in=active_semesters)
+        context['courses'] = courses
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        course_id = request.POST.get('course')
+
+        if not title or not course_id:
+            messages.error(request, 'Title and Course are required.')
+            return redirect('teacher-create-quiz')
+
+        try:
+            course = Course.objects.get(id=course_id)
+            teacher = Teacher.objects.get(id=request.session.get('user_id'))
+
+            # Create the quiz
+            Quiz.objects.create(
+                title=title,
+                description=description,
+                course=course,
+                teacher=teacher
+            )
+            messages.success(request, 'Quiz created successfully!')
+            return redirect('teacher-dashboard-quizzes')
+        except Course.DoesNotExist:
+            messages.error(request, 'Invalid course selected.')
+            return redirect('teacher-create-quiz')
+
+class TeacherCreateQuiz(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_create_quiz.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the logged-in teacher
+        teacher = get_object_or_404(Teacher, id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+
+        # Fetch active semesters and courses
+        active_semesters = Semester.objects.filter(is_active=True)
+        courses = Course.objects.filter(teacher=teacher, semester__in=active_semesters)
+        context['courses'] = courses
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        course_id = request.POST.get('course')
+
+        if not title or not course_id:
+            messages.error(request, 'Title and Course are required.')
+            return redirect('teacher-create-quiz')
+
+        try:
+            course = Course.objects.get(id=course_id)
+            teacher = Teacher.objects.get(id=request.session.get('user_id'))
+
+            # Create the quiz
+            Quiz.objects.create(
+                title=title,
+                description=description,
+                course=course,
+                teacher=teacher
+            )
+            messages.success(request, 'Quiz created successfully!')
+            return redirect('teacher-dashboard-quizzes')
+        except Course.DoesNotExist:
+            messages.error(request, 'Invalid course selected.')
+            return redirect('teacher-create-quiz')
+        
+        
+        
+class TeacherQuizDetail(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_quiz_detail.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        teacher = get_object_or_404(Teacher, id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+        
+        active_semesters = Semester.objects.filter(is_active=True)
+        courses = Course.objects.filter(teacher=teacher, semester__in=active_semesters)
+        context['courses'] = courses
+
+        
+        # Fetch the quiz
+        quiz = get_object_or_404(Quiz, id=self.kwargs['quiz_id'])
+        context['quiz'] = quiz
+
+        # Fetch questions for the quiz
+        questions = quiz.questions.all()
+        context['questions'] = questions
+
+        return context
     
+class TeacherAddQuestion(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_add_question.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        teacher = get_object_or_404(Teacher, id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+
+        # Fetch the quiz
+        quiz = get_object_or_404(Quiz, id=self.kwargs['quiz_id'])
+        context['quiz'] = quiz
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        quiz = get_object_or_404(Quiz, id=self.kwargs['quiz_id'])
+        text = request.POST.get('text')
+        option1 = request.POST.get('option1')
+        option2 = request.POST.get('option2')
+        option3 = request.POST.get('option3')
+        option4 = request.POST.get('option4')
+        correct_option = request.POST.get('correct_option')
+        marks = request.POST.get('marks')
+
+        if not text or not option1 or not option2 or not correct_option or not marks:
+            messages.error(request, 'All fields are required except Option 3 and Option 4.')
+            return redirect('teacher-add-question', quiz_id=quiz.id)
+
+        try:
+            # Create the question
+            Question.objects.create(
+                quiz=quiz,
+                text=text,
+                option1=option1,
+                option2=option2,
+                option3=option3,
+                option4=option4,
+                correct_option=correct_option,
+                marks=int(marks)
+            )
+            messages.success(request, 'Question added successfully!')
+            return redirect('teacher-quiz-detail', quiz_id=quiz.id)
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('teacher-add-question', quiz_id=quiz.id)
+        
+# Teacher quiz section end
     
 # class AllTeacherList(TemplateView):
 #     template_name = 'teacher_template/all_teacher_list.html'
