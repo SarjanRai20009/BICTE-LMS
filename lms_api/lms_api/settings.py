@@ -192,3 +192,22 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sarjanrai914@gmail.com'  # 
 EMAIL_HOST_PASSWORD = 'eawk ywyd cplo jmbv' 
 DEFAULT_FROM_EMAIL = 'sarjanrai914@gmail.com'
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

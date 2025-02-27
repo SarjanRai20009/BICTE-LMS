@@ -1115,7 +1115,58 @@ def edit_feedback(request, submission_id):
     
     return redirect('teacher-assignmentsv-view')
 
-    
+
+class TeacherAssignedCoursesView(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_assigned_courses.html'
+    login_url = '/api/login/'  
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the logged-in teacher
+        teacher = get_object_or_404(Teacher, id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+         
+        # Fetch courses, assignments, quizzes, and materials for the teacher
+        courses = Course.objects.filter(teacher=teacher)
+        context['courses'] = courses
+        
+        assignments = Assignment.objects.filter(teacher=teacher)
+        context['assignments'] = assignments
+
+        quizzes = Quiz.objects.filter(teacher=teacher)
+        context['quizzes'] = quizzes
+            
+        course_materials = CourseMaterial.objects.filter(teacher=teacher)
+        context['course_materials'] = course_materials       
+             
+        # Prepare data for the assigned courses table
+        assigned_courses = Course.objects.filter(teacher=teacher)
+        course_data = []
+        for course in assigned_courses:
+            semester = course.semester
+            total_students = Student.objects.filter(semester=semester).count()
+
+            course_data.append({
+                'id': course.id,  # Include course ID for URL generation
+                'course_title': course.title,
+                'subject_code': course.subject_code,  # Ensure this field exists in your Course model
+                'semester_name': semester.get_se_name_display(),
+                'batch': semester.batch,  # Include batch for display
+                'total_students': total_students,
+                'is_semester_active': semester.is_active,
+            })
+
+        # Check if any semester is inactive
+        inactive_semester_warning = any(not course['is_semester_active'] for course in course_data)
+
+        # Add data to the context
+        context['course_data'] = course_data
+        context['inactive_semester_warning'] = inactive_semester_warning
+
+        return context
+
+
 class TeacherAssignmentView(LoginRequiredMixin, ListView):
     model = AssignmentSubmit
     template_name = 'teacher_template/teacher_assignment_view.html'

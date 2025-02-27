@@ -14,6 +14,8 @@ from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+import logging
+
 
 # Create your models here.
 
@@ -172,65 +174,119 @@ class CourseObjectives(models.Model):
     class Meta:
         verbose_name = "Course Objective"
         verbose_name_plural = "Course Objectives"
-        
-class Student(models.Model):    
-    profile_picture = models.ImageField(upload_to='student_pics/', null=True, blank=True , default='no_image2.jpg') 
-    
-    st_exam_roll_no = models.CharField(max_length=8, default='00000000') 
-    st_reg_no = models.CharField(max_length=40, default='0-0-000-00-0000')  
-    
+   
+   
+logger = logging.getLogger(__name__)
+
+class Student(models.Model):
+    # Personal Information
+    profile_picture = models.ImageField(upload_to='student_pics/', null=True, blank=True, default='no_image2.jpg')
+    st_exam_roll_no = models.CharField(max_length=8, default='00000000')
+    st_reg_no = models.CharField(max_length=40, default='0-0-000-00-0000')
     st_name = models.CharField(max_length=100)
     st_date_of_birth = models.DateField(null=True, blank=True)
     st_address = models.CharField(max_length=255)
     st_contact = models.CharField(max_length=15)
-    enrollment_date = models.IntegerField(null=True, blank=True)  
-    
+    enrollment_date = models.IntegerField(null=True, blank=True)
     st_email = models.EmailField(unique=True)
-    st_password = models.CharField(max_length=128, default='studentSMC1')  # Add default password
-    
+    st_password = models.CharField(max_length=128, default='studentSMC1')  # Default password
     st_gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], null=True, blank=True)
     st_father_name = models.CharField(max_length=100, null=True, blank=True)
-    
-    
-       
 
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)   
-    
-    email_sent = models.BooleanField(default=False) 
-    
-    
-    
-    def save(self, *args, **kwargs):
-        """Hashes password only if it's a new password or changed"""
-        self._raw_password = self.st_password
-        if self.pk:  # Check if instance exists (i.e., if it's an update)
-            original = Student.objects.get(pk=self.pk)
-            if original.st_password != self.st_password:
-                self.st_password = make_password(self.st_password) 
-        else:  # New user
-            self.st_password = make_password(self.st_password) 
+    # Academic Information
+    semester = models.ForeignKey('Semester', on_delete=models.CASCADE)
 
-        super().save(*args, **kwargs)
-        
-        
-      
+    # Email Tracking
+    email_sent = models.BooleanField(default=False)  # Track if email has been sent
 
-    def check_password(self, raw_password):
-        """Checks if the entered password matches the stored hashed password"""
-        return check_password(raw_password, self.st_password)
-    
     def __str__(self):
-        return f"{self.st_name} - {self.st_email} - {self.st_contact}" 
+        return f"{self.st_name} - {self.st_email} - {self.st_contact}"
+
     class Meta:
         verbose_name = "Student"
         verbose_name_plural = "Students"
-        
+
+    def clean(self):
+        """Validate student data before saving."""
+        if not self.st_email:
+            raise ValidationError("Email is required.")
+        if not self.st_name:
+            raise ValidationError("Name is required.")
+        if not self.st_exam_roll_no:
+            raise ValidationError("Exam roll number is required.")
+        if not self.st_reg_no:
+            raise ValidationError("Registration number is required.")
+
+    def save(self, *args, **kwargs):
+        """
+        Override the save method to:
+        1. Hash the password for new students or if the password has changed.
+        2. Send a welcome email to newly added students.
+        3. Update the email_sent flag after sending the email.
+        """
+        if self.pk:  # Check if instance exists (i.e., if it's an update)
+            original = Student.objects.get(pk=self.pk)
+            if original.st_password != self.st_password:
+                self.st_password = make_password(self.st_password)  # Hash the new password if it’s changed
+        else:  # New user
+            self.st_password = make_password(self.st_password)  # Hash the password for a new user
+
+        # Save the student first
+        super().save(*args, **kwargs)
+        logger.info(f"Student saved successfully. PK: {self.pk}")
+
+        if not self.email_sent:
+            # Send welcome email to new students
+            logger.info(f"Sending welcome email to {self.st_email}")
+            self.send_welcome_email()
+            self.email_sent = True
+            # Update the email_sent flag
+            super().save(update_fields=['email_sent'])
+            logger.info(f"Email sent flag updated to {self.email_sent}")
+
+    def send_welcome_email(self):
+        """
+        Send a welcome email to the newly added student.
+        """
+        subject = "Welcome to BICTE of Sukuna Multiple Campus"
+        message = (
+            f"Dear {self.st_name},\n\n"
+            "Welcome to BICTE of Sukuna Multiple Campus! We are excited to have you as part of our community.\n\n"
+            "Here are your login details:\n"
+            f"- Name: {self.st_name}\n"
+            f"- Email: {self.st_email}\n"
+            f"- Roll No: {self.st_exam_roll_no}\n"
+            f"- Registration No: {self.st_reg_no}\n"
+            f"- Password: studentSMC1\n"
+            f"- Semester: {self.semester.get_se_name_display()}\n\n"
+            "Please log in to the portal using the provided credentials and change your password after the first login.\n\n"
+            "Best regards,\n"
+            "The Administration Team"
+        )
+        try:
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [self.st_email],
+                fail_silently=False,
+            )
+            logger.info(f"Email sent successfully to {self.st_email}")
+        except Exception as e:
+            logger.error(f"Failed to send email to {self.st_email}: {e}")
+
+    def check_password(self, raw_password):
+        """
+        Check if the entered password matches the stored hashed password.
+        """
+        return check_password(raw_password, self.st_password)
+
     def get_student_info(self):
-        return f"Roll No: {self.st_exam_roll_no}, Reg No: {self.st_reg_no}, Semester: {self.semester.se_name}"
-
-        
-
-
+        """
+        Return a summary of the student's information.
+        """
+        return f"Roll No: {self.st_exam_roll_no}, Reg No: {self.st_reg_no}, Semester: {self.semester.get_se_name_display()}"
+    
 class MaterialType(models.Model):
     MATERIAL_CHOICES = [
         ('BOOK', 'Book', 'bi-book'), 

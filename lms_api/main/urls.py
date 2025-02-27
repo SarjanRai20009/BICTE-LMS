@@ -30,6 +30,8 @@ urlpatterns = [
     
     path('notic-list/', views.NoticeListView.as_view(), name='notic-list'),
     # path('notic-list/', views.NoticeListView.as_view(), name='notic-list'),
+    
+    
     # login, logout
     path('login/', SignIn, name = 'signin'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
@@ -93,6 +95,9 @@ urlpatterns = [
     path('teacher-assignments-view/', TeacherAssignmentView.as_view(), name='teacher-assignmentsv-view'),
     path('add-feedback/<int:submission_id>/', add_feedback, name='add-feedback'),
     path('edit-feedback/<int:submission_id>/', edit_feedback, name='edit-feedback'),
+    
+    # Teacher semester list view
+    path('teacher-assigned-courses/', TeacherAssignedCoursesView.as_view(), name='teacher-assigned-courses'),
     
     # quiz teacher section
     path('teacher-dashboard-quizzes/', views.TeacherDashboardQuizzes.as_view(), name='teacher-dashboard-quizzes'),

@@ -134,10 +134,10 @@
                 text-decoration: black;
             }
             .user-drop {
-                margin-right: -3rem;
+                margin-right: 0rem !important;
             }
             .this_drop {
-                margin-right: -10.2rem !important;
+                margin-right: -5rem !important;
             }
         }
         
@@ -170,7 +170,7 @@
         }
         
         .this_drop {
-            margin-left: -10.2rem !important;
+            margin-left: -4.2rem !important;
         }
     </style>
 </head>
@@ -206,12 +206,11 @@
               Courses
             </a> {% if courses %}
                     <div class="dropdown-menu this_drop" aria-labelledby="navbarDropdownSemester">
-                        {% for course in courses %}
-                        <a class="dropdown-item text-center" href="{% url 'teacher-active-semester' course.id %}">
-                {{ course.title }} ({{ course.semester.get_se_name_display }} -
-                Batch {{ course.semester.batch }})
-              </a> {% endfor %}
-                        <hr class="dropdown-divider" />
+
+                        <a class="dropdown-item text-center" href="{% url 'teacher-assigned-courses' %}">
+
+          View Courses            
+                       
                         <a class="dropdown-item text-center" href="{% url 'teacher-upload-course-material' %}">Manage CourseMaterial</a
               >
             </div>

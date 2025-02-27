@@ -31,7 +31,7 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover">
                             <thead class="thead-dark">
-                                <tr>
+                                <tr class="text-center">
                                     <th scope="col">SN</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
@@ -40,12 +40,12 @@
                                     <th scope="col">Gender</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center">
                                 {% for student in students %}
                                 <tr>
                                     <th class="text-center" scope="row">{{ forloop.counter }}</th>
                                     <td>
-                                        <a href="{% url 'teacher-view-student-profile' student.id %}"> {{ student.st_name }}</a>
+                                        <a class="student_name" href="{% url 'teacher-view-student-profile' student.id %}" style="text-decoration: none;"> {{ student.st_name }}</a>
                                     </td>
                                     <td>{{ student.st_email }}</td>
                                     <td>{{ student.st_exam_roll_no }}</td>
@@ -72,4 +72,10 @@
         </div>
     </div>
 </div>
-{% endblock %}
+<style>
+    .student_name:hover {
+        color: black !important;
+        text-decoration: underline !important;
+        transition: 1s ease;
+    }
+</style>{% endblock %}

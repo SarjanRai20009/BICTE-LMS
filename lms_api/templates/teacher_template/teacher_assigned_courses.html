@@ -1,0 +1,178 @@
+{% extends 'teacher_template/t_basepage.html' %} {% block title %}My Assigned Courses - BICTE-LMS{% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <h5 class="card-header text-center" style="background-color: #ccccff;">
+            My Assigned Courses
+        </h5>
+        <div class="card-body">
+            <!-- Warning for inactive semesters -->
+            {% if inactive_semester_warning %}
+            <div class="alert alert-warning text-center">
+                <strong>Warning:</strong> Some courses are associated with inactive semesters. No information is available for these courses.
+            </div>
+            {% endif %}
+
+            <!-- Responsive table wrapper -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th class=" bg-secondary">SN</th>
+                            <th class=" bg-secondary">Course Title</th>
+                            <th class=" bg-secondary">Subject Code</th>
+                            <th class=" bg-secondary">Semester</th>
+                            <th class=" bg-secondary">Total Students</th>
+                            <th class=" bg-secondary">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in course_data %}
+                        <tr class="text-center ">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ course.course_title }}</td>
+                            <td>{{ course.subject_code }}</td>
+                            <td>
+                                <a class="dropdown-item text-center semester_list" href="{% url 'teacher-active-semester' course.id %}" style="color: black !important; font-weight: normal !important;">
+                                    {{ course.semester_name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if course.is_semester_active %} {{ course.total_students }} {% else %} N/A {% endif %}
+                            </td>
+                            <td>
+                                {% if course.is_semester_active %}
+                                <span class="badge bg-success">Active</span> {% else %}
+                                <span class="badge bg-danger">Inactive</span> {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">No courses assigned.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Base styles */
+    
+    .badge {
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+    
+    .bg-success {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .bg-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .semester_list:hover {
+        text-decoration: underline;
+        transition: 1.4s ease;
+    }
+    /* Responsive styles */
+    
+    @media (max-width: 767.98px) {
+        /* Mobile devices */
+        .card-header h5 {
+            font-size: 1.2rem;
+            /* Smaller header font size */
+        }
+        .alert {
+            font-size: 0.9rem;
+            /* Smaller alert font size */
+        }
+        .table-responsive {
+            overflow-x: auto;
+            /* Ensure table is scrollable */
+        }
+        .table th,
+        .table td {
+            padding: 0.5rem;
+            /* Reduce padding for smaller screens */
+            font-size: 0.9rem;
+            /* Smaller font size for table cells */
+        }
+        .badge {
+            padding: 3px 6px;
+            /* Smaller badge padding */
+            font-size: 0.8rem;
+            /* Smaller badge font size */
+        }
+        .semester_list {
+            font-size: 0.9rem;
+            /* Smaller font size for semester links */
+        }
+    }
+    
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        /* Tablets */
+        .card-header h5 {
+            font-size: 1.4rem;
+            /* Slightly larger header font size */
+        }
+        .alert {
+            font-size: 1rem;
+            /* Slightly larger alert font size */
+        }
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            /* Slightly larger padding */
+            font-size: 1rem;
+            /* Slightly larger font size */
+        }
+        .badge {
+            padding: 4px 8px;
+            /* Slightly larger badge padding */
+            font-size: 0.9rem;
+            /* Slightly larger badge font size */
+        }
+        .semester_list {
+            font-size: 1rem;
+            /* Slightly larger font size for semester links */
+        }
+    }
+    
+    @media (min-width: 992px) {
+        /* Desktops and larger screens */
+        .card-header h5 {
+            font-size: 1.6rem;
+            /* Larger header font size */
+        }
+        .alert {
+            font-size: 1.1rem;
+            /* Larger alert font size */
+        }
+        .table th,
+        .table td {
+            padding: 1rem;
+            /* Larger padding */
+            font-size: 1.1rem;
+            /* Larger font size */
+        }
+        .badge {
+            padding: 5px 10px;
+            /* Larger badge padding */
+            font-size: 1rem;
+            /* Larger badge font size */
+        }
+        .semester_list {
+            font-size: 1.1rem;
+            /* Larger font size for semester links */
+        }
+    }
+</style>
+{% endblock %}
