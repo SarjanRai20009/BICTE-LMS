@@ -1,0 +1,208 @@
+{% extends "student_template/st_base_template.html" %} {% load static %} {% block title %} Quiz Attempt - BICTESMC {% endblock %} {% block content %}
+<div class="my-5">
+    <!-- Quiz Attempt Card -->
+    <div class="card shadow-lg quiz-attempt-card animate__animated animate__fadeIn" style="background-color: rgba(92, 92, 92, 0.218);">
+        <div class="card-header bg-gradient-primary text-white">
+            <h2 class="card-title mb-0 text-center">{{ quiz.title }}</h2>
+            <p class="mb-0"><i class="fas fa-stopwatch me-2"></i>Time Remaining: <span id="countdown">02:00</span></p>
+        </div>
+        <div class="card-body">
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% elif warning %}
+            <div class="alert alert-warning">{{ warning }}</div>
+            {% else %}
+            <form id="quiz-form">
+                {% csrf_token %} {% for question in questions %}
+                <div class="card mb-3 question-card animate__animated animate__fadeInUp">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ question.text }}</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option1_{{ question.id }}" value="1">
+                            <label class="form-check-label" for="option1_{{ question.id }}">{{ question.option1 }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option2_{{ question.id }}" value="2">
+                            <label class="form-check-label" for="option2_{{ question.id }}">{{ question.option2 }}</label>
+                        </div>
+                        {% if question.option3 %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option3_{{ question.id }}" value="3">
+                            <label class="form-check-label" for="option3_{{ question.id }}">{{ question.option3 }}</label>
+                        </div>
+                        {% endif %} {% if question.option4 %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option4_{{ question.id }}" value="4">
+                            <label class="form-check-label" for="option4_{{ question.id }}">{{ question.option4 }}</label>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="{% url 'student-quiz-list' %}" class="btn btn-outline-secondary text-warning">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Quiz List
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg animate__animated animate__pulse">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Quiz
+                        </button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    /* Import Google Fonts */
+    
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    /* Apply Google Font */
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+    /* Gradient Background for Card Header */
+    
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+    /* Quiz Attempt Card Styling */
+    
+    .quiz-attempt-card {
+        border-radius: 15px;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .quiz-attempt-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    .card-title {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    .question-card {
+        border-radius: 10px;
+        border: 1px solid #eee;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .question-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title.text-primary {
+        color: #3498db !important;
+    }
+    
+    .form-check-input {
+        margin-top: 0.3rem;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 25px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-success:hover {
+        background-color: #218838;
+    }
+    
+    .btn-outline-secondary {
+        border-radius: 10px;
+        padding: 10px 25px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+    /* Responsive Design */
+    
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 1.75rem;
+        }
+        .btn-success,
+        .btn-outline-secondary {
+            font-size: 0.9rem;
+            padding: 8px 20px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-title {
+            font-size: 1.5rem;
+        }
+        .btn-success,
+        .btn-outline-secondary {
+            font-size: 0.85rem;
+            padding: 6px 15px;
+        }
+    }
+</style>
+
+<!-- Animate.css for Animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<!-- JavaScript for Form Submission and Countdown Timer -->
+<script>
+    // Countdown Timer
+    let timeLeft = 120; // 2 minutes in seconds
+    const countdownElement = document.getElementById('countdown');
+
+    const countdownInterval = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        // Change color to red when 30 seconds are left
+        if (timeLeft <= 30) {
+            countdownElement.style.color = 'red';
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            alert('Time is up! You will be redirected to the quiz list.');
+            window.location.href = "{% url 'student-quiz-list' %}";
+        } else {
+            timeLeft--;
+        }
+    }, 1000);
+
+    // Form Submission
+    document.getElementById('quiz-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        fetch("{% url 'student-quiz-attempt' quiz.id %}", {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            }).then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = "{% url 'student-quiz-result' quiz.id %}";
+                } else if (data.status === 'error') {
+                    alert(data.message);
+                }
+            });
+    });
+</script>
+{% endblock %}

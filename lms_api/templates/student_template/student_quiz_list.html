@@ -1,0 +1,78 @@
+{% extends "student_template/st_base_template.html" %} {% load static %} {% block title %} Quiz List - BICTESMC {% endblock %} {% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Quiz List</h2>
+
+    <!-- Quiz List Cards -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for quiz in quizzes %}
+        <div class="col">
+            <div class="card h-100 shadow-sm quiz-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ quiz.title }}</h5>
+                    <p class="card-text text-muted">{{ quiz.course.title }}</p>
+                    <p class="card-text">{{ quiz.description|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{% url 'student-quiz-detail' quiz.id %}" class="btn btn-primary w-100"> Quiz Detail</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="container my-5 d-flex justify-content-center align-items-center">
+            <div class="alert alert-info text-center " role="alert ">
+                No quizzes available for your semester.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    /* Quiz Card Styling */
+    
+    .quiz-card {
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .quiz-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .card-text {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    
+    .btn-primary {
+        background-color: #3498db;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #2980b9;
+    }
+    /* Empty State Styling */
+    
+    .alert-info {
+        background-color: #e9f5ff;
+        border-color: #b3e0ff;
+        color: #2c3e50;
+        border-radius: 10px;
+        padding: 20px;
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}

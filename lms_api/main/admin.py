@@ -265,3 +265,9 @@ class NewsAdmin(admin.ModelAdmin):
         # Removed 'posted_at' from fieldsets since it's non-editable
     )
     ordering = ('-posted_at',)
+    
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at')
+    search_fields = ('name', 'email', 'subject')
+    list_filter = ('created_at',)

@@ -609,6 +609,77 @@
             transition: 0.6s ease all;
             color: #2f2f2f;
         }
+        
+        .contact-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            width: 100%;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #0f12af;
+            box-shadow: 0 0 5px rgba(15, 18, 175, 0.5);
+            outline: none;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-group button {
+            background-color: #2f2f2f;
+            color: #f6f6dc;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .form-group button:hover {
+            background-color: #0f12af;
+        }
+        /* Responsive Design */
+        
+        @media (max-width: 767px) {
+            .contact-form-container {
+                padding: 15px;
+            }
+            .form-group input,
+            .form-group textarea {
+                font-size: 0.9rem;
+            }
+            .form-group button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -675,19 +746,23 @@
                         </div>
                         <div class="swiper-slide">
                             <h1 class="slide-title"></h1>
-                            <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+2" alt="Swiper" />
+                            <img src="{% static 'images/SMC_Galary/orientationday_bicte_9th_batch_02.jpeg' %}" alt="Logo" />
+                            <!-- <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+2" alt="Swiper" /> -->
                         </div>
                         <div class="swiper-slide">
                             <h1 class="slide-title"></h1>
-                            <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+3" alt="Swiper" />
+                            <img src="{% static 'images/SMC_Galary/orientationday_bicte_9th_batch.jpeg' %}" alt="Logo" />
+                            <!-- <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+3" alt="Swiper" /> -->
                         </div>
                         <div class="swiper-slide">
                             <h1 class="slide-title"></h1>
-                            <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+4" alt="Swiper" />
+                            <img src="{% static 'images/SMC_Galary/orientationday_bicte_9th_batch_05.jpeg' %}" alt="Logo" />
+                            <!-- <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+4" alt="Swiper" /> -->
                         </div>
                         <div class="swiper-slide">
                             <h1 class="slide-title"></h1>
-                            <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+5" alt="Swiper" />
+                            <img src="{% static 'images/SMC_Galary/orientationday_bicte_9th_batch_03.jpeg' %}" alt="Logo" />
+                            <!-- <img src="https://via.placeholder.com/780x400/2f2f2f/fbfbf0?text=Slide+5" alt="Swiper" /> -->
                         </div>
                     </div>
                     <div class="swiper-pagination"></div>
@@ -701,7 +776,10 @@
                 BICTE-LMS
             </h2>
             <p class="subtitle-section" data-scroll data-scroll-speed="1.5">
-                BICTE-LMS is a Learning Management System (LMS) designed to enhance the educational experience for the faculty at Sukuna Multiple Campus.
+                BICTE-LMS is a Learning Management System (LMS) designed to enhance the educational experience for the faculty at Sukuna Multiple Campus. This system is designed for use in academic institutions, specifically within the BICTE faculty. It can be accessed
+                via web browsers. It enables students and teachers to interact and access learning materials remotely. This system LMS will provide a centralized platform for course material management, student assessment, and collaborative learning.
+                Key features include the ability to upload, organize, and share learning materials, administer gamified quizzes, monitor student progress, and provide feedback. Teachers will be able to manage courses efficiently, and students can access
+                and engage with learning resources, enhancing their learning experience through interactive tools and assessments.
             </p>
         </section>
 
@@ -725,7 +803,7 @@
                 <!-- Team Member: Sarjan Rai -->
                 <div class="team-member">
                     <div class="team-member-inner">
-                        <img src="{% static 'images/sarjan.jpg' %}" alt="Sarjan Rai" class="team-img" />
+                        <img src="{% static 'images/my_image.jpeg' %}" alt="Sarjan Rai" class="team-img" />
                         <h3>Sarjan Rai</h3>
                         <p class="role">Project Planning & Full-Stack Development Lead</p>
                         <div class="team-member-overlay">
@@ -778,13 +856,42 @@
             </div>
         </section>
 
-        <section id="contact" class="main-section" style="font-size: 25px" data-scroll-section>
+        <!-- <section id="contact" class="main-section" style="font-size: 25px" data-scroll-section>
             <h2 class="title-section" data-scroll data-scroll-speed="1">
                 Contact Us
             </h2>
             <p class="subtitle-section" data-scroll data-scroll-speed="1.5">
                 Have any questions or feedback? Feel free to reach out to us.
             </p>
+        </section> -->
+        <!-- Add this inside the #contact section -->
+        <section id="contact" class="main-section" style="font-size: 25px" data-scroll-section>
+            <h2 class="title-section" data-scroll data-scroll-speed="1">Contact Us</h2>
+            <p class="subtitle-section" data-scroll data-scroll-speed="1.5">
+                Have any questions or feedback? Feel free to reach out to us.
+            </p>
+
+            <!-- Contact Form -->
+            <div class="contact-form-container">
+                <form method="post" action="{% url 'contact' %}" class="contact-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Send Message</button>
+                    </div>
+                </form>
+            </div>
         </section>
 
         <footer data-scroll-section>
@@ -819,17 +926,17 @@
                         </a>
                     </li>
                     <li>
-                        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.facebook.com/profile.php?id=100072545824031" target="_blank" rel="noopener noreferrer">
                             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111392.png" alt="Facebook" width="24" height="24" /> Facebook
                         </a>
                     </li>
                     <li>
-                        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.linkedin.com/in/sarjan-rai-b63736253/" target="_blank" rel="noopener noreferrer">
                             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111499.png" alt="LinkedIn" width="24" height="24" /> LinkedIn
                         </a>
                     </li>
                     <li>
-                        <a href="https://github.com/SarjanRai20009/BICTE-LMS" target="_blank" rel="noopener noreferrer">
+                        <a href="https://github.com/SarjanRai20009/" target="_blank" rel="noopener noreferrer">
                             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111612.png" alt="GitHub" width="24" height="24" /> GitHub
                         </a>
                     </li>

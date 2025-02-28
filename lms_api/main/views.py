@@ -10,6 +10,8 @@ from django.utils import timezone
 from django.contrib import messages
 from django.db.models.functions import Lower
 
+from django.template.defaulttags import register
+
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import generics
@@ -141,7 +143,7 @@ def AdminDashboard(request):
     
 @login_required(login_url='/api/login/')
 def search(request):
-    query = request.GET.get('q')  # Get the search query from the URL parameter
+    query = request.GET.get('q') 
     courses = assignments = quizzes = students = teachers = None  # Initialize variables to avoid UnboundLocalError
     try:
         logged_in_student = Student.objects.get(id=request.session.get('user_id'))
@@ -903,8 +905,201 @@ class TeacherDetailStudentPage(LoginRequiredMixin, TemplateView):
             context['error'] = 'Student not found. Please log in again.'
         
         return context
-
     
+class StudentQuizListView(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/student_quiz_list.html'
+    login_url = '/api/login/'
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = student
+            
+            if student.semester:
+                # Check if the semester is active
+                if student.semester.is_active:
+                    # Fetch quizzes for the student's active semester
+                    quizzes = Quiz.objects.filter(course__semester=student.semester, is_active=True)
+                    context['quizzes'] = quizzes
+                else:
+                    # Semester is not active
+                    context['warning'] = 'You are not enrolled in an active semester. Please contact the administrator.'
+                    context['quizzes'] = []
+            else:
+                # No semester assigned to the student
+                context['warning'] = 'You are not enrolled in any semester. Please contact the administrator.'
+                context['quizzes'] = []       
+            
+            
+
+          
+          
+
+        except Student.DoesNotExist:
+            context['error'] = 'Student not found. Please log in again.'
+        return context
+    
+
+        
+          
+class StudentQuizDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/student_quiz_detail.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        try:
+            # Fetch the logged-in student
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = student
+
+         
+            if student.semester:
+             
+                if student.semester.is_active:
+                    
+                    quiz = get_object_or_404(Quiz, id=self.kwargs['quiz_id'], course__semester=student.semester, is_active=True)
+                    context['quiz'] = quiz
+                else:
+                    # Semester is not active
+                    context['warning'] = 'You are not enrolled in an active semester. Please contact the administrator.'
+            else:
+              
+                context['warning'] = 'You are not enrolled in any semester. Please contact the administrator.'
+
+        except Student.DoesNotExist:
+          
+            context['error'] = 'Student not found. Please log in again.'
+
+        return context
+    
+
+class StudentQuizAttemptView(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/student_quiz_attempt.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        try:
+          
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = student
+
+           
+            if student.semester:
+               
+                if student.semester.is_active:
+                   
+                    quiz = get_object_or_404(Quiz, id=self.kwargs['quiz_id'], course__semester=student.semester, is_active=True)
+                    questions = quiz.questions.all()
+                    context['quiz'] = quiz
+                    context['questions'] = questions
+                else:
+                  
+                    context['warning'] = 'You are not enrolled in an active semester. Please contact the administrator.'
+            else:
+               
+                context['warning'] = 'You are not enrolled in any semester. Please contact the administrator.'
+
+        except Student.DoesNotExist:
+         
+            context['error'] = 'Student not found. Please log in again.'
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Fetch the logged-in student
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+
+           
+            if student.semester and student.semester.is_active:
+                # Fetch the quiz
+                quiz = get_object_or_404(Quiz, id=self.kwargs['quiz_id'], course__semester=student.semester, is_active=True)
+                data = request.POST
+                score = 0
+
+                # Calculate the score
+                for question in quiz.questions.all():
+                    selected_option = data.get(f'question_{question.id}')
+                    if selected_option == question.correct_option:
+                        score += question.marks
+
+                # Update or create quiz attempt
+                quiz_attempt, created = QuizAttempt.objects.update_or_create(
+                    student=student,
+                    quiz=quiz,
+                    defaults={'score': score, 'attempted_at': timezone.now()}
+                )
+
+                return JsonResponse({'status': 'success', 'score': score})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'You are not enrolled in an active semester.'})
+
+        except Student.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Student not found. Please log in again.'})
+    
+    
+class StudentQuizResultView(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/student_quiz_result.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        try:
+           
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = student
+
+          
+            if student.semester:
+                # Check if the semester is active
+                if student.semester.is_active:
+                 
+                    quiz = get_object_or_404(Quiz, id=self.kwargs['quiz_id'], course__semester=student.semester, is_active=True)
+                    quiz_attempt = QuizAttempt.objects.filter(student=student, quiz=quiz).first()
+                    context['quiz'] = quiz
+                    context['quiz_attempt'] = quiz_attempt
+                else:
+                   
+                    context['warning'] = 'You are not enrolled in an active semester. Please contact the administrator.'
+            else:
+                
+                context['warning'] = 'You are not enrolled in any semester. Please contact the administrator.'
+
+        except Student.DoesNotExist:
+          
+            context['error'] = 'Student not found. Please log in again.'
+
+        return context
+class StudentViewResult(LoginRequiredMixin, TemplateView):
+    template_name = 'student_template/st_view_result.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        try:
+            # Fetch the logged-in student
+            student = Student.objects.get(id=self.request.session.get('user_id'))
+            context['student'] = student
+
+            if student.semester:
+                results = Result.objects.filter(semester=student.semester)
+                context['results'] = results
+            else:
+                context['error'] = 'You are not enrolled in any semester. Please contact the administrator.'
+
+        except Student.DoesNotExist:
+            context['error'] = 'Student not found. Please log in again.'
+
+        return context
 # end student view 
 
 
@@ -1566,6 +1761,47 @@ class TeacherAddQuestion(LoginRequiredMixin, TemplateView):
             messages.error(request, f'An error occurred: {str(e)}')
             return redirect('teacher-add-question', quiz_id=quiz.id)
         
+        
+class TeacherCourseDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_course_detail.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the logged-in teacher
+        teacher = Teacher.objects.get(id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+        
+        # Fetch the course
+        course_id = self.kwargs.get('course_id')
+        course = get_object_or_404(Course, id=course_id, teacher=teacher)
+        context['courses'] = course 
+        
+        
+        
+        course_id = self.kwargs.get('course_id')
+        course = get_object_or_404(Course, id=course_id, teacher=teacher)
+        context['course'] = course
+        
+        # Check if the semester is active
+        is_semester_active = course.semester.is_active
+        context['is_semester_active'] = is_semester_active
+        
+        # Fetch course materials
+        course_materials = CourseMaterial.objects.filter(course=course)
+        context['course_materials'] = course_materials
+        
+        # Fetch course objectives
+        course_objectives = CourseObjectives.objects.filter(course=course)
+        context['course_objectives'] = course_objectives
+        
+        # Fetch related courses
+        related_courses = Course.objects.filter(teacher=course.teacher).exclude(id=course.id)
+        context['related_courses'] = related_courses
+        
+        return context
+        
 # Teacher quiz section end
     
 # class AllTeacherList(TemplateView):
@@ -1592,6 +1828,7 @@ class CourseMaterialUploadView(LoginRequiredMixin, TemplateView):
         # Fetch the logged-in teacher
         teacher = Teacher.objects.get(id=self.request.session.get('user_id'))
         context['teacher'] = teacher
+        
 
         # Fetch courses taught by the teacher
         courses = Course.objects.filter(teacher=teacher)
@@ -1641,7 +1878,185 @@ class CourseMaterialUploadView(LoginRequiredMixin, TemplateView):
             messages.error(request, f'An error occurred: {str(e)}')
 
         return redirect('teacher-upload-course-material')
+    
+class TeacherSearchView(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_search_results.html'
+    login_url = '/api/login/'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get the logged-in teacher
+        teacher = Teacher.objects.get(id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+
+        # Get the search query from the URL parameter
+        query = self.request.GET.get('q')
+        context['query'] = query
+
+        # Initialize search results
+        students = assignments = quizzes = search_courses = semesters = None
+
+        if query:
+            # Search for students in the teacher's assigned courses
+            students = Student.objects.filter(
+                Q(st_name__icontains=query) | Q(st_email__icontains=query) | Q(st_exam_roll_no__icontains=query),
+                semester__course__teacher=teacher
+            ).distinct()
+
+            # Search for assignments created by the teacher
+            assignments = Assignment.objects.filter(
+                Q(title__icontains=query) | Q(description__icontains=query),
+                teacher=teacher
+            )
+
+            # Search for quizzes created by the teacher
+            quizzes = Quiz.objects.filter(
+                Q(title__icontains=query) | Q(description__icontains=query),
+                teacher=teacher
+            )
+
+            # Search for courses taught by the teacher
+            search_courses = Course.objects.filter(
+                Q(title__icontains=query) | Q(description__icontains=query),
+                teacher=teacher
+            )
+
+            # Search for semesters associated with the teacher's courses
+            semesters = Semester.objects.filter(
+                Q(se_name__icontains=query) | Q(batch__icontains=query),
+                course__teacher=teacher
+            ).distinct()
+
+        # Add search results to the context
+        context.update({
+            'students': students,
+            'assignments': assignments,
+            'quizzes': quizzes,
+            'search_courses': search_courses,
+            'semesters': semesters,
+        })
+
+        # Add the teacher's assigned courses to the context
+        assigned_courses = Course.objects.filter(teacher=teacher)
+        context['courses'] = assigned_courses
+
+        return context   
+    
+    
+# @login_required(login_url='/api/login/')
+# def teacher_search(request):
+#     query = request.GET.get('q')  
+#     students = assignments = quizzes = courses = semesters = None 
+#     context = {}  
+
+#     try:
+#         logged_in_teacher = Teacher.objects.get(id=request.session.get('user_id'))
+#         context['teacher'] = logged_in_teacher  
+
+#     except Teacher.DoesNotExist:
+#         logged_in_teacher = None
+
+#     if query and logged_in_teacher:
+      
+#         students = Student.objects.filter(
+#             Q(st_name__icontains=query) | Q(st_email__icontains=query) | Q(st_exam_roll_no__icontains=query),
+#             semester__course__teacher=logged_in_teacher
+#         ).distinct()
+
+     
+#         assignments = Assignment.objects.filter(
+#             Q(title__icontains=query) | Q(description__icontains=query),
+#             teacher=logged_in_teacher
+#         )
+
+       
+#         quizzes = Quiz.objects.filter(
+#             Q(title__icontains=query) | Q(description__icontains=query),
+#             teacher=logged_in_teacher
+#         )
+
+       
+#         search_courses = Course.objects.filter(
+#             Q(title__icontains=query) | Q(description__icontains=query),
+#             teacher=logged_in_teacher
+#         )
+
+      
+#         semesters = Semester.objects.filter(
+#             Q(se_name__icontains=query) | Q(batch__icontains=query),
+#             course__teacher=logged_in_teacher
+#         ).distinct()
+
+#     context.update({
+#         'query': query,
+#         'students': students,
+#         'assignments': assignments,
+#         'quizzes': quizzes,
+#         'search_courses': search_courses,
+#         'semesters': semesters,
+#     })
+
+#     return render(request, 'teacher_template/teacher_search_results.html', context)
+
+
+class TeacherProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'teacher_template/teacher_profile.html'
+    login_url = '/api/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch the logged-in teacher
+        teacher = Teacher.objects.get(id=self.request.session.get('user_id'))
+        context['teacher'] = teacher
+
+        # Fetch only active semester details
+        active_semesters = Semester.objects.filter(is_active=True)
+        assigned_courses = Course.objects.filter(teacher=teacher, semester__in=active_semesters)
+        context['courses'] = assigned_courses
+        
+        assignments = Assignment.objects.filter(teacher=teacher, course__semester__in=active_semesters)
+        context['assignments'] = assignments
+
+        quizzes = Quiz.objects.filter(teacher=teacher, course__semester__in=active_semesters)
+        context['quizzes'] = quizzes
+
+        course_materials = CourseMaterial.objects.filter(teacher=teacher, course__semester__in=active_semesters)
+        context['course_materials'] = course_materials
+
+        # Social Media Links
+        social_media_links = TeacherSocialMedia.objects.filter(teacher=teacher)
+        context['social_media_links'] = social_media_links
+
+        # Define social media icons
+        social_media_icons = {
+            'facebook': 'fab fa-facebook',
+            'twitter': 'fab fa-twitter',
+            'linkedin': 'fab fa-linkedin',
+            'instagram': 'fab fa-instagram',
+            'github': 'fab fa-github',
+            'other': 'fas fa-link',
+        }
+
+        # Preprocess social media links
+        processed_social_media = []
+        for platform, icon in social_media_icons.items():
+            link = next((link for link in social_media_links if link.platform == platform), None)
+            processed_social_media.append({
+                'platform': platform,
+                'icon': icon,
+                'link': link.link if link else None,
+            })
+
+        context['processed_social_media'] = processed_social_media
+
+        return context
+    
+    
+@register.filter
+def filter_by_course(items, course):
+    return items.filter(course=course)
 #teacher view end
     
     
@@ -1780,7 +2195,42 @@ class LogoutView(View):
         logout(request)  
         return redirect('/api/')
 
+def contact(request):
+    if request.method == 'POST':
+        # Get data from the POST request
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
 
+        # Validate the data (optional)
+        if not name or not email or not subject or not message:
+            return render(request, 'base.html', {'error': 'All fields are required.'})
+
+        # Save the data to the database
+        contact = Contact.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message
+        )
+
+        # Send an email (optional)
+        send_mail(
+            f"Contact Form Submission: {subject}",
+            f"Name: {name}\nEmail: {email}\nMessage: {message}",
+            email,  # From email
+            ['your-email@example.com'],  # To email
+            fail_silently=False,
+        )
+
+        # Redirect to a success page or show a success message
+        return redirect('contact_success')
+    else:
+        return render(request, 'base_template/base.html')
+
+def contact_success(request):
+    return render(request, 'base_template/contact_success.html')
     
     
     

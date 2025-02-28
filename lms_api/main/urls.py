@@ -32,6 +32,11 @@ urlpatterns = [
     # path('notic-list/', views.NoticeListView.as_view(), name='notic-list'),
     
     
+    # contact form
+    
+    path('contact/', contact, name='contact'),
+    path('contact/success/', contact_success, name='contact_success'),    
+    
     # login, logout
     path('login/', SignIn, name = 'signin'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
@@ -73,12 +78,13 @@ urlpatterns = [
     
     path('change-student-account-password/', views.ChangeStudentPassword.as_view(), name='change-student-account-password'),
     # Todo List
-    # path("quizzes/", QuizListView.as_view(), name="quiz-list"),
-    # path("quizzes/<int:quiz_id>/", QuizDetailView.as_view(), name="quiz-detail"),
-    # path("quizzes/<int:quiz_id>/attempt/", QuizAttemptView.as_view(), name="quiz-attempt"),
-    # path("quizzes/<int:quiz_id>/leaderboard/", LeaderboardView.as_view(), name="quiz-leaderboard"),
+    path('student-quiz-list/', views.StudentQuizListView.as_view(), name='student-quiz-list'),
+    path('student-quiz-detail/<int:quiz_id>/', views.StudentQuizDetailView.as_view(), name='student-quiz-detail'),
+    path('student-quiz-attempt/<int:quiz_id>/', views.StudentQuizAttemptView.as_view(), name='student-quiz-attempt'),
+    path('student-quiz-result/<int:quiz_id>/', views.StudentQuizResultView.as_view(), name='student-quiz-result'),
     path("leaderboard/", views.Leaderboard.as_view(), name = "leaderboard"),
-    
+    # student view result
+    path('student-view-result/', views.StudentViewResult.as_view(), name='student-view-result'),
     
     
     # teacher template views:
@@ -96,6 +102,14 @@ urlpatterns = [
     path('add-feedback/<int:submission_id>/', add_feedback, name='add-feedback'),
     path('edit-feedback/<int:submission_id>/', edit_feedback, name='edit-feedback'),
     
+    
+    # Teacher searh feature view
+    
+    # path('teacher-search/', views.teacher_search, name='teacher-search'),
+    path('teacher-search/', TeacherSearchView.as_view(), name='teacher-search'),
+    
+    path('teacher-profile/', TeacherProfileView.as_view(), name='teacher-profile'),
+    
     # Teacher semester list view
     path('teacher-assigned-courses/', TeacherAssignedCoursesView.as_view(), name='teacher-assigned-courses'),
     
@@ -111,6 +125,9 @@ urlpatterns = [
     path('teacher-details/<int:pk>', views.TeacherDetails.as_view(), name='teacher-details'),
     path('base-teacher-details/<int:pk>', views.BaseTeacherDetails.as_view(), name='base-teacher-details'),
     path('teacher-active-semester/<int:course_id>/', TeacherActiveSemesterView.as_view(), name='teacher-active-semester'),
+
+
+    path('teacher-course-detail/<int:course_id>/', TeacherCourseDetailView.as_view(), name='teacher-course-detail'),
 
     # API views with explicit names
     path('teacher/', views.TeacherList.as_view(), name='api-teacher-list'),

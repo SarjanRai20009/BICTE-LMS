@@ -1,0 +1,7 @@
+{% extends "student_template/st_base_template.html" %} {% load static %} {% block title %} Quiz Result - BICTESMC {% endblock %} {% block content %}
+<div class="container">
+    <h2>{{ quiz.title }} - Result</h2>
+    <p>Your score: {{ quiz_attempt.score }}</p>
+    <a href="{% url 'leaderboard' %}" class="btn btn-primary">View Leaderboard</a>
+</div>
+{% endblock %}

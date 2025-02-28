@@ -1,0 +1,38 @@
+{% extends "student_template/st_base_template.html" %} {% block title %} View Results - BICTE-SMC {% endblock %} {% block content %}
+<div class="container mb-3">
+    <h2 class="mb-4 text-center">Your Results</h2>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% else %} {% if results %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="text-center">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Uploaded At</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.title }}</td>
+                    <td>{{ result.description|default:"No description" }}</td>
+                    <td>{{ result.uploaded_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <a href="{{ result.file.url }}" class="btn btn-primary btn-sm" download>
+                            <i class="bi bi-download"></i> Download
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center text-danger fs-5">No results available.</div>
+    {% endif %} {% endif %}
+</div>
+{% endblock %}

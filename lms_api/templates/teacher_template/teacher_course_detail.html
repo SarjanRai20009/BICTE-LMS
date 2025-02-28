@@ -1,0 +1,174 @@
+{% extends "teacher_template/t_basepage.html" %} {% load static %} {% block title %} Course Detail - BICTESMC {% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-9 ms-auto me-auto">
+            <h3 class="text-center">{{ course.title }}</h3>
+            <p style="text-align: justify;">{{ course.description }}</p>
+            <p class="fw-bold">
+                Semester:
+                <a href="#" class="text-dark">{{ course.semester.get_se_name_display }}</a>
+            </p>
+            <p class="fw-bold">Credit Hours: {{ course.credits }} hrs</p>
+            <p class="fw-bold">Course Types: {% if course.is_elective %}Elective{% else %}Core{% endif %}</p>
+        </div>
+    </div>
+
+    <!-- Course Syllabus Section -->
+    <div class="card mt-3 ps-3 pe-3 pt-2 pb-2 mb-2">
+        <p class="fw-bold text-center" style="font-size: 1.3rem;">Course Syllabus</p>
+        <div class="row">
+            {% if course.syllabus_file %}
+            <div class="col-12 mb-2">
+                <a href="{{ course.syllabus_file.url }}" download class="btn btn-primary w-100">Download</a>
+            </div>
+            <div class="col-12">
+                <a href="{{ course.syllabus_file.url }}" target="_blank" class="btn btn-primary w-100">View Now</a>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <p class="text-center">No syllabus file available.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Course Objectives Section -->
+    <div class="card mt-3 pt-2">
+        <div class="card-header text-center fw-bold mb-2" style="font-size: 1.3rem;">Objectives</div>
+        <ul class="list-group list-group-flush">
+            {% for objective in course_objectives %}
+            <li class="list-group-item text-center">{{ objective.objective }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Course Materials Section -->
+    <div class="card mt-4 ps-3 pe-3 pt-2 pb-2 mb-3">
+        <p class="fw-bold text-center">Course Materials</p>
+        <ul class="list-group list-group-flush">
+            {% if course_materials %} {% for material in course_materials %}
+            <li class="list-group-item d-flex material-item">
+                {% if material.file %}
+                <a href="{{ material.file.url }}" target="_blank" class="material-link d-flex align-items-center w-100 text-decoration-none">
+                    <i class="bi {{ material.material_type.icon_class }} me-2"></i>
+                    <span class="flex-grow-1">{{ material.title }}</span>
+                    <span class="export-text ms-2">Explore</span>
+                </a>
+                {% elif material.external_link %}
+                <a href="{{ material.external_link }}" target="_blank" class="material-link d-flex align-items-center w-100 text-decoration-none">
+                    <i class="bi {{ material.material_type.icon_class }} me-2"></i>
+                    <span class="flex-grow-1">{{ material.title }}</span>
+                    <span class="export-text ms-2">Explore</span>
+                </a>
+                {% else %}
+                <div class="d-flex align-items-center w-100">
+                    <i class="bi {{ material.material_type.icon_class }} me-2"></i>
+                    <span class="flex-grow-1">{{ material.title }}</span>
+                    <span class="export-text ms-2">No file or link available</span>
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %} {% else %}
+            <li class="list-group-item text-center">No materials available</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Teacher Actions Section -->
+    <div class="card mt-4 ps-3 pe-3 pt-2 pb-2 mb-3">
+        <p class="fw-bold text-center">Teacher Actions</p>
+        <div class="row">
+            <!-- Upload Course Material -->
+            <div class="col-md-4 mb-3">
+                <a href="{% if is_semester_active %}{% url 'teacher-upload-course-material' %}{% else %}#{% endif %}" class="btn btn-success w-100 {% if not is_semester_active %}disabled{% endif %}">
+                    <i class="bi bi-upload me-2"></i>Upload Material
+                </a>
+            </div>
+
+            <!-- Create Assignment -->
+            <div class="col-md-4 mb-3">
+                <a href="{% if is_semester_active %}{% url 'teacher-dashboard-assignments' %}{% else %}#{% endif %}" class="btn btn-primary w-100 {% if not is_semester_active %}disabled{% endif %}">
+                    <i class="bi bi-pencil-square me-2"></i>Create Assignment
+                </a>
+            </div>
+
+            <!-- Create Quiz -->
+            <div class="col-md-4 mb-3">
+                <a href="{% if is_semester_active %}{% url 'teacher-create-quiz' %}{% else %}#{% endif %}" class="btn btn-warning w-100 {% if not is_semester_active %}disabled{% endif %}">
+                    <i class="bi bi-question-circle me-2"></i>Create Quiz
+                </a>
+            </div>
+
+            <!-- View Student Profiles -->
+            <div class="col-md-4 mb-3">
+                <a href="{% if is_semester_active %}{% url 'teacher-active-semester' course.id %}{% else %}#{% endif %}" class="btn btn-info w-100 {% if not is_semester_active %}disabled{% endif %}">
+                    <i class="bi bi-people me-2"></i>View Students
+                </a>
+            </div>
+
+            <!-- View Assignments -->
+            <div class="col-md-4 mb-3">
+                <a href="{% if is_semester_active %}{% url 'teacher-assignmentsv-view' %}{% else %}#{% endif %}" class="btn btn-secondary w-100 {% if not is_semester_active %}disabled{% endif %}">
+                    <i class="bi bi-list-task me-2"></i>View Assignments
+                </a>
+            </div>
+
+            <!-- View Quizzes -->
+            <div class="col-md-4 mb-3">
+                <a href="{% if is_semester_active %}{% url 'teacher-dashboard-quizzes' %}{% else %}#{% endif %}" class="btn btn-dark w-100 {% if not is_semester_active %}disabled{% endif %}">
+                    <i class="bi bi-card-checklist me-2"></i>View Quizzes
+                </a>
+            </div>
+        </div>
+
+        <!-- Semester Inactive Warning -->
+        {% if not is_semester_active %}
+        <div class="alert alert-warning mt-3 text-center">
+            <i class="bi bi-exclamation-triangle me-2"></i> The semester for this course is not active. You cannot perform actions on this course.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Related Semester Courses Section -->
+    <h4 class="pb-1 mt-5 mb-4 text-center fw-bold">Related Semester Courses</h4>
+    <div class="row">
+        {% for related_course in related_courses %}
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <a href="{% url 'teacher-course-detail' related_course.id %}">
+                    <img src="{% static 'images/no_image.jpg' %}" class="card-img-top" alt="No Image" />
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="{% url 'teacher-course-detail' related_course.id %}">{{ related_course.title }}</a>
+                    </h5>
+                    <p class="card-text text-center">{{ related_course.description|truncatechars:50 }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .course-image {
+        margin: auto;
+    }
+    
+    .teacherprofile {
+        text-decoration: none;
+    }
+    
+    .teacherprofile:hover {
+        text-decoration: underline;
+        font-weight: bolder;
+    }
+</style>
+
+<script>
+    function getCourseId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("course_id"); // Extract course_id from query parameter
+    }
+</script>
+{% endblock %}

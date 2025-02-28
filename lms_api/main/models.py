@@ -253,13 +253,17 @@ class Student(models.Model):
             f"Dear {self.st_name},\n\n"
             "Welcome to BICTE of Sukuna Multiple Campus! We are excited to have you as part of our community.\n\n"
             "Here are your login details:\n"
-            f"- Name: {self.st_name}\n"
+            f"- Username: {self.st_name}\n"
             f"- Email: {self.st_email}\n"
             f"- Roll No: {self.st_exam_roll_no}\n"
             f"- Registration No: {self.st_reg_no}\n"
             f"- Password: studentSMC1\n"
             f"- Semester: {self.semester.get_se_name_display()}\n\n"
             "Please log in to the portal using the provided credentials and change your password after the first login.\n\n"
+            "Login portal: http://127.0.0.1:8800/api/login/\n\n" 
+            "Use Your Username and Password to login.\n\n"
+            
+            
             "Best regards,\n"
             "The Administration Team"
         )
@@ -316,7 +320,9 @@ class MaterialType(models.Model):
         verbose_name = "Material Type"
         verbose_name_plural = "Material Types"
         
-        
+
+
+
 class CourseMaterial(models.Model):
     title = models.CharField(max_length=255, verbose_name="Material Title")
     file = models.FileField(upload_to="course_materials/", blank=True, null=True, verbose_name="Material File")
@@ -666,3 +672,18 @@ class News(models.Model):
         verbose_name = "News"
         verbose_name_plural = "News"
         ordering = ["-posted_at"]
+
+
+class Contact(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Your Name")
+    email = models.EmailField(verbose_name="Your Email")
+    subject = models.CharField(max_length=200, verbose_name="Subject")
+    message = models.TextField(verbose_name="Your Message")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
+
+    class Meta:
+        verbose_name = "Contact Submission"
+        verbose_name_plural = "Contact Submissions"

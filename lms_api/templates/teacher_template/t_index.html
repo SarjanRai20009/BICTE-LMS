@@ -39,15 +39,15 @@
         <p class="mb-4">Manage your courses note, assignments, quizzes and more.</p>
 
         <!-- Search Form -->
-        <form id="searchForm" class="form-inline justify-content-center mb-4" action="#" method="get">
-            <input class="form-control form-control-lg mr-2" type="text" placeholder="Search courses, students, teacher" aria-label="Search" style="min-width: 300px" />
+        <form id="searchForm" class="form-inline justify-content-center mb-4" action="{% url 'teacher-search' %}" method="get">
+            <input class="form-control form-control-lg  mr-2" type="text" name="q" placeholder="Search courses, students, teacher" aria-label="Search" style="min-width: 300px" />
             <button class="btn btn-warning btn-lg" type="submit">Search</button>
         </form>
 
         <!-- CTA Buttons/Links -->
         <div>
-            <a href="#" class="btn btn-outline-light btn-lg mr-2">All Courses</a>
-            <a href="#" class="btn btn-light btn-lg read_more">Read More</a>
+            <a href="/api/teacher-assigned-courses/" class="btn btn-outline-light btn-lg mr-2">All Courses</a>
+            <a href="https://sukuna.edu.np/introduction/" class="btn btn-light btn-lg read_more" target="_blank">For More</a>
         </div>
     </div>
 </section>

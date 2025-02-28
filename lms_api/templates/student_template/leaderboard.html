@@ -1,145 +1,103 @@
 {% extends 'student_template/st_base_template.html' %} {% block title %} Leaderboard - BICTE LMS{% endblock %} {% load static %} {% block content %}
 <div class="container mt-5">
-
+    <!-- Error Message Section -->
     {% if error %}
     <div class="alert alert-danger" role="alert">
         {{ error }}
     </div>
     {% endif %}
+
+    <!-- Search Bar -->
     <div class="search-bar ps-5">
         <form class="d-flex justify-content-center" action="{% url 'search' %}" method="get">
             <input type="text" class="form-control search-input" name="q" placeholder="Search courses, assignments, quizzes..." aria-label="Search" />
             <button class="btn btn-primary search-btn" type="submit">
-            <i class="bi bi-search"></i>
-          </button>
+                <i class="bi bi-search"></i>
+            </button>
         </form>
     </div>
-</div>
-<h1 class="text-center mb-5">Quiz Leaderboard</h1>
 
-<div class="row">
-    <!-- Left Column: Top 3 Players -->
-    <div class="col-md-6">
-        <div class="row justify-content-center">
-            <!-- Second Place -->
-            <div class="col-md-4 text-center mb-4">
-                <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInLeft">
-                    <a href="#">
-                        <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="Second Place" style="width: 120px; height: 120px" />
-                    </a>
-                    <h4>John Doe</h4>
-                    <p class="text-muted">Semester: 5</p>
-                    <p class="text-success fw-bold">Score: 850</p>
+    <h1 class="text-center mb-5">Quiz Leaderboard</h1>
+
+    <div class="row">
+        <!-- Left Column: Top 3 Players -->
+        <div class="col-md-6">
+            <div class="row justify-content-center">
+                {% if top_students|length >= 3 %}
+                <!-- Second Place -->
+                <div class="col-md-4 text-center mb-4">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInLeft">
+                        <a href="#">
+                            <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="Second Place" style="width: 120px; height: 120px" />
+                        </a>
+                        <h4>{{ top_students.1.student.st_name }}</h4>
+                        <p class="text-muted">Semester: {{ top_students.1.student.semester.get_se_name_display }}</p>
+                        <p class="text-success fw-bold">Score: {{ top_students.1.total_score }}</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- First Place -->
-            <div class="col-md-4 text-center mb-4">
-                <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInUp">
-                    <a href="#">
-                        <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="First Place" style="width: 150px; height: 150px" />
-                    </a>
-                    <h3>Jane Smith</h3>
-                    <p class="text-muted">Semester: 6</p>
-                    <p class="text-success fw-bold">Score: 950</p>
+                <!-- First Place -->
+                <div class="col-md-4 text-center mb-4">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInUp">
+                        <a href="#">
+                            <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="First Place" style="width: 150px; height: 150px" />
+                        </a>
+                        <h3>{{ top_students.0.student.st_name }}</h3>
+                        <p class="text-muted">Semester: {{ top_students.0.student.semester.get_se_name_display }}</p>
+                        <p class="text-success fw-bold">Score: {{ top_students.0.total_score }}</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Third Place -->
-            <div class="col-md-4 text-center mb-4">
-                <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInRight">
-                    <a href="#">
-                        <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="Third Place" style="width: 120px; height: 120px" />
-                    </a>
-                    <h4>Alice Johnson</h4>
-                    <p class="text-muted">Semester: 4</p>
-                    <p class="text-success fw-bold">Score: 800</p>
+                <!-- Third Place -->
+                <div class="col-md-4 text-center mb-4">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded animate__animated animate__fadeInRight">
+                        <a href="#">
+                            <img src="{% static 'images/default-profile-picture1.jpg' %}" class="rounded-circle img-fluid mb-3" alt="Third Place" style="width: 120px; height: 120px" />
+                        </a>
+                        <h4>{{ top_students.2.student.st_name }}</h4>
+                        <p class="text-muted">Semester: {{ top_students.2.student.semester.get_se_name_display }}</p>
+                        <p class="text-success fw-bold">Score: {{ top_students.2.total_score }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-muted">Not enough data to display top 3 players.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Column: Top 10 Leaderboard Table -->
+        <div class="col-md-6">
+            <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h3 class="text-center mb-4">Top 10 Players</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Rank</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Semester</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rank in top_students %}
+                            <tr>
+                                <th scope="row">{{ rank.rank }}</th>
+                                <td>{{ rank.student.st_name }}</td>
+                                <td>{{ rank.student.semester.get_se_name_display }}</td>
+                                <td class="text-success fw-bold">{{ rank.total_score }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No data available.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Right Column: Top 10 Leaderboard Table -->
-    <div class="col-md-6">
-        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-            <div class="card-body">
-                <h3 class="text-center mb-4">Top 10 Players</h3>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Rank</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Semester</th>
-                            <th scope="col">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Jane Smith</td>
-                            <td>6</td>
-                            <td class="text-success fw-bold">950</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>John Doe</td>
-                            <td>5</td>
-                            <td class="text-success fw-bold">850</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Alice Johnson</td>
-                            <td>4</td>
-                            <td class="text-success fw-bold">800</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Michael Brown</td>
-                            <td>7</td>
-                            <td>780</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Emily Davis</td>
-                            <td>3</td>
-                            <td>760</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">6</th>
-                            <td>David Wilson</td>
-                            <td>5</td>
-                            <td>740</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">7</th>
-                            <td>Sarah Miller</td>
-                            <td>6</td>
-                            <td>720</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">8</th>
-                            <td>James Moore</td>
-                            <td>4</td>
-                            <td>700</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">9</th>
-                            <td>Linda Taylor</td>
-                            <td>5</td>
-                            <td>680</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">10</th>
-                            <td>Robert Anderson</td>
-                            <td>6</td>
-                            <td>660</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 
 <!-- Add Animate.css for animations -->

@@ -1,0 +1,138 @@
+{% extends "student_template/st_base_template.html" %} {% load static %} {% block title %} Quiz Detail - BICTESMC {% endblock %} {% block content %}
+<div class="container my-5">
+    <div class="mt-3">
+        <p class="text-danger"><i class="fas fa-stopwatch me-2"></i>Time Remaining: <span id="countdown">0:10</span></p>
+    </div>
+    <!-- Quiz Detail Card -->
+    <div class="card shadow-lg quiz-detail-card animate__animated animate__fadeIn">
+        <div class="card-header bg-primary text-white">
+            <h2 class="card-title mb-0" style="text-align: justify;">{{ quiz.title }}</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text lead text-center">{{ quiz.description }}</p>
+            <hr class="my-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <div class="text-center text-md-start mb-3 mb-md-0">
+                    <p class="text-muted mb-0"><i class="fas fa-book me-2"></i>Course: {{ quiz.course.title }}</p>
+                    <p class="text-muted mb-0"><i class="fas fa-clock me-2"></i>Created: {{ quiz.created_at|date:"F d, Y" }}</p>
+                </div>
+                <a href="{% url 'student-quiz-attempt' quiz.id %}" class="btn btn-lg btn-success animate__animated animate__pulse animate__infinite">
+                    <i class="fas fa-play-circle me-2"></i>Start Quiz
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // JavaScript for countdown timer
+    let timeLeft = 10; // 20 seconds
+    const countdown = document.getElementById('countdown');
+
+    const timer = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        countdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timeLeft === 0) {
+            clearInterval(timer); // Stop the timer when it reaches 0
+            window.location.href = "{% url 'student-quiz-list' %}"; // Redirect to student-quiz-list
+        }
+
+        timeLeft--;
+    }, 1000);
+</script>
+
+<!-- Custom CSS -->
+<style>
+    /* Import Google Fonts */
+    
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    /* Apply Google Font */
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+    /* Quiz Detail Card Styling */
+    
+    .quiz-detail-card {
+        border-radius: 15px;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .quiz-detail-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    .card-title {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    .card-text.lead {
+        font-size: 1.1rem;
+        color: #555;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 25px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-success:hover {
+        background-color: #218838;
+    }
+    
+    .text-muted {
+        font-size: 0.95rem;
+    }
+    
+    hr {
+        border-top: 2px solid #eee;
+    }
+    /* Responsive Design */
+    
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 1.75rem;
+        }
+        .card-text.lead {
+            font-size: 1rem;
+        }
+        .btn-success {
+            font-size: 0.9rem;
+            padding: 8px 20px;
+        }
+        .text-muted {
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-title {
+            font-size: 1.5rem;
+        }
+        .card-text.lead {
+            font-size: 0.95rem;
+        }
+        .btn-success {
+            font-size: 0.85rem;
+            padding: 6px 15px;
+        }
+        .text-muted {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+
+<!-- Animate.css for Animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"> {% endblock %}

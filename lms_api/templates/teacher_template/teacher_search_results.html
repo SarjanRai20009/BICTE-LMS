@@ -1,0 +1,298 @@
+{% extends 'teacher_template/t_basepage.html' %} {% block title %} Search Results - BICTE-LMS{% endblock %} {% block content %}
+<style>
+    /* Custom styles for a modern and creative design */
+    
+    .search-results-page {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        /* Center all text */
+    }
+    
+    .search-form {
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        /* Space between input and button */
+    }
+    
+    .search-form .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 15px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        height: 60px;
+        /* Fixed height for input */
+        flex: 1;
+        /* Allow input to grow */
+        max-width: 500px;
+        /* Limit input width */
+    }
+    
+    .search-form .form-control:focus {
+        border-color: #007bff;
+        box-shadow: none;
+    }
+    
+    .search-form .btn-warning {
+        border-radius: 10px;
+        background-color: #ffc107;
+        border: none;
+        font-weight: 600;
+        padding: 15px 30px;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        height: 60px;
+        /* Fixed height for button */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .search-results-page {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-form {
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .search-form .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 15px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+    }
+    
+    .search-form .form-control:focus {
+        border-color: #007bff;
+        box-shadow: none;
+    }
+    
+    .results-section {
+        margin-top: 30px;
+    }
+    
+    .results-section h2 {
+        color: #343a40;
+        font-weight: 700;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    
+    .results-section h4 {
+        color: #495057;
+        font-weight: 600;
+        margin-top: 25px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+    
+    .results-list {
+        list-style: none;
+        padding: 0;
+        text-align: center;
+        /* Center list items */
+    }
+    
+    .results-list li {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: inline-block;
+        /* Center list items */
+        width: 100%;
+        max-width: 600px;
+        /* Limit width of list items */
+    }
+    
+    .results-list li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .results-list a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+        display: block;
+    }
+    
+    .results-list a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+    
+    .no-results {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 30px;
+        display: inline-block;
+        /* Center the no-results box */
+        width: 100%;
+        max-width: 600px;
+        /* Limit width of no-results box */
+    }
+    
+    .search-results-page {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        /* Center all text */
+    }
+    
+    .no-results p {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+    }
+    /* Responsive Design */
+    
+    @media (max-width: 768px) {
+        .search_bttn {
+            margin-top: 0.6rem;
+        }
+        .search-form {
+            flex-direction: column;
+            /* Stack input and button vertically on small screens */
+            gap: 15px;
+            /* Add space between stacked elements */
+        }
+        .search-form .form-control,
+        .search-form .btn-warning {
+            width: 100%;
+            /* Full width on small screens */
+            max-width: none;
+            /* Remove max-width restriction */
+        }
+        .results-list li {
+            max-width: 100%;
+            /* Full width for list items on small screens */
+        }
+    }
+</style>
+
+<div class="mt-4">
+    <!-- Search Form -->
+    <div class="search-form">
+        <form id="searchForm" class="form-inline justify-content-center mb-4" action="{% url 'teacher-search' %}" method="get">
+            <input class="form-control form-control-lg mr-2" type="text" name="q" placeholder="Search students, assignments, quizzes, courses..." aria-label="Search" style="min-width: 300px" />
+            <button class="btn btn-warning btn-lg search_bttn" type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-results-page">
+        <h2>Search Results for "{{ query }}"</h2>
+
+        <!-- Students Section -->
+        {% if students %}
+        <div class="results-section">
+            <h4>Students</h4>
+            <ul class="results-list">
+                {% for student in students %}
+                <li>
+                    <a href="{% url 'teacher-view-student-profile' student.id %}">
+            {{ student.st_name }} ({{ student.st_exam_roll_no }})
+          </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Assignments Section -->
+        {% if assignments %}
+        <div class="results-section">
+            <h4>Assignments</h4>
+            <ul class="results-list">
+                {% for assignment in assignments %}
+                <li>
+                    <a href="#">
+            {{ assignment.title }} ({{ assignment.course.title }})
+          </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Quizzes Section -->
+        {% if quizzes %}
+        <div class="results-section">
+            <h4>Quizzes</h4>
+            <ul class="results-list">
+                {% for quiz in quizzes %}
+                <li>
+                    <a href="{% url 'teacher-quiz-detail' quiz.id %}">
+            {{ quiz.title }} ({{ quiz.course.title }})
+          </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Courses Section -->
+        {% if search_courses %}
+        <div class="results-section">
+            <h4>Courses</h4>
+            <ul class="results-list">
+                {% for search_course in search_courses %}
+                <li>
+                    <a href="#"> {{ search_course.title }} ({{ search_course.subject_code }}) </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Semesters Section -->
+        {% if semesters %}
+        <div class="results-section">
+            <h4>Semesters</h4>
+            <ul class="results-list">
+                {% for semester in semesters %}
+                <li>
+                    <a href="#">
+            {{ semester.get_se_name_display }} (Batch: {{ semester.batch }})
+          </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- No Results Message -->
+        {% if not students and not assignments and not quizzes and not search_courses and not semesters %}
+        <div class="no-results">
+            <p>No results found for "{{ query }}".</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

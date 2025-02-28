@@ -7,7 +7,7 @@
         </div> -->
         <div class="col-9 ms-auto me-auto">
             <h3 class="text-center">{{ course.title }}</h3>
-            <p>{{course.description}}</p>
+            <p style="text-align: justify;">{{course.description}}</p>
             <p class="fw-bold">
                 Semester:
                 <a href="{% url 'st-semester-view' course.semester.id %}" class="text-dark">{{ course.semester.get_se_name_display }}</a>
@@ -52,7 +52,7 @@
         <div class="card-heade text-center fw-bold mb-2 " style="font-size: 1.3rem">Objectives</div>
         <ul class="list-group list-group-flush">
             {% for objective in course_objectives %}
-            <li class="list-group-item">{{ objective.objective }}</li>
+            <li class="list-group-item text-center ">{{ objective.objective }}</li>
             {% endfor %}
         </ul>
     </div>

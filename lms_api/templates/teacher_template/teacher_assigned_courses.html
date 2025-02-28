@@ -1,4 +1,4 @@
-{% extends 'teacher_template/t_basepage.html' %} {% block title %}My Assigned Courses - BICTE-LMS{% endblock %} {% block content %}
+{% extends 'teacher_template/t_basepage.html' %} {% block title %} My Assigned Courses - BICTE-LMS {% endblock %} {% block content %}
 <div class="container mt-4">
     <div class="card">
         <h5 class="card-header text-center" style="background-color: #ccccff;">
@@ -29,7 +29,7 @@
                         {% for course in course_data %}
                         <tr class="text-center ">
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ course.course_title }}</td>
+                            <td> <a class="text-decoration-none" href="{% url 'teacher-course-detail' course.id %}">{{ course.course_title }}</a></td>
                             <td>{{ course.subject_code }}</td>
                             <td>
                                 <a class="dropdown-item text-center semester_list" href="{% url 'teacher-active-semester' course.id %}" style="color: black !important; font-weight: normal !important;">
